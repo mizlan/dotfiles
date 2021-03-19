@@ -1,4 +1,11 @@
+local paqpath = vim.fn.stdpath('data')..'/site/pack/paqs/opt/paq-nvim'
+
+if vim.fn.empty(vim.fn.glob(paqpath)) > 0 then
+  vim.api.nvim_command('!git clone https://github.com/savq/paq-nvim.git ' .. paqpath)
+end
+
 vim.cmd 'packadd paq-nvim'
+
 local paq = require('paq-nvim').paq
 
 paq {'savq/paq-nvim', opt=true}
