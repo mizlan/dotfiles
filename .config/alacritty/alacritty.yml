@@ -1,0 +1,217 @@
+window:
+  decorations: none
+  padding:
+    x: 0
+    y: 0
+  dynamic_padding: true
+  title: a
+  dynamic_title: true
+
+font:
+  normal:
+    family: Roboto Mono
+    size: 21.0
+  offset:
+    x: 0
+    y: 0
+  glyph_offset:
+    x: 0
+    y: 0
+  use_thin_strokes: true
+
+    #font:
+    #  normal:
+    #    family: Roboto Mono
+    #    style: Light
+    #  bold:
+    #    family: Roboto Mono
+    #    style: Regular
+    #  italic:
+    #    family: Roboto Mono
+    #    style: Light Italic
+    #  bold italic:
+    #    family: Roboto Mono
+    #    style: Italic
+    #  size: 25.0
+    #  offset:
+    #    x: 0
+    #    y: 0
+    #  glyph_offset:
+    #    x: 0
+    #    y: 0
+    #  use_thin_strokes: true
+
+draw_bold_text_with_bright_colors: true
+
+# # Nord:
+# colors:
+  # primary:
+    # background: '#2e3440'
+    # foreground: '#d8dee9'
+    # dim_foreground: '#a5abb6'
+  # cursor:
+    # text: '#2e3440'
+    # cursor: '0xff2676'
+  # vi_mode_cursor:
+    # text: '#2e3440'
+    # cursor: '#d8dee9'
+  # selection:
+    # text: CellForeground
+    # background: '#4c566a'
+  # search:
+    # matches:
+      # foreground: CellBackground
+      # background: '#88c0d0'
+    # bar:
+      # background: '#434c5e'
+      # foreground: '#d8dee9'
+  # normal:
+    # black: '#3b4252'
+    # red: '#bf616a'
+    # green: '#a3be8c'
+    # yellow: '#ebcb8b'
+    # blue: '#81a1c1'
+    # magenta: '#b48ead'
+    # cyan: '#88c0d0'
+    # white: '#e5e9f0'
+  # bright:
+    # black: '#4c566a'
+    # red: '#bf616a'
+    # green: '#a3be8c'
+    # yellow: '#ebcb8b'
+    # blue: '#81a1c1'
+    # magenta: '#b48ead'
+    # cyan: '#8fbcbb'
+    # white: '#eceff4'
+  # dim:
+    # black: '#373e4d'
+    # red: '#94545d'
+    # green: '#809575'
+    # yellow: '#b29e75'
+    # blue: '#68809a'
+    # magenta: '#8c738c'
+    # cyan: '#6d96a5'
+    # white: '#aeb3bb'
+    # 
+    # # Colors (Gruvbox light)
+    # colors:
+    # # Default colors
+    # primary:
+    # # hard contrast: background = '0xf9f5d7'
+    # background: '0xfbf1c7'
+    # # soft contrast: background = '0xf2e5bc'
+    # foreground: '0x3c3836'
+    # 
+    # # Normal colors
+    # normal:
+    # black:   '0xfbf1c7'
+    # red:     '0xcc241d'
+    # green:   '0x98971a'
+    # yellow:  '0xd79921'
+    # blue:    '0x458588'
+    # magenta: '0xb16286'
+    # cyan:    '0x689d6a'
+    # white:   '0x7c6f64'
+    # 
+    # # Bright colors
+    # bright:
+    # black:   '0x928374'
+    # red:     '0x9d0006'
+    # green:   '0x79740e'
+    # yellow:  '0xb57614'
+    # blue:    '0x076678'
+    # magenta: '0x8f3f71'
+    # cyan:    '0x427b58'
+    # white:   '0x3c3836'
+
+# custom
+colors:
+  primary:
+    background: '#f5f4ed'
+    foreground: '#474644'
+    dim_foreground: '#807d78'
+  cursor:
+    text: '#2e3440'
+    cursor: '0xff2676'
+  vi_mode_cursor:
+    text: '#2e3440'
+    cursor: '#d8dee9'
+  selection:
+    text: CellForeground
+    background: '#dbd4c5'
+  search:
+    matches:
+      foreground: CellBackground
+      background: '#88c0d0'
+    bar:
+      background: '#434c5e'
+      foreground: '#d8dee9'
+  normal:
+    black: '#3b4252'
+    red: '#d44250'
+    green: '#77a352'
+    yellow: '#d9b05d'
+    blue: '#4574a3'
+    magenta: '#9c4e8d'
+    cyan: '#599ab3'
+    white: '#a2a2a0'
+  bright:
+    black: '#4c566a'
+    red: '#d44250'
+    green: '#77a352'
+    yellow: '#d9b05d'
+    blue: '#4574a3'
+    magenta: '#9c4e8d'
+    cyan: '#599ab3'
+    white: '#a2a2a0'
+  dim:
+    black: '#373e4d'
+    red: '#94545d'
+    green: '#809575'
+    yellow: '#b29e75'
+    blue: '#68809a'
+    magenta: '#8c738c'
+    cyan: '#49788a'
+    white: '#a2a2a0'
+    
+bell:
+  animation: EaseOutSine
+  duration: 100
+  color: '#f2b8c5'
+background_opacity: 1
+cursor:
+  style: Underline
+  unfocused_hollow: false
+  thickness: 0.3
+live_config_reload: true
+shell:
+  program: /usr/local/bin/fish
+  #  args:
+  #  - --login
+
+key_bindings:
+  - { key: Key0, mods: Alt, chars: "\x1b0" }
+  - { key: Key1, mods: Alt, chars: "\x1b1" }
+  - { key: Key2, mods: Alt, chars: "\x1b2" }
+  - { key: Key3, mods: Alt, chars: "\x1b3" }
+  - { key: Key4, mods: Alt, chars: "\x1b4" }
+  - { key: Key5, mods: Alt, chars: "\x1b5" }
+  - { key: Key6, mods: Alt, chars: "\x1b6" }
+  - { key: Key7, mods: Alt, chars: "\x1b7" }
+  - { key: Key8, mods: Alt, chars: "\x1b8" }
+  - { key: Key9, mods: Alt, chars: "\x1b9" }
+  - { key: F,    mods: Alt, chars: "\x1bf" }
+  - { key: B,    mods: Alt, chars: "\x1bb" }
+  - { key: J,    mods: Alt, chars: "\x1bj" }
+  - { key: K,    mods: Alt, chars: "\x1bk" }
+  - { key: H,    mods: Alt, chars: "\x1bh" }
+  - { key: L,    mods: Alt, chars: "\x1bl" }
+  - { key: Q,    mods: Alt, chars: "\x1bq" }
+  - { key: U,    mods: Alt, chars: "\x1bu" }
+  - { key: R,    mods: Alt, chars: "\x1br" }
+  - { key: I,    mods: Alt, chars: "\x1bi" }
+  - { key: O,    mods: Alt, chars: "\x1bo" }
+  - { key: W,    mods: Alt, chars: "\x1bw" }
+  - { key: E,    mods: Alt, chars: "\x1be" }
+  - { key: T,    mods: Alt, chars: "\x1bt" }
+  - { key: Y,    mods: Alt, chars: "\x1by" }
