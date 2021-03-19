@@ -1,0 +1,10 @@
+cmd + shift - return : open -a Emacs
+cmd + shift - space  : open -a Alacritty
+cmd + shift - b      : open -a Brave\ Browser
+cmd + shift - d      : open -a Discord
+cmd + shift - m      : open -a Messenger
+cmd + shift - n      : open -a Slack
+cmd + shift - k      : open -a Skim
+cmd + shift - p      : open -a Preview
+cmd + shift - y      : open -a zoom.us
+cmd + shift - 1      : screencapture -ic
