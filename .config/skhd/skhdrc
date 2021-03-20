@@ -4,6 +4,7 @@ cmd + shift - b      : open -a Brave\ Browser
 cmd + shift - d      : open -a Discord
 cmd + shift - m      : open -a Messenger
 cmd + shift - n      : open -a Slack
+cmd + shift - e      : open -a Element
 cmd + shift - k      : open -a Skim
 cmd + shift - p      : open -a Preview
 cmd + shift - y      : open -a zoom.us
