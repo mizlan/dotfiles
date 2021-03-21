@@ -21,6 +21,22 @@ paq 'liquidz/vim-iced'
 paq 'guns/vim-sexp'
 paq 'tpope/vim-commentary'
 paq 'machakann/vim-sandwich'
+--
+--- Options
+vim.api.nvim_set_keymap('n', '-', ':bd<CR>', {silent = true, noremap = true})
+vim.api.nvim_set_keymap('n', '<Esc>', ':nohl<CR>', {silent = true, noremap = true})
+vim.o.hidden = true
+vim.o.ignorecase = true
+vim.o.background = 'light'
+vim.cmd 'colo github'
+vim.cmd 'set et ts=2 sts=2 sw=2'
+vim.o.termguicolors = true
+vim.o.laststatus = 0
+vim.o.guifont = 'Roboto Mono:h20'
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' m'
+
+vim.cmd 'runtime macros/sandwich/keymap/surround.vim'
 
 --- Telescope
 local actions = require('telescope.actions')
@@ -50,20 +66,6 @@ require('nvim-treesitter.configs').setup {
   },
 }
 vim.cmd 'command! TSRehighlight :write | edit | TSBufEnable highlight'
-
---- Options
-vim.api.nvim_set_keymap('n', '-', ':bd<CR>', {silent = true, noremap = true})
-vim.api.nvim_set_keymap('n', '<Esc>', ':nohl<CR>', {silent = true, noremap = true})
-vim.o.ignorecase = true
-vim.o.background = 'light'
-vim.cmd 'colo github'
-vim.cmd 'set et ts=2 sts=2 sw=2'
-vim.o.termguicolors = true
-vim.o.laststatus = 0
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' m'
-
-vim.cmd 'runtime macros/sandwich/keymap/surround.vim'
 
 --- Clojure
 vim.g.sexp_mappings = {
