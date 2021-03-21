@@ -1,5 +1,6 @@
 cmd + shift - return : open -a Emacs
 cmd + shift - space  : open -a Alacritty
+cmd + shift - g      : open -a goneovim
 cmd + shift - b      : open -a Brave\ Browser
 cmd + shift - d      : open -a Discord
 cmd + shift - m      : open -a Messenger
