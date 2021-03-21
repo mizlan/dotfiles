@@ -1,0 +1,10 @@
+[Editor]
+ExtTabline = true
+
+DrawWindowSeparator = false
+WindowSeparatorTheme = "dark"
+WindowSeparatorColor = "#2222ff"
+WindowSeparatorGradient = false
+
+[ScrollBar]
+Visible = true
