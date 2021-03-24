@@ -18,3 +18,11 @@ viewing < p      : open -a Preview
 viewing < s      : open -a Skim
 viewing < space  : screencapture -ic
 viewing < escape ; default
+
+# quick access websites leader
+:: websites @
+cmd + shift - g   ; websites
+websites < c      : open -a Brave\ Browser 'https://classroom.google.com/u/1/'
+websites < s      : open -a Brave\ Browser 'file:///Users/michaellan/hs/bell_schedule_20_21.pdf'
+websites < y      : open -a Brave\ Browser 'https://youtube.com'
+websites < escape ; default
