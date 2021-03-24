@@ -1,12 +1,20 @@
-cmd + shift - return : open -a Emacs
+cmd + shift - return : open -a Brave\ Browser
 cmd + shift - space  : open -a Alacritty
-cmd + shift - g      : open -a goneovim
-cmd + shift - b      : open -a Brave\ Browser
-cmd + shift - d      : open -a Discord
-cmd + shift - m      : open -a Messenger
-cmd + shift - n      : open -a Slack
-cmd + shift - e      : open -a Element
-cmd + shift - k      : open -a Skim
-cmd + shift - p      : open -a Preview
 cmd + shift - y      : open -a zoom.us
-cmd + shift - 1      : screencapture -ic
+
+# messages leader
+:: messages @
+cmd + shift - m   ; messages
+messages < m      : open -a Messenger
+messages < d      : open -a Discord
+messages < e      : open -a Element
+messages < s      : open -a Slack
+messages < escape ; default
+
+# viewing leader
+:: viewing @
+cmd + shift - v  ; viewing
+viewing < p      : open -a Preview
+viewing < s      : open -a Skim
+viewing < space  : screencapture -ic
+viewing < escape ; default
