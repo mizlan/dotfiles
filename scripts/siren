@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+#
+# Requires:
+# - youtube-dl
+# - a filter (e.g. fzf)
+#
+
+ROOT_DIR="$HOME/siren"
+SONG_DIR="$ROOT_DIR/songs"
+FILTER="fzf"
+
+shopt -s nullglob
+
+add_song() {
+  song_id="$1"
+  if [ -z "$song_id" ]; then
+    printf "no song ID given, exiting\n"; exit 1
+  fi
+  dest="${SONG_DIR}/%(id)s.%(ext)s"
+  youtube-dl --no-playlist -f 'bestaudio[ext=m4a]' --write-info-json -o "$dest" "$song_id"
+}
+
+_gen_song_list() {
+  for song in "$SONG_DIR"/*.m4a; do
+    info_file="${song%.m4a}.info.json"
+    # TODO: provide metadata file that's faster than repeatedly reading jq output
+    title=$(jq -r '.title' < "$info_file")
+    uploader=$(jq -r '.uploader' < "$info_file")
+    printf "%s uploaded by %s [id:%s]\n" "$title" "$uploader" "$(basename "$song" .m4a)"
+  done
+}
+
+_query_song_id() {
+  if ! entry=$(_gen_song_list | "$FILTER"); then
+    printf "no song chosen\n"
+    exit 1
+  fi
+  id=$(echo "$entry" | grep -E '\[id:[A-Za-z0-9_-]+\]' | sed 's/.*\[id://; s/\]$//')
+  echo "$id"
+}
+
+delete_song() {
+  id=$(_query_song_id) || exit 1
+  [ -n "$id" ] || { echo "no id"; exit 1; }
+  rm -v "$SONG_DIR"/"$id"*
+}
+
+browse_songs() {
+  # NOTE: use grep color to highlight ID
+  _gen_song_list | \
+    GREP_COLORS='ms=34' \
+    GREP_COLOR='34' \
+    grep -E --color=always '\[id:[A-Za-z0-9_-]+\]$'
+}
+
+play_song() {
+  id="$(_query_song_id)" || exit 1
+  afplay "$SONG_DIR"/"$id".m4a
+}
+
+case "$1" in
+
+  add-song)     add_song "${@:2}" ;;
+  del-song)     delete_song "${@:2}" ;;
+  edit)         echo "Not yet implemented." ;;
+  browse-songs) browse_songs "${@:2}" ;;
+  play-song)    play_song "${@:2}" ;;
+  *)            echo "What?"; exit 1 ;;
+
+esac
