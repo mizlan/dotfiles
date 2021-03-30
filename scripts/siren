@@ -21,13 +21,19 @@ add_song() {
   youtube-dl --no-playlist -f 'bestaudio[ext=m4a]' --write-info-json -o "$dest" "$song_id"
 }
 
-_gen_song_list() {
+_gen_id_list() {
   for song in "$SONG_DIR"/*.m4a; do
-    info_file="${song%.m4a}.info.json"
+    printf "%s\n" "$(basename "$song" .m4a)"
+  done
+}
+
+_gen_song_list() {
+  for song_id in $(_gen_id_list); do
+    info_file="$SONG_DIR"/"$song_id".info.json
     # TODO: provide metadata file that's faster than repeatedly reading jq output
     title=$(jq -r '.title' < "$info_file")
     uploader=$(jq -r '.uploader' < "$info_file")
-    printf "%s uploaded by %s [id:%s]\n" "$title" "$uploader" "$(basename "$song" .m4a)"
+    printf "%s uploaded by %s [id:%s]\n" "$title" "$uploader" "$song_id"
   done
 }
 
@@ -59,6 +65,12 @@ play_song() {
   afplay "$SONG_DIR"/"$id".m4a
 }
 
+import_songs() {
+  while read -r line; do
+    add_song "$line"
+  done < "${1:-/dev/stdin}"
+}
+
 case "$1" in
 
   add-song)     add_song "${@:2}" ;;
@@ -66,6 +78,8 @@ case "$1" in
   edit)         echo "Not yet implemented." ;;
   browse-songs) browse_songs "${@:2}" ;;
   play-song)    play_song "${@:2}" ;;
+  export)       _gen_id_list ;;
+  import)       import_songs "${@:2}" ;;
   *)            echo "What?"; exit 1 ;;
 
 esac
