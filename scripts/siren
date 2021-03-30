@@ -8,7 +8,14 @@
 
 ROOT_DIR="$HOME/siren"
 SONG_DIR="$ROOT_DIR/songs"
+INFO_DIR="$ROOT_DIR/cache"
 FILTER="fzf"
+
+setup_dirs() {
+  mkdir -p "$ROOT_DIR"
+  mkdir -p "$SONG_DIR"
+  mkdir -p "$INFO_DIR"
+}
 
 shopt -s nullglob
 
@@ -29,11 +36,16 @@ _gen_id_list() {
 
 _gen_song_list() {
   for song_id in $(_gen_id_list); do
-    info_file="$SONG_DIR"/"$song_id".info.json
-    # TODO: provide metadata file that's faster than repeatedly reading jq output
-    title=$(jq -r '.title' < "$info_file")
-    uploader=$(jq -r '.uploader' < "$info_file")
-    printf "%s uploaded by %s [id:%s]\n" "$title" "$uploader" "$song_id"
+    cached_info="$INFO_DIR"/"$song_id"
+    echo $cached_info
+    [ -e "$cached_info" ] || {
+      # NOTE: cache the info
+      info_file="$SONG_DIR"/"$song_id".info.json
+      title=$(jq -r '.title' < "$info_file")
+      uploader=$(jq -r '.uploader' < "$info_file")
+      printf "%s uploaded by %s [id:%s]\n" "$title" "$uploader" "$song_id" > "$cached_info"
+    }
+    cat "$cached_info"
   done
 }
 
@@ -73,6 +85,7 @@ import_songs() {
 
 case "$1" in
 
+  setup)        setup_dirs ;;
   add-song)     add_song "${@:2}" ;;
   del-song)     delete_song "${@:2}" ;;
   edit)         echo "Not yet implemented." ;;
