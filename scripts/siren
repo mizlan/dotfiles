@@ -37,7 +37,6 @@ _gen_id_list() {
 _gen_song_list() {
   for song_id in $(_gen_id_list); do
     cached_info="$INFO_DIR"/"$song_id"
-    echo $cached_info
     [ -e "$cached_info" ] || {
       # NOTE: cache the info
       info_file="$SONG_DIR"/"$song_id".info.json
