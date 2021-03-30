@@ -25,6 +25,7 @@ require('packer').startup(function()
   use 'ekaj2/limelight.vim'
   use 'janet-lang/janet.vim'
   use 'luochen1990/rainbow'
+  use 'https://github.com/neomutt/neomutt.vim'
 end)
 
 --- Options
@@ -33,7 +34,7 @@ vim.api.nvim_set_keymap('n', '-', ':bd<CR>', {silent = true, noremap = true})
 vim.api.nvim_set_keymap('n', '<Esc>', ':nohl<CR>', {silent = true, noremap = true})
 vim.o.hidden = true
 vim.o.ignorecase = true
-vim.o.background = 'dark'
+vim.o.background = 'light'
 vim.wo.signcolumn = 'yes'
 vim.o.inccommand = 'nosplit'
 vim.cmd 'colo github'
@@ -98,6 +99,9 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', ']e',  '<cmd>lua vim.lsp.diagnostic.goto_next()                          <CR>', opts)
 end
 require'lspconfig'.hls.setup{
+  on_attach = on_attach
+}
+require'lspconfig'.clangd.setup{
   on_attach = on_attach
 }
 
