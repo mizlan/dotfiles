@@ -1,6 +1,7 @@
 cmd + shift - return : open -a Brave\ Browser
 cmd + shift - space  : open -a Alacritty
 cmd + shift - y      : open -a zoom.us
+cmd + shift - o      : python3 '/Users/michaellan/scripts/zoom_helper/main.py'
 
 # messages leader
 :: messages @
@@ -13,7 +14,7 @@ messages < escape ; default
 
 # viewing leader
 :: viewing @
-cmd + shift - v  ; viewing
+cmd + shift - k  ; viewing
 viewing < p      : open -a Preview
 viewing < s      : open -a Skim
 viewing < space  : screencapture -ic
