@@ -12,6 +12,7 @@ ROOT_DIR="$HOME/siren"
 SONG_DIR="$ROOT_DIR/songs"
 INFO_DIR="$ROOT_DIR/cache"
 FILTER="fzf"
+MULTI_FILTER="fzf -m"
 PLAYER="afplay"
 
 setup_dirs() {
@@ -60,6 +61,13 @@ _query_song_id() {
   echo "$id"
 }
 
+_query_multi_song_id() {
+  _gen_song_list | \
+    $MULTI_FILTER | \
+    grep -E '\[id:[A-Za-z0-9_-]+\]' | \
+    sed 's/.*\[id://; s/\]$//'
+}
+
 delete_song() {
   id=$(_query_song_id) || exit 1
   [ -n "$id" ] || { echo "no id"; exit 1; }
@@ -75,8 +83,14 @@ browse_songs() {
 }
 
 play_song() {
-  id="$(_query_song_id)" || exit 1
+  [ -n "$1" ] && id="$1" || id="$(_query_song_id)" || exit 1
   "$PLAYER" "$SONG_DIR"/"$id".m4a
+}
+
+play_multi() {
+  for song in $(_query_multi_song_id); do
+    play_song $song
+  done
 }
 
 import_songs() {
@@ -103,6 +117,7 @@ case "$1" in
   d|del|del-song) delete_song "${@:2}" ;;
   b|browse|browse-songs) browse_songs "${@:2}" ;;
   p|play|play-song) play_song "${@:2}" ;;
+  m|multi|multi-play) play_multi ;;
   e|export) _gen_id_list ;;
   i|import) import_songs "${@:2}" ;;
   q|query) _query_song_id ;;
