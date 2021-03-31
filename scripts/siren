@@ -6,10 +6,12 @@
 # - a filter (e.g. fzf)
 #
 
+# TODO: use XDG directories for these
 ROOT_DIR="$HOME/siren"
 SONG_DIR="$ROOT_DIR/songs"
 INFO_DIR="$ROOT_DIR/cache"
 FILTER="fzf"
+PLAYER="afplay"
 
 setup_dirs() {
   mkdir -p "$ROOT_DIR"
@@ -73,7 +75,7 @@ browse_songs() {
 
 play_song() {
   id="$(_query_song_id)" || exit 1
-  afplay "$SONG_DIR"/"$id".m4a
+  "$PLAYER" "$SONG_DIR"/"$id".m4a
 }
 
 import_songs() {
