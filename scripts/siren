@@ -85,15 +85,12 @@ import_songs() {
 }
 
 case "$1" in
-
-  setup)        setup_dirs ;;
-  add-song)     add_song "${@:2}" ;;
-  del-song)     delete_song "${@:2}" ;;
-  edit)         echo "Not yet implemented." ;;
-  browse-songs) browse_songs "${@:2}" ;;
-  play-song)    play_song "${@:2}" ;;
-  export)       _gen_id_list ;;
-  import)       import_songs "${@:2}" ;;
-  *)            echo "What?"; exit 1 ;;
-
+  s|setup)        setup_dirs ;;
+  a|add-song)     add_song "${@:2}" ;;
+  d|del-song)     delete_song "${@:2}" ;;
+  b|browse-songs) browse_songs "${@:2}" ;;
+  p|play-song)    play_song "${@:2}" ;;
+  e|export)       _gen_id_list ;;
+  i|import)       import_songs "${@:2}" ;;
+  *)              echo "What?"; exit 1 ;;
 esac
