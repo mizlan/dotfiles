@@ -5,9 +5,12 @@
 # - youtube-dl
 # - a filter (e.g. fzf)
 #   - it should support streaming of input
+#   - for some options, it should also support
+#     selecting multiple lines
 # - jq
 
-# TODO: use XDG directories for these
+# TODO: - use XDG directories for these
+#       - allow user to override these at runtime
 ROOT_DIR="$HOME/siren"
 SONG_DIR="$ROOT_DIR/songs"
 INFO_DIR="$ROOT_DIR/cache"
@@ -53,7 +56,7 @@ _gen_song_list() {
 }
 
 _query_song_id() {
-  if ! entry=$(_gen_song_list | "$FILTER"); then
+  if ! entry=$(_gen_song_list | $FILTER); then
     printf "no song chosen\n"
     exit 1
   fi
@@ -112,9 +115,9 @@ size
 EOF
 
 case "$1" in
-  s|setup) setup_dirs ;;
   a|add|add-song) add_song "${@:2}" ;;
   d|del|del-song) delete_song "${@:2}" ;;
+  D|debug) _query_multi_song_id ;;
   b|browse|browse-songs) browse_songs "${@:2}" ;;
   p|play|play-song) play_song "${@:2}" ;;
   m|multi|multi-play) play_multi ;;
@@ -122,5 +125,6 @@ case "$1" in
   i|import) import_songs "${@:2}" ;;
   q|query) _query_song_id ;;
   size) du -h "$ROOT_DIR" ;;
+  setup) setup_dirs ;;
   *) echo $opts; exit 1 ;;
 esac
