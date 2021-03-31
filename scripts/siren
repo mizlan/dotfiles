@@ -4,7 +4,8 @@
 # Requires:
 # - youtube-dl
 # - a filter (e.g. fzf)
-#
+#   - it should support streaming of input
+# - jq
 
 # TODO: use XDG directories for these
 ROOT_DIR="$HOME/siren"
@@ -84,13 +85,27 @@ import_songs() {
   done < "${1:-/dev/stdin}"
 }
 
+read -r -d '' opts << EOF
+setup
+add-song
+del-song
+browse-songs
+play-song
+export
+import
+query
+size
+EOF
+
 case "$1" in
-  s|setup)        setup_dirs ;;
-  a|add-song)     add_song "${@:2}" ;;
-  d|del-song)     delete_song "${@:2}" ;;
-  b|browse-songs) browse_songs "${@:2}" ;;
-  p|play-song)    play_song "${@:2}" ;;
-  e|export)       _gen_id_list ;;
-  i|import)       import_songs "${@:2}" ;;
-  *)              echo "What?"; exit 1 ;;
+  s|setup) setup_dirs ;;
+  a|add|add-song) add_song "${@:2}" ;;
+  d|del|del-song) delete_song "${@:2}" ;;
+  b|browse|browse-songs) browse_songs "${@:2}" ;;
+  p|play|play-song) play_song "${@:2}" ;;
+  e|export) _gen_id_list ;;
+  i|import) import_songs "${@:2}" ;;
+  q|query) _query_song_id ;;
+  size) du -h "$ROOT_DIR" ;;
+  *) echo $opts; exit 1 ;;
 esac
