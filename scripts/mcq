@@ -11,6 +11,7 @@ fi
 
 str=$(cat /dev/stdin | sed 's/[^A-Za-z]//g' | $PASTE_CMD -sd '')
 echo $str
+echo "length ${#str}"
 idx=0
 while (( idx < ${#str} ))
 do
