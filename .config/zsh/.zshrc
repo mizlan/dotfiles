@@ -23,11 +23,15 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu yes select
 
 bindkey -v
+bindkey '^R' history-incremental-search-backward
 
 # [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# eval "$(pyenv init - --no-rehash)"
+eval "$(pyenv init - --no-rehash)"
 
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
+
+save() { tee $HOME/.save-output }
+pull() { cat $HOME/.save-output }
 
 source $ZDOTDIR/zsh_prompt
