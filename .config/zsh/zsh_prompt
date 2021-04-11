@@ -1,1 +1,9 @@
-export PS1="%B%F{blue}%~%b%f "
+NEWLINE=$'\n'
+
+chpwd() {
+  dir=$(pwd)
+  par=$(echo $dir | grep -Eo '^.*\/')
+  export PS1="%B%F{black}$par%F{blue}${dir#"$par"}$NEWLINE>%b%f "
+}
+
+chpwd
