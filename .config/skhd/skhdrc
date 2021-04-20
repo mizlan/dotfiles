@@ -3,6 +3,7 @@ cmd + shift - e      : open -a kitty
 cmd + shift - space  : open -a Emacs
 cmd + shift - y      : open -a zoom.us
 cmd + shift - o      : python3 '/Users/michaellan/scripts/zoom_helper/main.py'
+cmd + shift - p      : janet '/Users/michaellan/scripts/zoom_helper/zelda.janet'
 
 # messages leader
 :: messages @
@@ -29,7 +30,7 @@ messages < escape ; default
 # websites < y      : open -a Brave\ Browser 'https://youtube.com'
 # websites < escape ; default
 
-cmd + shift - i : open -a Brave\ Browser 'file:///Users/michaellan/hs/bell_schedule_20_21.pdf'
+cmd + shift - i : open 'file:///Users/michaellan/hs/bell_schedule_20_21.pdf'
 
 # yabai
 # focus window
@@ -93,3 +94,7 @@ alt - r         : yabai -m space --rotate 270
 shift + alt - r : yabai -m space --rotate 90
 shift + alt - x : yabai -m space --mirror x-axis
 shift + alt - y : yabai -m space --mirror y-axis
+
+shift + alt - space : \
+    yabai -m window --toggle float; \
+    yabai -m window --toggle border
