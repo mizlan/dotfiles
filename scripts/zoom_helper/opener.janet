@@ -12,6 +12,8 @@
     (slurp)
     (init)
     (string/split "\n")
+    (map string/trim)
+    (filter |(and (> (length $0) 0) (not (string/has-prefix? "#" $0))))
     (map |(string/split " " $0))
     (map first-last)
     (flatten)
