@@ -1,9 +1,11 @@
+#!/bin/zsh
+
 NEWLINE=$'\n'
 
 chpwd() {
   dir=$(pwd)
-  par=$(echo $dir | grep -Eo '^.+\/')
-  color=$((1 + $(echo $dir | cksum | cut -d ' ' -f 1) % 6))
+  par=$(echo "$dir" | grep -Eo '^.+\/')
+  color=$((1 + (1 + $(echo "$dir" | cksum | cut -d ' ' -f 1)) % 6))
   export PS1="%B%F{black}$par%F{$color}${dir#"$par"}$NEWLINE$%b%f "
 }
 
