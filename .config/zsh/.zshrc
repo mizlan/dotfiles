@@ -1,37 +1,63 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 #
 # .zshrc
 #
 
-# Have less display colours
-# from: https://wiki.archlinux.org/index.php/Color_output_in_console#man
-export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
-export LESS_TERMCAP_md=$'\e[1;33m'     # begin blink
-export LESS_TERMCAP_so=$'\e[01;44;37m' # begin reverse video
-export LESS_TERMCAP_us=$'\e[01;37m'    # begin underline
-export LESS_TERMCAP_me=$'\e[0m'        # reset bold/blink
-export LESS_TERMCAP_se=$'\e[0m'        # reset reverse video
-export LESS_TERMCAP_ue=$'\e[0m'        # reset underline
-export GROFF_NO_SGR=1                  # for konsole and gnome-terminal
-
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 
-# load-opam() {
-#   test -r /Users/michaellan/.opam/opam-init/init.zsh && . /Users/michaellan/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
-# }
-
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 
+zstyle ':completion:*' list-suffixes
+zstyle ':completion:*' expand prefix suffix
 zstyle ':completion:*' menu yes select
+# zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
-bindkey -v
-bindkey '^R' history-incremental-search-backward
+alias ls=lsd
 
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+bindkey -e
 
-eval "$(pyenv init - --no-rehash)"
+setopt histignorealldups
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+eval "$(pyenv init -)"
+eval "$(zoxide init zsh)"
 
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 
 save() { tee $HOME/.save-output }
 pull() { cat $HOME/.save-output }
 
-source $ZDOTDIR/zsh_prompt
+# pinentry mac: gpg-agent --daemon --pinentry-program /usr/local/bin/pinentry-mac
+
+alias luamake=/Users/michaellan/util/lua-language-server/3rd/luamake/luamake
+
+autoload -z edit-command-line
+zle -N edit-command-line
+bindkey "^X^E" edit-command-line
+
+source /Users/michaellan/.config/broot/launcher/bash/br
+source $HOME/powerlevel10k/powerlevel10k.zsh-theme
+
+alias pe='perl -E'
+alias pne='perl -nE'
+alias ppe='perl -pE'
+
+alias cd='z'
+
+autoload -Uz compinit
+if [ $(date +'%j') != $(/usr/bin/stat -f '%Sm' -t '%j' ${ZDOTDIR:-$HOME}/.zcompdump) ]; then
+  compinit
+else
+  compinit -C
+fi
+
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh

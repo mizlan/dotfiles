@@ -1,0 +1,40 @@
+#
+# zsh prompt
+#
+
+# theme color
+export THEME_COLOR='green'
+export THEME_COLOR_BG_JOBS='14'
+
+# newline character
+NEWLINE=$'\n'
+
+# transient right-prompt
+setopt TRANSIENT_RPROMPT
+
+# prompt substitution
+setopt PROMPT_SUBST
+
+# remove space from RPROMPT
+# export ZLE_RPROMPT_INDENT=-1
+
+# jobs,directory
+# export PROMPT="%1(j.%j.✕)%F{${THEME_COLOR}} ● %f%B%2~%b${NEWLINE}"
+# export PROMPT="${PROMPT}%B%(!.#.%F{${THEME_COLOR}}#%f)%b "
+
+# prompt by raj
+RIGHT_BG='8'
+RIGHT_FG='7'
+
+LEFT_SECTION='${IN_GIT}'
+RIGHT_SECTION='%2~'
+
+# {exit code}
+export RPROMPT='%1(j.%F{$THEME_COLOR_BG_JOBS}.%F{$THEME_COLOR}){%f%?%1(j.%F{$THEME_COLOR_BG_JOBS}.%F{$THEME_COLOR})}%f'
+# git rev-parse --is-inside-work-tree
+
+precmd() {
+	IN_GIT=$(git rev-parse --is-inside-work-tree >/dev/null 2>&1 && echo "" || echo "")
+	export PROMPT='%k%1(j.%F{$THEME_COLOR_BG_JOBS}.%F{$THEME_COLOR})%F{0}%1(j.%K{$THEME_COLOR_BG_JOBS}.%K{$THEME_COLOR})${IN_GIT}%K{$RIGHT_BG}%1(j.%F{$THEME_COLOR_BG_JOBS}.%F{$THEME_COLOR})%F{$RIGHT_FG} ${RIGHT_SECTION}%F{$RIGHT_BG}%k%f '
+	# export PROMPT='%K{15}%F{0} %1~ %k%f '
+}
