@@ -9,10 +9,10 @@ open(SKHD, '<', $skhd_path) or die $!;
 my $skhd_text  = join "", <SKHD>;
 
 my %keybind_hash = (
-  Firefox   => q(cmd + shift - return),
+  Chromium => q(cmd + shift - return),
   Messenger => q(cmd + shift - m),
-  iTerm2    => q(cmd + shift - e),
-  Discord   => q(cmd + shift - d),
+  kitty => q(cmd + shift - e),
+  Discord => q(cmd + shift - d),
 );
 
 my @data = qx(yabai -m query --windows | jq '.[] | [.id, .app, .space] | join (" ")');
