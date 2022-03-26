@@ -2,4 +2,5 @@
 
 # use regex and fzf to locate and narrow PDF page
 
-rga --no-heading "$@" | fzf | perl -aF: -e 'use Cwd 'abs_path'; $f=abs_path $F[0]; $F[1]=~/Page (\d+)/; `psg $f $1`'
+rga --no-heading "$@" | fzf | perl /Users/michaellan/scripts/lyra.pl
+# rga --no-heading "$@" | fzf | perl -aF: -e 'use Cwd 'abs_path'; $f=abs_path $F[0]; $F[1]=~/Page (\d+)/; `psg $f $1`'
