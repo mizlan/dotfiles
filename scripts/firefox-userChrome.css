@@ -174,12 +174,12 @@
 }
 
 .urlbar-input-box {
-    font-family: 'JetBrains Mono';
+    font-family: 'JetBrainsMono Nerd Font';
     /* font-stretch: condensed; */
 }
 
 .urlbarView-url {
-  font-family: 'JetBrains Mono';
+  font-family: 'JetBrainsMono Nerd Font';
 }
 
 .autocomplete-richlistitem .ac-title,
@@ -191,7 +191,7 @@
 .urlbarView-row .urlbarView-title,
 .urlbarView-row .urlbarView-secondary,
 .urlbarView-row .urlbarView-title-separator {
-  font-family: 'JetBrains Mono';
+  font-family: 'JetBrainsMono Nerd Font';
 }
 
 .autocomplete-richlistitem[selected=true] .ac-url,
