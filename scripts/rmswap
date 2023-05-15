@@ -1,7 +1,0 @@
-#!/bin/sh
-
-NVIM_DATA_DIR="$(nvim -es +"verbose echo stdpath('data')" 2>&1)"
-
-swapfilepath="$(realpath "$1" | sed "s#/#%#g; s#^#$NVIM_DATA_DIR/swap/#; s/$/.swp/")"
-
-rm "$swapfilepath"
