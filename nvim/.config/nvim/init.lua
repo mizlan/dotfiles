@@ -257,6 +257,8 @@ require('lspconfig')['zls'].setup {
   on_attach = on_attach,
 }
 
+-- ENDLSP
+
 require("neodev").setup()
 
 vim.opt.signcolumn = 'yes'
