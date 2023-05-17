@@ -94,11 +94,12 @@ fancy-ctrl-z () {
 zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z
 
-export HISTSIZE=999999999
+export HISTSIZE=9999999999
 export SAVEHIST=$HISTSIZE
 HISTORY_IGNORE="(ls|cd|fg)"
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
+setopt SHARE_HISTORY
 
 precmd () {print -Pn "\e]0;%~\a"}
 
