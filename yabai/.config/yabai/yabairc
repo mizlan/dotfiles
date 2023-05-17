@@ -22,8 +22,8 @@ yabai -m config window_gap                   $gapsize
 
 yabai -m config window_animation_duration    0.20
 
-yabai -m signal --add event=window_created action='/Users/ml/code/libra/libra c $YABAI_WINDOW_ID'
-yabai -m signal --add event=window_destroyed action='/Users/ml/code/libra/libra r $YABAI_WINDOW_ID'
+yabai -m signal --add event=window_created action='echo r | nc 127.0.0.1 1337'
+yabai -m signal --add event=window_destroyed action='echo r | nc 127.0.0.1 1337'
 
 yabai -m signal --add event=space_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq .[0].id)"
 
