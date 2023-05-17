@@ -8,8 +8,10 @@
   "cmp-nvim-lsp-signature-help": { "branch": "main", "commit": "3d8912ebeb56e5ae08ef0906e3a54de1c66b92f1" },
   "conjure": { "branch": "master", "commit": "1dd96d90f53122225f698e58b50dee9ed760cf2e" },
   "dressing.nvim": { "branch": "master", "commit": "540d6e7115fb32b5035ddaf0c1a26cbffb855dac" },
+  "everforest": { "branch": "master", "commit": "e6e3cbdc854dcd75a2f1a9648ab21103acb79c44" },
   "fennel.vim": { "branch": "main", "commit": "c6a9c035ca108cbb24273d96cd6277fb8fbc60b4" },
   "fzy-lua-native": { "branch": "master", "commit": "45148b3f70d244e8b8b5db60df447a2b7ac2de9d" },
+  "git-conflict.nvim": { "branch": "main", "commit": "e83d9cc866338ed75b886d5a98c9ff03da99434d" },
   "gitlinker.nvim": { "branch": "master", "commit": "cc59f732f3d043b626c8702cb725c82e54d35c25" },
   "gitsigns.nvim": { "branch": "main", "commit": "814158f6c4b1724c039fcefe79b0be72c9131c2d" },
   "haskell-tools.nvim": { "branch": "master", "commit": "ffd571921848eab27c2f61b92cc5ea4a500c4c29" },
@@ -43,6 +45,7 @@
   "vim-easy-align": { "branch": "master", "commit": "12dd6316974f71ce333e360c0260b4e1f81169c3" },
   "vim-fugitive": { "branch": "master", "commit": "5f0d280b517cacb16f59316659966c7ca5e2bea2" },
   "vim-haskell-indent": { "branch": "master", "commit": "32af0fe63e961f56ea7faa66c3baa43460b9acd3" },
+  "vim-searchx": { "branch": "main", "commit": "4e22e05cb2d487d9191d3d6480342f02cb9a37e8" },
   "vim-table-mode": { "branch": "master", "commit": "9555a3e6e5bcf285ec181b7fc983eea90500feb4" },
   "vimtex": { "branch": "master", "commit": "18255a2370812696138cb415a5b02925d33ef569" },
   "zig.vim": { "branch": "master", "commit": "a9633f5f5905e448049933bfcdaab632447c4394" }

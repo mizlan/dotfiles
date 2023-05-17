@@ -146,6 +146,8 @@ require('colorizer').setup {
   css = { rgb_fn = true, }
 }
 
+vim.opt.guicursor = ''
+
 require('iswap').setup {
   debug = true,
   move_cursor = true
@@ -156,6 +158,8 @@ vim.opt.wrap = false
 
 vim.o.completeopt = 'menuone,noinsert,noselect'
 vim.o.shortmess = vim.o.shortmess .. 'c'
+
+vim.diagnostic.config({ signs = false })
 
 local on_attach = function(_, bufnr)
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -220,6 +224,7 @@ require('lspconfig')['lua_ls'].setup {
           'vim',
           'require'
         },
+        unusedLocalExclude = { "_*" },
       },
       workspace = {
         library = vim.api.nvim_get_runtime_file("", true),
@@ -268,7 +273,7 @@ end
 
 require('gitsigns').setup {
   on_attach = function()
-    nc("sh", "Gitsigns stage_hunk")
+    vim.keymap.set({ "n", "v" }, "<leader>sh", "<cmd>Gitsigns stage_hunk<cr>")
     nc("sb", "Gitsigns stage_buffer")
     nc("rh", "Gitsigns reset_hunk")
     vim.keymap.set("n", "]h", "<cmd>Gitsigns next_hunk<cr>")
@@ -531,3 +536,5 @@ vim.keymap.set('!', '<C-k>', readline.kill_line)
 vim.keymap.set('!', '<C-u>', readline.backward_kill_line)
 
 vim.keymap.set('n', '<leader>cd', ':lcd %:h<CR>')
+
+vim.opt.signcolumn = 'yes'
