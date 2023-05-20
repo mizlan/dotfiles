@@ -103,5 +103,7 @@ setopt SHARE_HISTORY
 
 precmd () {print -Pn "\e]0;%~\a"}
 
+alias bal='yabai -m space --balance'
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
