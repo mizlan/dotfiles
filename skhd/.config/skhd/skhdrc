@@ -1,24 +1,41 @@
-cmd + shift - 0x18 : yabai -m window --toggle zoom-fullscreen
+alt - 0x29 : yabai -m window --toggle zoom-fullscreen
+alt - f : yabai -m window --toggle zoom-fullscreen
 ctrl + alt + cmd - r : yabai --restart-service
 
 cmd + shift - return [
-  "firefox" : echo 'c' | nc 127.0.0.1 1337
+  "firefox" : echo 'c'        | nc 127.0.0.1 1337
   *         : echo 'gFirefox' | nc 127.0.0.1 1337
 ]
 
 cmd + shift - e [
-  "kitty" : echo 'c' | nc 127.0.0.1 1337
+  "kitty" : echo 'c'      | nc 127.0.0.1 1337
   *       : echo 'gkitty' | nc 127.0.0.1 1337
 ]
 
 cmd + shift - p [
-  "sioyek" : echo 'c' | nc 127.0.0.1 1337
-  *        : echo 'gsioyek' | nc 127.0.0.1 1337
+  "Skim" : echo 'c'     | nc 127.0.0.1 1337
+  *      : echo 'gSkim' | nc 127.0.0.1 1337
 ]
 
 cmd + shift - b : echo 'gYomu' | nc 127.0.0.1 1337
 cmd + shift - j : echo 'c' | nc 127.0.0.1 1337
 cmd + shift - m : echo 'r' | nc 127.0.0.1 1337
+cmd + shift - k : echo 'x' | nc 127.0.0.1 1337
+
+shift + alt - h : yabai -m window --warp west
+shift + alt - j : yabai -m window --warp south
+shift + alt - k : yabai -m window --warp north
+shift + alt - l : yabai -m window --warp east
+
+ctrl + alt - h : yabai -m window --swap west
+ctrl + alt - j : yabai -m window --swap south
+ctrl + alt - k : yabai -m window --swap north
+ctrl + alt - l : yabai -m window --swap east
+
+alt - h : yabai -m window --focus west
+alt - j : yabai -m window --focus south
+alt - k : yabai -m window --focus north
+alt - l : yabai -m window --focus east
 
 alt - 1 : yabai -m space --focus 1
 alt - 2 : yabai -m space --focus 2
