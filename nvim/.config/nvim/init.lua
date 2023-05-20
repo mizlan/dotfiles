@@ -1,5 +1,3 @@
-require('adaptive')
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -12,12 +10,13 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
-require("lazy").setup {
+require("lazy").setup({
   {
     'https://github.com/rose-pine/neovim',
     lazy = false,
     priority = 1000,
     config = function()
+      require('adaptive')
       require('rose-pine').setup({
         dark_variant = 'moon',
       })
@@ -25,10 +24,24 @@ require("lazy").setup {
     end
   },
   'nvim-lua/plenary.nvim',
-  'https://github.com/nvim-lualine/lualine.nvim',
+  {
+    'https://github.com/nvim-lualine/lualine.nvim',
+    opts = {
+      options = {
+        theme = 'rose-pine',
+        section_separators = { left = '', right = '' },
+        component_separators = ''
+      }
+    }
+  },
   -- 'https://github.com/vale1410/vim-minizinc',
-  'https://github.com/numToStr/Comment.nvim',
-  'https://github.com/kylechui/nvim-surround',
+  { 'https://github.com/numToStr/Comment.nvim', config = true },
+  {
+    'https://github.com/kylechui/nvim-surround',
+    opts = {
+      indent_lines = false
+    }
+  },
   'norcalli/nvim-colorizer.lua',
   'https://github.com/neovim/nvim-lspconfig',
   'https://github.com/romainl/vim-cool',
@@ -36,39 +49,32 @@ require("lazy").setup {
   'https://github.com/nvim-treesitter/nvim-treesitter',
   'https://github.com/nvim-telescope/telescope.nvim',
   'https://github.com/tpope/vim-fugitive',
-  -- 'https://github.com/nvim-treesitter/nvim-treesitter-context',
   'https://github.com/lewis6991/gitsigns.nvim',
   'https://github.com/pechorin/any-jump.vim',
   { dir = '~/Code/longbow.nvim' },
   'https://github.com/nvim-treesitter/playground',
-  'https://github.com/folke/neodev.nvim',
+  -- 'https://github.com/folke/neodev.nvim',
   'https://github.com/stevearc/dressing.nvim',
   'https://github.com/hrsh7th/nvim-cmp',
   'hrsh7th/cmp-nvim-lsp',
   'https://github.com/hrsh7th/cmp-nvim-lsp-signature-help',
   'nvim-telescope/telescope-frecency.nvim',
   'tami5/sqlite.lua',
-  --'https://github.com/JuliaEditorSupport/julia-vim',
-  --'https://github.com/Nymphium/vim-koka',
+  'https://github.com/JuliaEditorSupport/julia-vim',
+  'https://github.com/Nymphium/vim-koka',
   'lervag/vimtex',
   'https://github.com/MrcJkb/haskell-tools.nvim',
   'https://github.com/itchyny/vim-haskell-indent',
   'https://github.com/L3MON4D3/LuaSnip',
-  --'https://github.com/vim-scripts/alex.vim',
-  --'https://github.com/romgrk/kirby.nvim',
-  'romgrk/fzy-lua-native', -- needs 'make install'
+  'https://github.com/vim-scripts/alex.vim',
   'nvim-tree/nvim-web-devicons',
-  --'romgrk/kui.nvim',
-  'kevinhwang91/nvim-ufo',
+  { 'kevinhwang91/nvim-ufo',    config = true },
   'kevinhwang91/promise-async',
   'https://github.com/hrsh7th/cmp-buffer',
   'https://github.com/stevearc/oil.nvim',
   'https://github.com/nvim-telescope/telescope-file-browser.nvim',
   'https://github.com/junegunn/vim-easy-align',
-  {
-    'ruifm/gitlinker.nvim',
-    config = function() require "gitlinker".setup() end
-  },
+  { 'ruifm/gitlinker.nvim',               config = true },
   'kaarmu/typst.vim',
   'https://github.com/ziglang/zig.vim',
   'https://github.com/dhruvasagar/vim-table-mode',
@@ -76,7 +82,6 @@ require("lazy").setup {
   'https://github.com/natecraddock/telescope-zf-native.nvim',
   'https://github.com/ii14/neorepl.nvim',
   'goolord/alpha-nvim',
-  -- 'folke/noice.nvim',
   -- 'MunifTanjim/nui.nvim',
   -- 'rcarriga/nvim-notify',
   'https://github.com/jaawerth/fennel.vim',
@@ -84,8 +89,21 @@ require("lazy").setup {
   { "lukas-reineke/indent-blankline.nvim" },
   'https://github.com/linty-org/readline.nvim',
   'Olical/conjure',
-}
+  {
+    'glacambre/firenvim',
+    cond = not not vim.g.started_by_firenvim,
+    build = function()
+      require("lazy").load({ plugins = "firenvim", wait = true })
+      vim.fn["firenvim#install"](0)
+    end
+  },
+  'pwntester/octo.nvim',
 
+}, {
+  install = {
+    colorscheme = { "rose-pine" },
+  }
+})
 
 vim.cmd [[
 xmap ga <Plug>(EasyAlign)
@@ -121,7 +139,10 @@ cmp.setup({
     { name = 'luasnip' },
     { name = 'nvim_lsp' },
     { name = 'nvim_lsp_signature_help' },
-    { name = 'buffer' },
+    {
+      name = 'buffer',
+      option = { get_bufnrs = function() return vim.api.nvim_list_bufs() end }
+    }
   })
 })
 
@@ -130,17 +151,7 @@ vim.opt.termguicolors = true
 vim.g.vimtex_view_method = 'sioyek'
 vim.g.vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
 
-require('lualine').setup {
-  options = {
-    theme = 'rose-pine',
-    section_separators = { left = '', right = '' },
-    component_separators = ''
-  }
-}
-
 vim.cmd [[set ts=2 sw=2 sts=2 et]]
-
-require('Comment').setup()
 
 require('colorizer').setup {
   css = { rgb_fn = true, }
@@ -259,7 +270,7 @@ require('lspconfig')['zls'].setup {
 
 -- ENDLSP
 
-require("neodev").setup()
+-- require("neodev").setup()
 
 vim.opt.signcolumn = 'yes'
 
@@ -280,7 +291,7 @@ require('gitsigns').setup {
     nc("rh", "Gitsigns reset_hunk")
     vim.keymap.set("n", "]h", "<cmd>Gitsigns next_hunk<cr>")
     vim.keymap.set("n", "[h", "<cmd>Gitsigns prev_hunk<cr>")
-    nc("pvh", "Gitsigns preview_hunk")
+    nc("pvh", "Gitsigns preview_hunk_inline")
   end
 }
 
@@ -302,10 +313,6 @@ command! -range=% TB <line1>,<line2>w !nc termbin.com 9999 | tr -d '\n' | pbcopy
 ]]
 
 vim.cmd [[set formatoptions-=cro]]
-
-require('nvim-surround').setup {
-  indent_lines = false
-}
 
 local ht = require('haskell-tools')
 local def_opts = { noremap = true, silent = true, }
@@ -367,7 +374,7 @@ nn <Leader>s<Left> <cmd>ISwapNodeWithLeft<CR>
 nn <Leader>ss <cmd>ISwap<CR>
 ]]
 
-require('ufo').setup()
+-- require('ufo').setup()
 
 vim.cmd [[
 " press <Tab> to expand or jump in a snippet. These can also be mapped separately
@@ -509,6 +516,9 @@ map p <Plug>(miniyank-autoput)
 map P <Plug>(miniyank-autoPut)
 map <leader>n <Plug>(miniyank-cycle)
 map <leader>N <Plug>(miniyank-cycleback)
+map <Leader><Space>c <Plug>(miniyank-tochar)
+map <Leader><Space>l <Plug>(miniyank-toline)
+map <Leader><Space>b <Plug>(miniyank-toblock)
 ]]
 
 vim.api.nvim_create_autocmd({ "ColorScheme" }, {
@@ -540,3 +550,5 @@ vim.keymap.set('!', '<C-u>', readline.backward_kill_line)
 vim.keymap.set('n', '<leader>cd', ':lcd %:h<CR>')
 
 vim.opt.signcolumn = 'yes'
+
+vim.keymap.set('n', 's', '<cmd>Longbow<CR>')
