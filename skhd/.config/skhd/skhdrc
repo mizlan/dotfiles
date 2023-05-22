@@ -1,6 +1,8 @@
 alt - 0x29 : yabai -m window --toggle zoom-fullscreen
-alt - f : yabai -m window --toggle zoom-fullscreen
+# alt - f : yabai -m window --toggle zoom-fullscreen
 ctrl + alt + cmd - r : yabai --restart-service
+
+ctrl + alt + cmd - c : /Users/ml/themechange.sh
 
 cmd + shift - return [
   "firefox" : echo 'c'        | nc 127.0.0.1 1337
