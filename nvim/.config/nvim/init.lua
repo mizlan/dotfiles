@@ -97,7 +97,7 @@ require("lazy").setup({
       vim.fn["firenvim#install"](0)
     end
   },
-  'pwntester/octo.nvim',
+  { 'pwntester/octo.nvim', config = true }
 
 }, {
   install = {
@@ -451,8 +451,7 @@ local function button(sc, txt, keybind, keybind_opts)
     align_shortcut = "right",
     hl_shortcut = "WinSeparator",
     hl = {
-      { 'LineNr', 0, 5 },  -- highlight the icon glyph
-      { 'LineNr', 6, 17 }, -- highlight the part after the icon glyph
+      { 'LineNr', 0, 17 }, -- highlight the part after the icon glyph
     },
   }
   if keybind then
@@ -475,11 +474,11 @@ end
 
 -- Set menu
 dashboard.section.buttons.val = {
-  button("SPC o f", "    recents", ":Recent<CR>"),
-  button("SPC .  ", "    browse", ":Telescope file_browser<CR>"),
-  button("SPC g g", "    git", ":tab Git<CR>"),
-  button("e      ", "    new-file", ":ene <BAR> startinsert <CR>"),
-  button("SPC o o", "    oldfiles", ":Telescope oldfiles theme=dropdown<CR>"),
+  button("SPC o f", "  recents", ":Recent<CR>"),
+  button("SPC .  ", "  browse", ":Telescope file_browser<CR>"),
+  button("SPC g g", "  git", ":tab Git<CR>"),
+  button("e      ", "  new-file", ":ene <BAR> startinsert <CR>"),
+  button("SPC o o", "  oldfiles", ":Telescope oldfiles theme=dropdown<CR>"),
 }
 
 dashboard.section.buttons.opts = {

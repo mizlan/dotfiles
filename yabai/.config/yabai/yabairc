@@ -1,36 +1,42 @@
-gapsize=15
-margin=60
-borderwidth=6
+gapsize=6
+margin=6
+borderwidth=3
+
+# gapsize=15
+# margin=60
+# borderwidth=6
 
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa && sleep 1 && yabai -m config window_shadow off"
 sudo yabai --load-sa
 
-yabai -m config window_border                on
-yabai -m config window_border_hidpi          on
-yabai -m config window_border_width          $borderwidth
-yabai -m config active_window_border_color   0xFFfca9a9
-yabai -m config normal_window_border_color   0xFFe3cac5
-yabai -m config window_shadow                off
-
-yabai -m config mouse_action1                move
-yabai -m config mouse_action2                resize
-
-yabai -m config mouse_modifier fn
-yabai -m config focus_follows_mouse autoraise
-
-yabai -m config layout                       bsp
-yabai -m config top_padding                  $margin
-yabai -m config bottom_padding               $margin
-yabai -m config left_padding                 $margin
-yabai -m config right_padding                $margin
-yabai -m config window_gap                   $gapsize
-
-yabai -m config window_opacity on
-yabai -m config window_opacity_duration 0.25
-yabai -m config active_window_opacity 1.0
-yabai -m config normal_window_opacity 0.8
-
-yabai -m config window_animation_duration    0.20
+yabai -m config                           \
+  window_border              on           \
+  window_border_hidpi        on           \
+  window_border_width        $borderwidth \
+  active_window_border_color 0xFFfca9a9   \
+  normal_window_border_color 0xFFe3cac5   \
+  window_shadow              off          \
+                                          \
+  mouse_action1              move         \
+  mouse_action2              resize       \
+                                          \
+  mouse_modifier             fn           \
+  focus_follows_mouse        autoraise    \
+  mouse_follows_focus        on           \
+                                          \
+  layout                     bsp          \
+  top_padding                $margin      \
+  bottom_padding             $margin      \
+  left_padding               $margin      \
+  right_padding              $margin      \
+  window_gap                 $gapsize     \
+                                          \
+  window_opacity             on           \
+  window_opacity_duration    0.25         \
+  active_window_opacity      1.0          \
+  normal_window_opacity      0.8          \
+                                          \
+  window_animation_duration  0.10
 
 yabai -m signal --add event=window_created action='echo r | nc 127.0.0.1 1337'
 yabai -m signal --add event=window_destroyed action='echo r | nc 127.0.0.1 1337'
@@ -51,7 +57,7 @@ yabai -m signal --add event=window_deminimized action='echo "refresh windows" | 
 # Logic 2010
 yabai -m rule --add app="^LogicProgram$" manage=off
 
-# refresh YabaiIndicator
+curspace=$(yabai -m query --spaces --space | jq .index)
 
 yabai -m space --focus 1
 yabai -m space --focus 2
@@ -63,4 +69,4 @@ yabai -m space --focus 7
 yabai -m space --focus 8
 yabai -m space --focus 9
 
-echo "refresh" | nc -U /tmp/yabai-indicator.socket
+yabai -m space --focus $curspace
