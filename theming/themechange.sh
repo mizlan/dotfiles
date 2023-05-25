@@ -12,7 +12,7 @@ fi
 
 if [ "$theme" = "light" ]; then
   # wallpaper
-  python3 $HOME/desktop_img.py light
+  python3 $HOME/desktop_img.py light &
 
   # os
   osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to false'
@@ -36,7 +36,7 @@ if [ "$theme" = "light" ]; then
   # neovim
   echo 'light' > "$HOME/theme"
 else
-  python3 $HOME/desktop_img.py dark
+  python3 $HOME/desktop_img.py dark &
   osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to true'
   # gsed -i -e 's/"workbench.colorTheme": ".*"/"workbench.colorTheme": "Rosé Pine Moon"/g' "$HOME/Library/Application Support/Code/User/settings.json"
   kitty @ set-colors -a -c "$HOME/.config/kitty/moon.conf"
