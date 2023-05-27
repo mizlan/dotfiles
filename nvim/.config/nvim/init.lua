@@ -34,8 +34,23 @@ require("lazy").setup({
       }
     }
   },
-  -- 'https://github.com/vale1410/vim-minizinc',
-  { 'https://github.com/numToStr/Comment.nvim', config = true },
+  {
+    'https://github.com/nvim-treesitter/nvim-treesitter',
+    main = 'nvim-treesitter.configs',
+    opts = {
+      highlight = { enable = true },
+      context_commentstring = {
+        enable = true,
+      },
+    }
+  },
+  { 'JoosepAlviste/nvim-ts-context-commentstring' },
+  {
+    'https://github.com/numToStr/Comment.nvim',
+    opts = function()
+      return { pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook() }
+    end,
+  },
   {
     'https://github.com/kylechui/nvim-surround',
     opts = {
@@ -46,7 +61,6 @@ require("lazy").setup({
   'https://github.com/neovim/nvim-lspconfig',
   'https://github.com/romainl/vim-cool',
   { dir = '~/Repositories/iswap.nvim' },
-  'https://github.com/nvim-treesitter/nvim-treesitter',
   'https://github.com/nvim-telescope/telescope.nvim',
   'https://github.com/tpope/vim-fugitive',
   'https://github.com/lewis6991/gitsigns.nvim',
@@ -68,17 +82,17 @@ require("lazy").setup({
   'https://github.com/L3MON4D3/LuaSnip',
   'https://github.com/vim-scripts/alex.vim',
   'nvim-tree/nvim-web-devicons',
-  { 'kevinhwang91/nvim-ufo',    config = true },
+  -- { 'kevinhwang91/nvim-ufo', config = true },
   'kevinhwang91/promise-async',
   'https://github.com/hrsh7th/cmp-buffer',
   'https://github.com/stevearc/oil.nvim',
   'https://github.com/nvim-telescope/telescope-file-browser.nvim',
   'https://github.com/junegunn/vim-easy-align',
-  { 'ruifm/gitlinker.nvim',               config = true },
+  { 'ruifm/gitlinker.nvim',     config = true },
   'kaarmu/typst.vim',
   'https://github.com/ziglang/zig.vim',
   'https://github.com/dhruvasagar/vim-table-mode',
-  'https://github.com/smjonas/inc-rename.nvim',
+  { 'https://github.com/smjonas/inc-rename.nvim', config = true },
   'https://github.com/natecraddock/telescope-zf-native.nvim',
   'https://github.com/ii14/neorepl.nvim',
   'goolord/alpha-nvim',
@@ -97,7 +111,11 @@ require("lazy").setup({
       vim.fn["firenvim#install"](0)
     end
   },
-  { 'pwntester/octo.nvim', config = true }
+  { 'pwntester/octo.nvim',  config = true },
+  { 'aymericbeaumet/vim-symlink'} ,
+  { 'moll/vim-bbye' },
+  -- { 'aymericbeaumet/vim-symlink', dependencies = { 'moll/vim-bbye' } },
+  { 'junegunn/seoul256.vim' },
 
 }, {
   install = {
@@ -177,6 +195,10 @@ local on_attach = function(_, bufnr)
 
   vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, bufopts)
   vim.keymap.set('n', ']d', vim.diagnostic.goto_next, bufopts)
+  vim.keymap.set('n', '[D', function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR, }) end,
+    bufopts)
+  vim.keymap.set('n', ']D', function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR, }) end,
+    bufopts)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
@@ -276,10 +298,6 @@ vim.opt.signcolumn = 'yes'
 
 vim.g.python3_host_prog = '~/GlobalVenv/bin/python3.9'
 
-require('nvim-treesitter.configs').setup {
-  highlight = { enable = true }
-}
-
 local function nc(keys, cmd)
   vim.keymap.set("n", "<leader>" .. keys, "<cmd>" .. cmd .. "<cr>")
 end
@@ -344,7 +362,10 @@ ht.setup {
 
 require("telescope").setup {
   defaults = {
-    path_display = { absolute = true }
+    path_display = { absolute = true },
+    prompt_prefix = "   ",
+    selection_caret = "  ",
+    entry_prefix = "  ",
   },
   extensions = {
     file_browser = {
@@ -477,7 +498,7 @@ dashboard.section.buttons.val = {
   button("SPC o f", "  recents", ":Recent<CR>"),
   button("SPC .  ", "  browse", ":Telescope file_browser<CR>"),
   button("SPC g g", "  git", ":tab Git<CR>"),
-  button("e      ", "  new-file", ":ene <BAR> startinsert <CR>"),
+  button("i      ", "  new-file", ":ene <BAR> startinsert <CR>"),
   button("SPC o o", "  oldfiles", ":Telescope oldfiles theme=dropdown<CR>"),
 }
 
