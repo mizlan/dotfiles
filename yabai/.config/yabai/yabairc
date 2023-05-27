@@ -2,8 +2,8 @@ gapsize=6
 margin=6
 borderwidth=3
 
-# gapsize=15
-# margin=60
+# gapsize=25
+# margin=40
 # borderwidth=6
 
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa && sleep 1 && yabai -m config window_shadow off"
@@ -21,8 +21,8 @@ yabai -m config                           \
   mouse_action2              resize       \
                                           \
   mouse_modifier             fn           \
-  focus_follows_mouse        autoraise    \
-  mouse_follows_focus        on           \
+  focus_follows_mouse        off          \
+  mouse_follows_focus        off          \
                                           \
   layout                     bsp          \
   top_padding                $margin      \
@@ -31,12 +31,12 @@ yabai -m config                           \
   right_padding              $margin      \
   window_gap                 $gapsize     \
                                           \
-  window_opacity             on           \
-  window_opacity_duration    0.25         \
+  window_opacity             off           \
+  window_opacity_duration    0.15         \
   active_window_opacity      1.0          \
   normal_window_opacity      0.8          \
                                           \
-  window_animation_duration  0.10
+  window_animation_duration  0.05
 
 yabai -m signal --add event=window_created action='echo r | nc 127.0.0.1 1337'
 yabai -m signal --add event=window_destroyed action='echo r | nc 127.0.0.1 1337'
