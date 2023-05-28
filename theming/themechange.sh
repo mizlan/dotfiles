@@ -39,7 +39,7 @@ else
   python3 $HOME/desktop_img.py dark &
   osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to true'
   # gsed -i -e 's/"workbench.colorTheme": ".*"/"workbench.colorTheme": "Rosé Pine Moon"/g' "$HOME/Library/Application Support/Code/User/settings.json"
-  kitty @ set-colors -a -c "$HOME/.config/kitty/moon.conf"
+  kitty @ set-colors -a -c "$HOME/.config/kitty/everforest.conf"
   if ps aux | rg '[s]ioyek' >/dev/null; then
     sioyek --execute-command setconfig_custom_text_color --execute-command-data "0.879 0.87 0.95" >/dev/null 2>&1
     sioyek --execute-command setconfig_custom_background_color --execute-command-data "0.137 0.13 0.2" >/dev/null 2>&1
