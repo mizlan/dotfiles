@@ -20,7 +20,15 @@ require("lazy").setup({
       require('rose-pine').setup({
         dark_variant = 'moon',
       })
-      vim.cmd [[colorscheme rose-pine]]
+    end
+  },
+  {
+    'https://github.com/sainnhe/everforest',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.g.everforest_background = 'soft'
+      vim.g.everforest_better_performance = 1
     end
   },
   'nvim-lua/plenary.nvim',
@@ -28,7 +36,7 @@ require("lazy").setup({
     'https://github.com/nvim-lualine/lualine.nvim',
     opts = {
       options = {
-        theme = 'rose-pine',
+        theme = 'auto',
         section_separators = { left = '', right = '' },
         component_separators = ''
       }
@@ -542,7 +550,7 @@ map <Leader><Space>b <Plug>(miniyank-toblock)
 ]]
 
 vim.api.nvim_create_autocmd({ "ColorScheme" }, {
-  pattern = { "*" },
+  pattern = { "rose-pine*" },
   callback = function(ev)
     vim.cmd [[
     hi! link IndentBlanklineChar NonText
