@@ -27,8 +27,10 @@ function adjust_theme()
   read_file(themepath, vim.schedule_wrap(function(data)
     if trim6(data) == 'light' then
       vim.opt.background = 'light'
+      vim.cmd [[ colo rose-pine ]]
     else
       vim.opt.background = 'dark'
+      vim.cmd [[ colo everforest ]]
     end
   end))
 end
