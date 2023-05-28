@@ -50,4 +50,4 @@ def set_mac_wallpaper(img):
 if sys.argv[1] == 'light':
     set_mac_wallpaper('/System/Library/Desktop Pictures/Solid Colors/Rose Gold.png')
 else:
-    set_mac_wallpaper('/System/Library/Desktop Pictures/Solid Colors/Blue Violet.png')
+    set_mac_wallpaper('/Users/ml/Downloads/wallhaven-qdvvp7_3024x1964.png')
