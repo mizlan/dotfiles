@@ -44,7 +44,7 @@ else
     sioyek --execute-command setconfig_custom_text_color --execute-command-data "0.879 0.87 0.95" >/dev/null 2>&1
     sioyek --execute-command setconfig_custom_background_color --execute-command-data "0.137 0.13 0.2" >/dev/null 2>&1
   fi
-  yabai -m config normal_window_border_color 0xFF3f395c
-  yabai -m config active_window_border_color 0xFF8d6d8f
+  yabai -m config normal_window_border_color 0xFF384623
+  yabai -m config active_window_border_color 0xFF627a3d
   echo 'dark' > "$HOME/theme"
 fi
