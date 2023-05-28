@@ -71,6 +71,7 @@ require("lazy").setup({
   { dir = '~/Repositories/iswap.nvim' },
   'https://github.com/nvim-telescope/telescope.nvim',
   'https://github.com/tpope/vim-fugitive',
+  'https://github.com/TimUntersberger/neogit',
   'https://github.com/lewis6991/gitsigns.nvim',
   'https://github.com/pechorin/any-jump.vim',
   { dir = '~/Code/longbow.nvim' },
@@ -90,13 +91,13 @@ require("lazy").setup({
   'https://github.com/L3MON4D3/LuaSnip',
   'https://github.com/vim-scripts/alex.vim',
   'nvim-tree/nvim-web-devicons',
-  -- { 'kevinhwang91/nvim-ufo', config = true },
+  { 'kevinhwang91/nvim-ufo',    config = true },
   'kevinhwang91/promise-async',
   'https://github.com/hrsh7th/cmp-buffer',
   'https://github.com/stevearc/oil.nvim',
   'https://github.com/nvim-telescope/telescope-file-browser.nvim',
   'https://github.com/junegunn/vim-easy-align',
-  { 'ruifm/gitlinker.nvim',     config = true },
+  { 'ruifm/gitlinker.nvim',                       config = true },
   'kaarmu/typst.vim',
   'https://github.com/ziglang/zig.vim',
   'https://github.com/dhruvasagar/vim-table-mode',
@@ -104,8 +105,6 @@ require("lazy").setup({
   'https://github.com/natecraddock/telescope-zf-native.nvim',
   'https://github.com/ii14/neorepl.nvim',
   'goolord/alpha-nvim',
-  -- 'MunifTanjim/nui.nvim',
-  -- 'rcarriga/nvim-notify',
   'https://github.com/jaawerth/fennel.vim',
   'https://github.com/bfredl/nvim-miniyank',
   { "lukas-reineke/indent-blankline.nvim" },
@@ -119,12 +118,11 @@ require("lazy").setup({
       vim.fn["firenvim#install"](0)
     end
   },
-  { 'pwntester/octo.nvim',  config = true },
-  { 'aymericbeaumet/vim-symlink'} ,
+  { 'pwntester/octo.nvim',                config = true },
+  -- { 'aymericbeaumet/vim-symlink' },
   { 'moll/vim-bbye' },
-  -- { 'aymericbeaumet/vim-symlink', dependencies = { 'moll/vim-bbye' } },
+  'https://github.com/akinsho/git-conflict.nvim',
   { 'junegunn/seoul256.vim' },
-
 }, {
   install = {
     colorscheme = { "rose-pine" },
@@ -183,7 +181,7 @@ require('colorizer').setup {
   css = { rgb_fn = true, }
 }
 
-vim.opt.guicursor = ''
+vim.opt.guicursor = 'a:hor20'
 
 require('iswap').setup {
   debug = true,
@@ -423,7 +421,7 @@ smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' 
 require("luasnip.loaders.from_snipmate").lazy_load()
 
 vim.o.foldlevel = 10
-vim.o.cursorline = true
+-- vim.o.cursorline = true
 
 require("oil").setup()
 
@@ -466,7 +464,7 @@ dashboard.section.header.val = {
   "       ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃     ",
 }
 
-dashboard.section.header.opts.hl = 'Tag'
+dashboard.section.header.opts.hl = 'Function'
 
 local leader = "SPC"
 local function button(sc, txt, keybind, keybind_opts)
@@ -577,6 +575,15 @@ vim.keymap.set('!', '<C-u>', readline.backward_kill_line)
 
 vim.keymap.set('n', '<leader>cd', ':lcd %:h<CR>')
 
-vim.opt.signcolumn = 'yes'
+vim.cmd [[
+command! TW let &textwidth = min([&columns, 80]) | norm gqip
+]]
 
-vim.keymap.set('n', 's', '<cmd>Longbow<CR>')
+vim.cmd [[
+function! Slick()
+  let fname = resolve(expand('%:p'))
+  bwipeout
+  exec "edit " . fname
+endfunction
+command FollowSymlink call Slick()
+]]
