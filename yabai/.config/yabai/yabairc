@@ -2,9 +2,9 @@ gapsize=6
 margin=6
 borderwidth=3
 
-# gapsize=25
-# margin=40
-# borderwidth=6
+# gapsize=28
+# margin=50
+# borderwidth=8
 
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa && sleep 1 && yabai -m config window_shadow off"
 sudo yabai --load-sa
@@ -56,6 +56,11 @@ yabai -m signal --add event=window_deminimized action='echo "refresh windows" | 
 
 # Logic 2010
 yabai -m rule --add app="^LogicProgram$" manage=off
+
+# choose
+yabai -m rule --add app="^choose$" manage=off
+
+# TLDraw
 
 curspace=$(yabai -m query --spaces --space | jq .index)
 

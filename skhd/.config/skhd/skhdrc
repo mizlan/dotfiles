@@ -20,7 +20,6 @@ cmd + shift - p [
   *      : echo 'gSkim' | nc 127.0.0.1 1337
 ]
 
-cmd + shift - b : echo 'gYomu' | nc 127.0.0.1 1337
 cmd + shift - j : echo 'c' | nc 127.0.0.1 1337
 cmd + shift - m : echo 'r' | nc 127.0.0.1 1337
 cmd + shift - k : echo 'x' | nc 127.0.0.1 1337
@@ -60,7 +59,15 @@ shift + alt - 7 : yabai -m window --space 7 && echo 'r' | nc 127.0.0.1 1337
 shift + alt - 8 : yabai -m window --space 8 && echo 'r' | nc 127.0.0.1 1337
 shift + alt - 9 : yabai -m window --space 9 && echo 'r' | nc 127.0.0.1 1337
 
+ctrl - 1 : echo -n 'michaellan@ucla.edu' | pbcopy && cliclick kd:cmd t:v ku:cmd
+ctrl - 2 : echo -n '510-828-8860' | pbcopy && cliclick kd:cmd t:v ku:cmd
+ctrl - 3 : echo -n 'University of California - Los Angeles' | pbcopy && cliclick kd:cmd t:v ku:cmd
+ctrl - 4 : echo -n 'https://www.linkedin.com/in/michael-lan-9393a11b0/' | pbcopy && cliclick kd:cmd t:v ku:cmd
+ctrl - 5 : echo -n 'https://mzchael.com' | pbcopy && cliclick kd:cmd t:v ku:cmd
+
 ctrl + alt - p : yabai -m window --toggle sticky --toggle topmost --toggle border --toggle pip
+
+cmd + shift - space : yabai -m query --windows | jq -r '.[] | [.id, .app] | join (" ")' | choose | awk '{ print $1 }' | xargs -I{} yabai -m window --focus {}
 
 # logic 2010
 ctrl + shift - r : cliclick kd:shift kp:tab ku:shift kd:ctrl t:a ku:ctrl kp:delete kp:tab
