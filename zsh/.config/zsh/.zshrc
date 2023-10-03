@@ -1,29 +1,25 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 bindkey -e
 
 alias e=nvim
+alias t="$HOME/themechange.sh"
 alias ls="gls --hyperlink=always"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# rose-pine dawn/moon colors
-fzf() {
-  if grep -q dark "$HOME/theme"; then
-    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:#e0def4,bg:#2a273f,hl:#6e6a86 --color=fg+:#908caa,bg+:#232136,hl+:#908caa --color=info:#9ccfd8,prompt:#f6c177,pointer:#c4a7e7 --color=marker:#ea9a97,spinner:#eb6f92,header:#ea9a97" /opt/homebrew/bin/fzf
-  else
-    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:#575279,bg:#fffaf3,hl:#9893a5 --color=fg+:#797593,bg+:#faf4ed,hl+:#797593 --color=info:#56949f,prompt:#56949f,pointer:#907aa9 --color=marker:#d7827e,spinner:#b4637a,header:#d7827e" /opt/homebrew/bin/fzf
-  fi
-}
+# FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS "'--prompt="  "'' --pointer=" "'' --marker=·'
+
+# # rose-pine dawn/moon colors
+# fzf() {
+#   if grep -q dark "$HOME/theme"; then
+#     FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:#e0def4,bg:#2a273f,hl:#6e6a86 --color=fg+:#908caa,bg+:#232136,hl+:#908caa --color=info:#9ccfd8,prompt:#f6c177,pointer:#c4a7e7 --color=marker:#ea9a97,spinner:#eb6f92,header:#ea9a97" /opt/homebrew/bin/fzf "$@"
+#     # FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:#d8caac,bg:#323d43,hl:#83b6af --color=fg+:#d8caac,bg+:#2b3338,hl+:#83b6af --color=info:#d9bb80,prompt:#e68183,pointer:#d39bb6 --color=marker:#a7c080,spinner:#d39bb6,header:#87c095" /opt/homebrew/bin/fzf
+#   else
+#     FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:#575279,bg:#fffaf3,hl:#9893a5 --color=fg+:#797593,bg+:#faf4ed,hl+:#797593 --color=info:#56949f,prompt:#56949f,pointer:#907aa9 --color=marker:#d7827e,spinner:#b4637a,header:#d7827e" /opt/homebrew/bin/fzf "$@"
+#   fi
+# }
 
 # layout options
-export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
- --height 40% --layout=reverse"
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --height 40% --layout=reverse"
 
 autoload -z edit-command-line
 zle -N edit-command-line
@@ -62,9 +58,6 @@ else
   compinit -C
 fi
 
-# opam configuration
-[[ ! -r /Users/ml/.opam/opam-init/init.zsh ]] || source /Users/ml/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
-
 source /opt/homebrew/opt/powerlevel10k/powerlevel10k.zsh-theme
 
 source "$HOME/Repositories/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
@@ -75,7 +68,17 @@ ucla-wifi() {
 }
 
 sync-cs() {
-  unison ~/Notes/rsy -servercmd bin/unison-wrapper -auto ssh://michaell@cs33.seas.ucla.edu/D  
+  unison \
+    -servercmd bin/unison-wrapper \
+    -auto \
+    -fastcheck true \
+    -path notes/CS_180 \
+    -path notes/CS_33 \
+    -path notes/CS_35L \
+    -ignore 'Name .git' \
+    -ignore 'Name venv' \
+    -ignore 'Name __pycache__' \
+   default $HOME ssh://michaell@cs33.seas.ucla.edu/D
 }
 
 e-ssh() {
@@ -101,11 +104,29 @@ setopt hist_ignore_all_dups
 setopt hist_ignore_space
 setopt SHARE_HISTORY
 
-precmd () {print -Pn "\e]0;%~\a"}
-
 alias bal='yabai -m space --balance'
 
-export PATH="$PATH:$HOME/Repositories/kattis-cli"
+eval "$(atuin init zsh)"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+if test -n "$KITTY_INSTALLATION_DIR"; then
+    export KITTY_SHELL_INTEGRATION="no-cursor"
+    autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
+    kitty-integration
+    unfunction kitty-integration
+fi
+
+
+# tabtab source for packages
+# uninstall by removing these lines
+[[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
+
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+
+# pnpm
+export PNPM_HOME="/Users/ml/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

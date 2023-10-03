@@ -68,7 +68,8 @@ require("lazy").setup({
   'norcalli/nvim-colorizer.lua',
   'https://github.com/neovim/nvim-lspconfig',
   'https://github.com/romainl/vim-cool',
-  { dir = '~/Repositories/iswap.nvim' },
+  { dir = '~/Repositories/indianboy42/iswap.nvim' },
+  -- { 'https://github.com/IndianBoy42/iswap.nvim', branch = 'expand_key' },
   'https://github.com/nvim-telescope/telescope.nvim',
   'https://github.com/tpope/vim-fugitive',
   'https://github.com/TimUntersberger/neogit',
@@ -94,7 +95,13 @@ require("lazy").setup({
   { 'kevinhwang91/nvim-ufo',    config = true },
   'kevinhwang91/promise-async',
   'https://github.com/hrsh7th/cmp-buffer',
-  'https://github.com/stevearc/oil.nvim',
+  {
+    'https://github.com/stevearc/oil.nvim',
+    config = function()
+      require("oil").setup {}
+      vim.keymap.set("n", "-", require("oil").open, { desc = "Open parent directory" })
+    end
+  },
   'https://github.com/nvim-telescope/telescope-file-browser.nvim',
   'https://github.com/junegunn/vim-easy-align',
   { 'ruifm/gitlinker.nvim',                       config = true },
@@ -121,8 +128,40 @@ require("lazy").setup({
   { 'pwntester/octo.nvim',                config = true },
   -- { 'aymericbeaumet/vim-symlink' },
   { 'moll/vim-bbye' },
-  'https://github.com/akinsho/git-conflict.nvim',
+  'rhysd/conflict-marker.vim',
   { 'junegunn/seoul256.vim' },
+  { 'https://github.com/stevearc/aerial.nvim', config = true },
+  {
+    'https://github.com/chrisgrieser/nvim-spider',
+    config = function()
+      vim.keymap.set({ "n", "o", "x" }, "w", "<cmd>lua require('spider').motion('w')<CR>", { desc = "Spider-w" })
+      vim.keymap.set({ "n", "o", "x" }, "e", "<cmd>lua require('spider').motion('e')<CR>", { desc = "Spider-e" })
+      vim.keymap.set({ "n", "o", "x" }, "b", "<cmd>lua require('spider').motion('b')<CR>", { desc = "Spider-b" })
+      vim.keymap.set({ "n", "o", "x" }, "ge", "<cmd>lua require('spider').motion('ge')<CR>", { desc = "Spider-ge" })
+    end
+  },
+  'wakatime/vim-wakatime',
+  'anuvyklack/hydra.nvim',
+  'https://github.com/folke/tokyonight.nvim/',
+  'sheerun/vim-polyglot',
+  'https://github.com/tpope/vim-eunuch',
+  {
+    "chrisgrieser/nvim-early-retirement",
+    config = true,
+    event = "VeryLazy",
+  },
+  'rktjmp/lush.nvim',
+  'rstacruz/vim-closer',
+  {
+    "williamboman/mason.nvim",
+    config = true
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    config = true
+  }
+
+
 }, {
   install = {
     colorscheme = { "rose-pine" },
@@ -366,8 +405,18 @@ ht.setup {
 -- end, def_opts)
 -- vim.keymap.set('n', '<leader>rq', ht.repl.quit, def_opts)
 
+local actions = require('telescope.actions')
 require("telescope").setup {
   defaults = {
+    mappings = {
+      i = {
+        ["<Down>"] = actions.cycle_history_next,
+        ["<Up>"] = actions.cycle_history_prev,
+      },
+    },
+    history = {
+      cycle_wrap = true,
+    },
     path_display = { absolute = true },
     prompt_prefix = "   ",
     selection_caret = "  ",
@@ -386,14 +435,15 @@ require("telescope").setup {
 }
 
 nc("of", "Telescope frecency theme=dropdown")
-nc("oo", "Telescope oldfiles theme=dropdown")
-nc(",", "Telescope buffers theme=dropdown")
-nc(".", "Telescope file_browser")
+nc("ff", "Telescope find_files")
+nc("d", "Telescope resume")
+nc("oo", "Telescope oldfiles theme=ivy")
+nc(",", "Telescope buffers theme=ivy")
 nc("rg", "Telescope live_grep")
 nc("gg", "tab Git")
 
-vim.opt.list = true
-vim.opt.listchars = "tab:··"
+-- vim.opt.list = true
+-- vim.opt.listchars = "tab:··"
 
 vim.cmd [[
 nn <Leader>s<Right> <cmd>ISwapNodeWithRight<CR>
@@ -423,8 +473,6 @@ require("luasnip.loaders.from_snipmate").lazy_load()
 vim.o.foldlevel = 10
 -- vim.o.cursorline = true
 
-require("oil").setup()
-
 vim.cmd [[
 au ColorScheme * hi! link NonText WinSeparator
 ]]
@@ -435,7 +483,7 @@ local themes = require('telescope.themes')
 vim.api.nvim_create_user_command('Recent', function()
   local Path = require "plenary.path"
   local os_home = vim.loop.os_homedir()
-  require 'telescope'.extensions.frecency.frecency(themes.get_dropdown({
+  require 'telescope'.extensions.frecency.frecency(themes.get_ivy({
     path_display = function(_, filename)
       if vim.startswith(filename, os_home --[[@as string]]) then
         filename = "~/" .. Path:new(filename):make_relative(os_home)
@@ -502,7 +550,7 @@ end
 -- Set menu
 dashboard.section.buttons.val = {
   button("SPC o f", "  recents", ":Recent<CR>"),
-  button("SPC .  ", "  browse", ":Telescope file_browser<CR>"),
+  button("-      ", "  browse", ":Oil<CR>"),
   button("SPC g g", "  git", ":tab Git<CR>"),
   button("i      ", "  new-file", ":ene <BAR> startinsert <CR>"),
   button("SPC o o", "  oldfiles", ":Telescope oldfiles theme=dropdown<CR>"),
@@ -558,20 +606,50 @@ vim.api.nvim_create_autocmd({ "ColorScheme" }, {
     " hi! LuaLineDiffAdd    guifg=#56949f guibg=#faf4ed
     " hi! LuaLineDiffChange guifg=#d7827e guibg=#faf4ed
     " hi! LuaLineDiffDelete guifg=#b4637a guibg=#faf4ed
+    " hi! NeogitDiffAdd guibg=#404040 guifg=#859900
+    " hi! NeogitDiffAddRegion guibg=#404040 guifg=#00ff00
+    " hi! NeogitDiffDelete guibg=#404040 guifg=#dc322f
+    " hi! NeogitDiffContext guibg=#333333 guifg=#b2b2b2
+    " hi! NeogitDiffContextHighlight guibg=#333333 guifg=#b2b2b2
     ]]
   end
 })
 
+-- adding comment
+
 local readline = require 'readline'
-vim.keymap.set('!', '<M-f>', readline.forward_word)
-vim.keymap.set('!', '<M-b>', readline.backward_word)
-vim.keymap.set('!', '<C-a>', readline.beginning_of_line)
-vim.keymap.set('!', '<C-e>', readline.end_of_line)
-vim.keymap.set('!', '<M-d>', readline.kill_word)
-vim.keymap.set('!', '<M-BS>', readline.backward_kill_word)
-vim.keymap.set('!', '<C-w>', readline.unix_word_rubout)
-vim.keymap.set('!', '<C-k>', readline.kill_line)
-vim.keymap.set('!', '<C-u>', readline.backward_kill_line)
+vim.keymap.set('x', '<M-f>', readline.forward_word)
+vim.keymap.set('x', '<M-b>', readline.backward_word)
+vim.keymap.set('x', '<C-a>', readline.beginning_of_line)
+vim.keymap.set('x', '<C-e>', readline.end_of_line)
+vim.keymap.set('x', '<M-d>', readline.kill_word)
+vim.keymap.set('x', '<M-BS>', readline.backward_kill_word)
+vim.keymap.set('x', '<C-w>', readline.unix_word_rubout)
+vim.keymap.set('x', '<C-k>', readline.kill_line)
+vim.keymap.set('x', '<C-f>', "<Right>")
+vim.keymap.set('x', '<C-b>', "<Left>")
+
+local Hydra = require('hydra')
+
+Hydra({
+  name = 'Coordinate manipulation',
+  mode = 'n',
+  body = '<Leader>c',
+  heads = {
+    { 'h', [[<Cmd>s/(\zs-\?\d\+\.\?\d*\ze,\s*-\?\d\+\.\?\d*)/\=str2float(submatch("0"))-0.1<CR>]] },
+    { 'l', [[<Cmd>s/(\zs-\?\d\+\.\?\d*\ze,\s*-\?\d\+\.\?\d*)/\=str2float(submatch("0"))+0.1<CR>]] },
+    { 'j', [[<Cmd>s/(-\?\d\+\.\?\d*,\s*\zs-\?\d\+\.\?\d*\ze)/\=str2float(submatch("0"))-0.1<CR>]] },
+    { 'k', [[<Cmd>s/(-\?\d\+\.\?\d*,\s*\zs-\?\d\+\.\?\d*\ze)/\=str2float(submatch("0"))+0.1<CR>]],
+      {
+        desc =
+        'small incrs'
+      } },
+    { 'H', [[<Cmd>s/(\zs-\?\d\+\.\?\d*\ze,\s*-\?\d\+\.\?\d*)/\=str2float(submatch("0"))-1<CR>]] },
+    { 'L', [[<Cmd>s/(\zs-\?\d\+\.\?\d*\ze,\s*-\?\d\+\.\?\d*)/\=str2float(submatch("0"))+1<CR>]] },
+    { 'J', [[<Cmd>s/(-\?\d\+\.\?\d*,\s*\zs-\?\d\+\.\?\d*\ze)/\=str2float(submatch("0"))-1<CR>]] },
+    { 'K', [[<Cmd>s/(-\?\d\+\.\?\d*,\s*\zs-\?\d\+\.\?\d*\ze)/\=str2float(submatch("0"))+1<CR>]], { desc = 'large incrs' } },
+  }
+})
 
 vim.keymap.set('n', '<leader>cd', ':lcd %:h<CR>')
 
@@ -587,3 +665,25 @@ function! Slick()
 endfunction
 command FollowSymlink call Slick()
 ]]
+
+vim.cmd [[
+function! SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+]]
+
+
+Hydra({
+  name = 'Side scroll',
+  mode = 'n',
+  body = 'z',
+  heads = {
+    { 'h', '5zh' },
+    { 'l', '5zl', { desc = '←/→' } },
+    { 'H', 'zH' },
+    { 'L', 'zL',  { desc = 'half screen ←/→' } },
+  }
+})
