@@ -1,5 +1,6 @@
 {
   "Comment.nvim": { "branch": "master", "commit": "e1fe53117aab24c378d5e6deaad786789c360123" },
+  "Coqtail": { "branch": "main", "commit": "ac963d9dc54f175128aa31abc9a08c10ebef1ab3" },
   "LuaSnip": { "branch": "master", "commit": "274438dfa05c621771a1e787be08a491f13224a3" },
   "aerial.nvim": { "branch": "master", "commit": "2abd49152215395cee5e7aa2c49451c459a2dbb3" },
   "alex.vim": { "branch": "master", "commit": "060b78e4edd0574487dcfdc61a6dda75e60afcda" },
@@ -13,6 +14,7 @@
   "dressing.nvim": { "branch": "master", "commit": "f19cbd56f7f8cad212c58a7285d09c5d9c273896" },
   "everforest": { "branch": "master", "commit": "1db527e770deb8cbb3b5b60d8921f80bd2a4c12c" },
   "fennel.vim": { "branch": "main", "commit": "c6a9c035ca108cbb24273d96cd6277fb8fbc60b4" },
+  "filetype.nvim": { "branch": "main", "commit": "b522628a45a17d58fc0073ffd64f9dc9530a8027" },
   "firenvim": { "branch": "master", "commit": "386239e1b1e6e3884db4da8bb7057709bec3dc51" },
   "gitlinker.nvim": { "branch": "master", "commit": "cc59f732f3d043b626c8702cb725c82e54d35c25" },
   "gitsigns.nvim": { "branch": "main", "commit": "f868d82a36f7f7f5e110eb0a9659993984f59875" },
