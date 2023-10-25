@@ -10,6 +10,7 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+vim.opt.termguicolors = true
 require("lazy").setup({
   {
     'https://github.com/rose-pine/neovim',
@@ -65,10 +66,22 @@ require("lazy").setup({
       indent_lines = false
     }
   },
-  'norcalli/nvim-colorizer.lua',
+  {
+    'norcalli/nvim-colorizer.lua',
+    opts = {
+      css = { rgb_fn = true, }
+    }
+  },
   'https://github.com/neovim/nvim-lspconfig',
   'https://github.com/romainl/vim-cool',
-  { dir = '~/Repositories/indianboy42/iswap.nvim' },
+  {
+    dir = '~/Repositories/indianboy42/iswap.nvim',
+    opts =
+    {
+      debug = true,
+      move_cursor = true
+    }
+  },
   -- { 'https://github.com/IndianBoy42/iswap.nvim', branch = 'expand_key' },
   'https://github.com/nvim-telescope/telescope.nvim',
   'https://github.com/tpope/vim-fugitive',
@@ -86,13 +99,19 @@ require("lazy").setup({
   'tami5/sqlite.lua',
   'https://github.com/JuliaEditorSupport/julia-vim',
   'https://github.com/Nymphium/vim-koka',
-  'lervag/vimtex',
+  {
+    'lervag/vimtex',
+    config = function()
+      vim.g.vimtex_view_method = 'sioyek'
+      vim.g.vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
+    end
+  },
   'https://github.com/MrcJkb/haskell-tools.nvim',
   'https://github.com/itchyny/vim-haskell-indent',
   'https://github.com/L3MON4D3/LuaSnip',
   'https://github.com/vim-scripts/alex.vim',
   'nvim-tree/nvim-web-devicons',
-  { 'kevinhwang91/nvim-ufo',    config = true },
+  { 'kevinhwang91/nvim-ufo', config = true },
   'kevinhwang91/promise-async',
   'https://github.com/hrsh7th/cmp-buffer',
   {
@@ -104,7 +123,7 @@ require("lazy").setup({
   },
   'https://github.com/nvim-telescope/telescope-file-browser.nvim',
   'https://github.com/junegunn/vim-easy-align',
-  { 'ruifm/gitlinker.nvim',                       config = true },
+  { 'ruifm/gitlinker.nvim',  config = true },
   'kaarmu/typst.vim',
   'https://github.com/ziglang/zig.vim',
   'https://github.com/dhruvasagar/vim-table-mode',
@@ -115,7 +134,22 @@ require("lazy").setup({
   'https://github.com/jaawerth/fennel.vim',
   'https://github.com/bfredl/nvim-miniyank',
   { "lukas-reineke/indent-blankline.nvim" },
-  'https://github.com/linty-org/readline.nvim',
+  {
+    'https://github.com/linty-org/readline.nvim',
+    config = function()
+      local readline = require 'readline'
+      vim.keymap.set('x', '<M-f>', readline.forward_word)
+      vim.keymap.set('x', '<M-b>', readline.backward_word)
+      vim.keymap.set('x', '<C-a>', readline.beginning_of_line)
+      vim.keymap.set('x', '<C-e>', readline.end_of_line)
+      vim.keymap.set('x', '<M-d>', readline.kill_word)
+      vim.keymap.set('x', '<M-BS>', readline.backward_kill_word)
+      vim.keymap.set('x', '<C-w>', readline.unix_word_rubout)
+      vim.keymap.set('x', '<C-k>', readline.kill_line)
+      vim.keymap.set('x', '<C-f>', "<Right>")
+      vim.keymap.set('x', '<C-b>', "<Left>")
+    end
+  },
   'Olical/conjure',
   {
     'glacambre/firenvim',
@@ -125,12 +159,10 @@ require("lazy").setup({
       vim.fn["firenvim#install"](0)
     end
   },
-  { 'pwntester/octo.nvim',                config = true },
-  -- { 'aymericbeaumet/vim-symlink' },
+  { 'pwntester/octo.nvim', config = true },
   { 'moll/vim-bbye' },
   'rhysd/conflict-marker.vim',
   { 'junegunn/seoul256.vim' },
-  { 'https://github.com/stevearc/aerial.nvim', config = true },
   {
     'https://github.com/chrisgrieser/nvim-spider',
     config = function()
@@ -158,8 +190,37 @@ require("lazy").setup({
   },
   {
     "williamboman/mason-lspconfig.nvim",
-    config = true
-  }
+    -- config = function()
+    --   require("mason-lspconfig").setup()
+    --   require("mason-lspconfig").setup_handlers {
+    --     ["typst_lsp"] = function()
+    --       require("lspconfig")["typst_lsp"].setup {
+    --         settings = {
+    --           exportPdf = "onType" -- Choose onType, onSave or never.
+    --           -- serverPath = "" -- Normally, there is no need to uncomment it.
+    --         }
+    --       }
+    --     end,
+    --   }
+    -- end
+  },
+  {
+    'https://github.com/whonore/Coqtail',
+    config = function()
+      vim.g.coqtail_map_prefix = "<C-b>"
+    end
+  },
+  {
+    'nathom/filetype.nvim',
+    opts = {
+      overrides = {
+        extensions = {
+          typ = "typst",
+          v = "coq",
+        }
+      }
+    }
+  },
 
 
 }, {
@@ -209,23 +270,9 @@ cmp.setup({
   })
 })
 
-vim.opt.termguicolors = true
-
-vim.g.vimtex_view_method = 'sioyek'
-vim.g.vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
-
 vim.cmd [[set ts=2 sw=2 sts=2 et]]
 
-require('colorizer').setup {
-  css = { rgb_fn = true, }
-}
-
 vim.opt.guicursor = 'a:hor20'
-
-require('iswap').setup {
-  debug = true,
-  move_cursor = true
-}
 
 vim.opt.ignorecase = true
 vim.opt.wrap = false
@@ -327,7 +374,7 @@ require('lspconfig')['cssls'].setup {
 require('lspconfig')['typst_lsp'].setup {
   on_attach = on_attach,
   settings = {
-    exportPdf = "onSave",
+    exportPdf = "onType",
   }
 }
 
@@ -336,8 +383,6 @@ require('lspconfig')['zls'].setup {
 }
 
 -- ENDLSP
-
--- require("neodev").setup()
 
 vim.opt.signcolumn = 'yes'
 
@@ -357,8 +402,6 @@ require('gitsigns').setup {
     nc("pvh", "Gitsigns preview_hunk_inline")
   end
 }
-
-vim.g.filetype_pl = 'perl'
 
 vim.opt.showmode = false
 
@@ -597,9 +640,11 @@ map <Leader><Space>b <Plug>(miniyank-toblock)
 
 vim.api.nvim_create_autocmd({ "ColorScheme" }, {
   pattern = { "rose-pine*" },
-  callback = function(ev)
+  callback = function(_ev)
     vim.cmd [[
     hi! link IndentBlanklineChar NonText
+    hi def CoqtailChecked guibg=#d9e1dd
+    hi def CoqtailSent guibg=#f2e9e1
     " hi! GitSignsAdd        guifg=#d9e1dd blend=60
     " hi! GitSignsChange     guifg=#f2e9e1 blend=60
     " hi! GitSignsDelete     guifg=#ecd7d6 blend=60
@@ -616,18 +661,6 @@ vim.api.nvim_create_autocmd({ "ColorScheme" }, {
 })
 
 -- adding comment
-
-local readline = require 'readline'
-vim.keymap.set('x', '<M-f>', readline.forward_word)
-vim.keymap.set('x', '<M-b>', readline.backward_word)
-vim.keymap.set('x', '<C-a>', readline.beginning_of_line)
-vim.keymap.set('x', '<C-e>', readline.end_of_line)
-vim.keymap.set('x', '<M-d>', readline.kill_word)
-vim.keymap.set('x', '<M-BS>', readline.backward_kill_word)
-vim.keymap.set('x', '<C-w>', readline.unix_word_rubout)
-vim.keymap.set('x', '<C-k>', readline.kill_line)
-vim.keymap.set('x', '<C-f>', "<Right>")
-vim.keymap.set('x', '<C-b>', "<Left>")
 
 local Hydra = require('hydra')
 
