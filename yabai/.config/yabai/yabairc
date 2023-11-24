@@ -1,20 +1,15 @@
-gapsize=6
-margin=6
-borderwidth=3
+# gapsize=6
+# margin=6
+# borderwidth=3
 
-# gapsize=28
-# margin=50
-# borderwidth=8
+gapsize=28
+margin=40
+borderwidth=8
 
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa && sleep 1 && yabai -m config window_shadow off"
 sudo yabai --load-sa
 
 yabai -m config                           \
-  window_border              on           \
-  window_border_hidpi        on           \
-  window_border_width        $borderwidth \
-  active_window_border_color 0xFFfca9a9   \
-  normal_window_border_color 0xFFe3cac5   \
   window_shadow              off          \
                                           \
   mouse_action1              move         \
@@ -31,10 +26,10 @@ yabai -m config                           \
   right_padding              $margin      \
   window_gap                 $gapsize     \
                                           \
-  window_opacity             off           \
+  window_opacity             on           \
   window_opacity_duration    0.15         \
-  active_window_opacity      1.0          \
-  normal_window_opacity      0.8          \
+  active_window_opacity      0.98         \
+  normal_window_opacity      0.75         \
                                           \
   window_animation_duration  0.05
 
@@ -75,3 +70,5 @@ yabai -m space --focus 8
 yabai -m space --focus 9
 
 yabai -m space --focus $curspace
+
+$HOME/Repositories/JankyBorders/bin/borders active_color=0xaaf4ceab inactive_color=0xaa2b7b82 width=13.0 2>/dev/null 1>&2 &

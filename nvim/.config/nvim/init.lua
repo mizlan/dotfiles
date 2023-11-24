@@ -10,6 +10,7 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+vim.g.python3_host_prog = '~/GlobalVenv/bin/python3.9'
 vim.opt.termguicolors = true
 require("lazy").setup({
   {
@@ -17,10 +18,26 @@ require("lazy").setup({
     lazy = false,
     priority = 1000,
     config = function()
+      vim.api.nvim_create_autocmd({ "ColorScheme" }, {
+        pattern = { "rose-pine*" },
+        callback = function(_ev)
+          vim.cmd [[
+          hi! link IndentBlanklineChar NonText
+          hi def CoqtailChecked guibg=#d9e1dd
+          hi def CoqtailSent guibg=#f2e9e1
+          hi! GitSignsAdd        guifg=#bacfc4 blend=20
+          hi! GitSignsChange     guifg=#e6d2c1 blend=20
+          hi! GitSignsDelete     guifg=#dbb6b4 blend=20
+          hi! LuaLineDiffAdd    guifg=#56949f guibg=#faf4ed
+          hi! LuaLineDiffChange guifg=#d7827e guibg=#faf4ed
+          ]]
+        end
+      })
       require('adaptive')
       require('rose-pine').setup({
         dark_variant = 'moon',
       })
+      vim.cmd[[colorscheme rose-pine]]
     end
   },
   {
@@ -28,6 +45,16 @@ require("lazy").setup({
     lazy = false,
     priority = 1000,
     config = function()
+      vim.api.nvim_create_autocmd({ "ColorScheme" }, {
+        pattern = { "everforest" },
+        callback = function(_ev)
+          vim.cmd [[
+          hi! link IndentBlanklineChar NonText
+          hi def CoqtailChecked guibg=#425047
+          hi def CoqtailSent guibg=#343f44
+          ]]
+        end
+      })
       vim.g.everforest_background = 'medium'
       vim.g.everforest_better_performance = 1
     end
@@ -85,14 +112,40 @@ require("lazy").setup({
   -- { 'https://github.com/IndianBoy42/iswap.nvim', branch = 'expand_key' },
   'https://github.com/nvim-telescope/telescope.nvim',
   'https://github.com/tpope/vim-fugitive',
-  'https://github.com/TimUntersberger/neogit',
   'https://github.com/lewis6991/gitsigns.nvim',
-  'https://github.com/pechorin/any-jump.vim',
   { dir = '~/Code/longbow.nvim' },
   'https://github.com/nvim-treesitter/playground',
   -- 'https://github.com/folke/neodev.nvim',
   'https://github.com/stevearc/dressing.nvim',
-  'https://github.com/hrsh7th/nvim-cmp',
+  {
+    'https://github.com/hrsh7th/nvim-cmp',
+    config = function()
+      local cmp = require 'cmp'
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            require('luasnip').lsp_expand(args.body)
+          end
+        },
+        mapping = cmp.mapping.preset.insert({
+          ['<C-b>'] = cmp.mapping.scroll_docs(-1),
+          ['<C-f>'] = cmp.mapping.scroll_docs(1),
+          ['<C-Space>'] = cmp.mapping.complete(),
+          ['<C-e>'] = cmp.mapping.abort(),
+          ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        }),
+        sources = cmp.config.sources({
+          { name = 'luasnip' },
+          { name = 'nvim_lsp' },
+          { name = 'nvim_lsp_signature_help' },
+          {
+            name = 'buffer',
+            option = { get_bufnrs = function() return vim.api.nvim_list_bufs() end }
+          }
+        })
+      })
+    end
+  },
   'hrsh7th/cmp-nvim-lsp',
   'https://github.com/hrsh7th/cmp-nvim-lsp-signature-help',
   'nvim-telescope/telescope-frecency.nvim',
@@ -133,7 +186,7 @@ require("lazy").setup({
   'goolord/alpha-nvim',
   'https://github.com/jaawerth/fennel.vim',
   'https://github.com/bfredl/nvim-miniyank',
-  { "lukas-reineke/indent-blankline.nvim" },
+  -- { "lukas-reineke/indent-blankline.nvim" },
   {
     'https://github.com/linty-org/readline.nvim',
     config = function()
@@ -159,10 +212,10 @@ require("lazy").setup({
       vim.fn["firenvim#install"](0)
     end
   },
-  { 'pwntester/octo.nvim', config = true },
+  { 'pwntester/octo.nvim',                        config = true },
   { 'moll/vim-bbye' },
   'rhysd/conflict-marker.vim',
-  { 'junegunn/seoul256.vim' },
+  -- { 'junegunn/seoul256.vim' },
   {
     'https://github.com/chrisgrieser/nvim-spider',
     config = function()
@@ -206,8 +259,13 @@ require("lazy").setup({
   },
   {
     'https://github.com/whonore/Coqtail',
+    lazy = false,
     config = function()
-      vim.g.coqtail_map_prefix = "<C-b>"
+      vim.g.coqtail_nomap = 1
+      vim.keymap.set({ 'n', 'i' }, '<C-c><C-l>', '<Plug>CoqToLine')
+      vim.keymap.set({ 'n', 'i' }, '<C-c><C-j>', '<Plug>CoqNext')
+      vim.keymap.set({ 'n', 'i' }, '<C-c><C-k>', '<Plug>CoqUndo')
+      vim.keymap.set({ 'n', 'i' }, '<C-c><C-g>', '<Plug>CoqJumpToEnd')
     end
   },
   {
@@ -221,58 +279,79 @@ require("lazy").setup({
       }
     }
   },
-
+  { "https://github.com/pbrisbin/vim-colors-off" },
+  {
+    "https://github.com/nanotech/jellybeans.vim",
+    config = function()
+      vim.api.nvim_create_autocmd({ "ColorScheme" }, {
+        pattern = { "everforest" },
+        callback = function(_ev)
+          vim.cmd [[
+          hi! link IndentBlanklineChar NonText
+          hi def CoqtailChecked guibg=#425047
+          hi def CoqtailSent guibg=#343f44
+          ]]
+        end
+      })
+    end
+  },
+  { "shaunsingh/seoul256.nvim" },
+  { "https://github.com/vigoux/oak" },
+  -- { "https://github.com/savq/melange-nvim",
+  --   lazy = false,
+  --   config = function ()
+  --     vim.cmd[[colorscheme melange]]
+  --   end
+  -- },
+  { "rebelot/kanagawa.nvim" },
+  --
+  -- {
+  --   "https://github.com/ludovicchabant/vim-gutentags",
+  --   filetypes = { 'coq' },
+  --   config = function()
+  --     vim.g.gutentags_ctags_executable = '/opt/homebrew/bin/ctags'
+  --     vim.g.gutentags_gtags_options_file = 'coq.ctags'
+  --     vim.g.gutentags_add_default_project_roots = 0
+  --     vim.g.gutentags_generate_on_missing = 0
+  --     vim.g.gutentags_generate_on_new = 0
+  --     vim.g.gutentags_generate_on_write = 0
+  --   end,
+  --   cmd = "GutentagsUpdate"
+  -- },
 
 }, {
   install = {
     colorscheme = { "rose-pine" },
-  }
+  },
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "netrwPlugin",
+        "spellfile",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
 })
-
-vim.cmd [[
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
-]]
-
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 vim.opt.cmdheight = 1
-vim.opt.laststatus = 3
+vim.opt.laststatus = 0
 
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 vim.opt.undofile = true
 
-local cmp = require 'cmp'
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      require('luasnip').lsp_expand(args.body)
-    end
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-b>'] = cmp.mapping.scroll_docs(-1),
-    ['<C-f>'] = cmp.mapping.scroll_docs(1),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-  }),
-  sources = cmp.config.sources({
-    { name = 'luasnip' },
-    { name = 'nvim_lsp' },
-    { name = 'nvim_lsp_signature_help' },
-    {
-      name = 'buffer',
-      option = { get_bufnrs = function() return vim.api.nvim_list_bufs() end }
-    }
-  })
-})
-
 vim.cmd [[set ts=2 sw=2 sts=2 et]]
 
-vim.opt.guicursor = 'a:hor20'
+-- vim.opt.guicursor = 'a:hor20'
 
 vim.opt.ignorecase = true
 vim.opt.wrap = false
@@ -374,7 +453,7 @@ require('lspconfig')['cssls'].setup {
 require('lspconfig')['typst_lsp'].setup {
   on_attach = on_attach,
   settings = {
-    exportPdf = "onType",
+    exportPdf = "onSave",
   }
 }
 
@@ -385,8 +464,6 @@ require('lspconfig')['zls'].setup {
 -- ENDLSP
 
 vim.opt.signcolumn = 'yes'
-
-vim.g.python3_host_prog = '~/GlobalVenv/bin/python3.9'
 
 local function nc(keys, cmd)
   vim.keymap.set("n", "<leader>" .. keys, "<cmd>" .. cmd .. "<cr>")
@@ -405,8 +482,13 @@ require('gitsigns').setup {
 
 vim.opt.showmode = false
 
+vim.opt.linespace = 15
 vim.g.neovide_cursor_vfx_mode = 'railgun'
-vim.opt.guifont = 'JetBrainsMono Nerd Font Mono:h18'
+vim.g.neovide_cursor_vfx_particle_lifetime = 1.5
+vim.g.neovide_cursor_vfx_particle_density = 17.0
+vim.g.neovide_cursor_vfx_particle_phase = 4.5
+vim.g.neovide_cursor_vfx_particle_curl = 4.0
+vim.opt.guifont = 'JetBrains Mono:h24'
 
 vim.cmd [[
 command! -range=% SP <line1>,<line2>w !curl -F 'sprunge=<-' http://sprunge.us | tr -d '\n' | pbcopy
@@ -480,21 +562,16 @@ require("telescope").setup {
 nc("of", "Telescope frecency theme=dropdown")
 nc("ff", "Telescope find_files")
 nc("d", "Telescope resume")
-nc("oo", "Telescope oldfiles theme=ivy")
-nc(",", "Telescope buffers theme=ivy")
+nc("oo", "Telescope oldfiles theme=dropdown")
+nc(",", "Telescope buffers theme=dropdown")
 nc("rg", "Telescope live_grep")
 nc("gg", "tab Git")
-
--- vim.opt.list = true
--- vim.opt.listchars = "tab:··"
 
 vim.cmd [[
 nn <Leader>s<Right> <cmd>ISwapNodeWithRight<CR>
 nn <Leader>s<Left> <cmd>ISwapNodeWithLeft<CR>
 nn <Leader>ss <cmd>ISwap<CR>
 ]]
-
--- require('ufo').setup()
 
 vim.cmd [[
 " press <Tab> to expand or jump in a snippet. These can also be mapped separately
@@ -514,7 +591,6 @@ smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' 
 require("luasnip.loaders.from_snipmate").lazy_load()
 
 vim.o.foldlevel = 10
--- vim.o.cursorline = true
 
 vim.cmd [[
 au ColorScheme * hi! link NonText WinSeparator
@@ -638,51 +714,9 @@ map <Leader><Space>l <Plug>(miniyank-toline)
 map <Leader><Space>b <Plug>(miniyank-toblock)
 ]]
 
-vim.api.nvim_create_autocmd({ "ColorScheme" }, {
-  pattern = { "rose-pine*" },
-  callback = function(_ev)
-    vim.cmd [[
-    hi! link IndentBlanklineChar NonText
-    hi def CoqtailChecked guibg=#d9e1dd
-    hi def CoqtailSent guibg=#f2e9e1
-    " hi! GitSignsAdd        guifg=#d9e1dd blend=60
-    " hi! GitSignsChange     guifg=#f2e9e1 blend=60
-    " hi! GitSignsDelete     guifg=#ecd7d6 blend=60
-    " hi! LuaLineDiffAdd    guifg=#56949f guibg=#faf4ed
-    " hi! LuaLineDiffChange guifg=#d7827e guibg=#faf4ed
-    " hi! LuaLineDiffDelete guifg=#b4637a guibg=#faf4ed
-    " hi! NeogitDiffAdd guibg=#404040 guifg=#859900
-    " hi! NeogitDiffAddRegion guibg=#404040 guifg=#00ff00
-    " hi! NeogitDiffDelete guibg=#404040 guifg=#dc322f
-    " hi! NeogitDiffContext guibg=#333333 guifg=#b2b2b2
-    " hi! NeogitDiffContextHighlight guibg=#333333 guifg=#b2b2b2
-    ]]
-  end
-})
-
 -- adding comment
 
 local Hydra = require('hydra')
-
-Hydra({
-  name = 'Coordinate manipulation',
-  mode = 'n',
-  body = '<Leader>c',
-  heads = {
-    { 'h', [[<Cmd>s/(\zs-\?\d\+\.\?\d*\ze,\s*-\?\d\+\.\?\d*)/\=str2float(submatch("0"))-0.1<CR>]] },
-    { 'l', [[<Cmd>s/(\zs-\?\d\+\.\?\d*\ze,\s*-\?\d\+\.\?\d*)/\=str2float(submatch("0"))+0.1<CR>]] },
-    { 'j', [[<Cmd>s/(-\?\d\+\.\?\d*,\s*\zs-\?\d\+\.\?\d*\ze)/\=str2float(submatch("0"))-0.1<CR>]] },
-    { 'k', [[<Cmd>s/(-\?\d\+\.\?\d*,\s*\zs-\?\d\+\.\?\d*\ze)/\=str2float(submatch("0"))+0.1<CR>]],
-      {
-        desc =
-        'small incrs'
-      } },
-    { 'H', [[<Cmd>s/(\zs-\?\d\+\.\?\d*\ze,\s*-\?\d\+\.\?\d*)/\=str2float(submatch("0"))-1<CR>]] },
-    { 'L', [[<Cmd>s/(\zs-\?\d\+\.\?\d*\ze,\s*-\?\d\+\.\?\d*)/\=str2float(submatch("0"))+1<CR>]] },
-    { 'J', [[<Cmd>s/(-\?\d\+\.\?\d*,\s*\zs-\?\d\+\.\?\d*\ze)/\=str2float(submatch("0"))-1<CR>]] },
-    { 'K', [[<Cmd>s/(-\?\d\+\.\?\d*,\s*\zs-\?\d\+\.\?\d*\ze)/\=str2float(submatch("0"))+1<CR>]], { desc = 'large incrs' } },
-  }
-})
 
 vim.keymap.set('n', '<leader>cd', ':lcd %:h<CR>')
 
@@ -720,3 +754,23 @@ Hydra({
     { 'L', 'zL',  { desc = 'half screen ←/→' } },
   }
 })
+
+local map = vim.keymap.set
+
+local function neovideScale(amount)
+  local temp = vim.g.neovide_scale_factor + amount
+
+  if temp < 0.5 then
+    return
+  end
+
+  vim.g.neovide_scale_factor = temp
+end
+
+map("n", "<C-=>", function()
+  neovideScale(0.1)
+end)
+
+map("n", "<C-->", function()
+  neovideScale(-0.1)
+end)
