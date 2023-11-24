@@ -48,6 +48,6 @@ def set_mac_wallpaper(img):
     subprocess.call(["killall", "Dock"])
 
 if sys.argv[1] == 'light':
-    set_mac_wallpaper('/System/Library/Desktop Pictures/Solid Colors/Rose Gold.png')
+    set_mac_wallpaper('/Users/ml/Downloads/cropped-3840-2160-918434.jpg')
 else:
-    set_mac_wallpaper('/Users/ml/Downloads/wallhaven-qdvvp7_3024x1964.png')
+    set_mac_wallpaper('/Users/ml/Downloads/cropped-3840-2160-918434.jpg')
