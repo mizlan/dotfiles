@@ -36,8 +36,9 @@ require("lazy").setup({
       require('adaptive')
       require('rose-pine').setup({
         dark_variant = 'moon',
+        disable_italics = true,
       })
-      vim.cmd[[colorscheme rose-pine]]
+      vim.cmd [[colorscheme rose-pine]]
     end
   },
   {
@@ -175,7 +176,12 @@ require("lazy").setup({
     end
   },
   'https://github.com/nvim-telescope/telescope-file-browser.nvim',
-  'https://github.com/junegunn/vim-easy-align',
+  {
+    'https://github.com/junegunn/vim-easy-align',
+    config = function()
+      vim.cmd [[nmap ga <Plug>(EasyAlign)]]
+    end
+  },
   { 'ruifm/gitlinker.nvim',  config = true },
   'kaarmu/typst.vim',
   'https://github.com/ziglang/zig.vim',

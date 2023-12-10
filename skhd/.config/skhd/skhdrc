@@ -6,8 +6,8 @@ ctrl + alt + cmd - r : yabai --restart-service
 ctrl + alt + cmd - c : /Users/ml/themechange.sh
 
 cmd + shift - return [
-  "firefox" : echo 'c'        | nc 127.0.0.1 1337
-  *         : echo 'gFirefox' | nc 127.0.0.1 1337
+  "firefox nightly" : echo 'c'        | nc 127.0.0.1 1337
+  *         : echo 'gFirefox Nightly' | nc 127.0.0.1 1337
 ]
 
 cmd + shift - e [
@@ -61,6 +61,11 @@ shift + alt - 9 : yabai -m window --space 9 && echo 'r' | nc 127.0.0.1 1337
 ctrl + alt - p : yabai -m window --toggle sticky --toggle topmost --toggle border --toggle pip
 
 cmd + shift - space : yabai -m query --windows | jq -r '.[] | [.id, .app] | join (" ")' | choose | awk '{ print $1 }' | xargs -I{} yabai -m window --focus {}
+
+fn - n : yabai -m window --focus stack.next
+fn - p : yabai -m window --focus stack.prev
+
+fn - t : kitty -1 --title "ephemeral-$(uuidgen)" --directory "$HOME"
 
 # logic 2010
 ctrl + shift - r : cliclick kd:shift kp:tab ku:shift kd:ctrl t:a ku:ctrl kp:delete kp:tab

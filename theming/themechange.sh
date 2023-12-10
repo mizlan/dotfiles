@@ -29,10 +29,6 @@ if [ "$theme" = "light" ]; then
     sioyek --execute-command setconfig_custom_background_color --execute-command-data "0.97647 0.9569 0.933" >/dev/null 2>&1
   fi
 
-  # yabai borders
-  yabai -m config active_window_border_color   0xFFfca9a9
-  yabai -m config normal_window_border_color   0xFFe3cac5
-
   # neovim
   echo 'light' > "$HOME/theme"
 else
@@ -44,7 +40,5 @@ else
     sioyek --execute-command setconfig_custom_text_color --execute-command-data "0.879 0.87 0.95" >/dev/null 2>&1
     sioyek --execute-command setconfig_custom_background_color --execute-command-data "0.137 0.13 0.2" >/dev/null 2>&1
   fi
-  yabai -m config normal_window_border_color 0xFF384623
-  yabai -m config active_window_border_color 0xFF627a3d
   echo 'dark' > "$HOME/theme"
 fi
