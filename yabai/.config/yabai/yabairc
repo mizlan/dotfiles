@@ -1,10 +1,8 @@
-gapsize=6
-margin=3
-borderwidth=3
+gapsize=20
+margin=20
 
 # gapsize=28
 # margin=20
-# borderwidth=8
 
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa && sleep 1 && yabai -m config window_shadow off"
 sudo yabai --load-sa
@@ -14,6 +12,7 @@ yabai -m config                           \
                                           \
   mouse_action1              move         \
   mouse_action2              resize       \
+  mouse_drop_action          stack        \
                                           \
   mouse_modifier             fn           \
   focus_follows_mouse        off          \
@@ -82,4 +81,4 @@ $HOME/.config/yabai/centerstubborn.sh
 $HOME/Repositories/JankyBorders/bin/borders \
   "active_color=gradient(top_left=0xffffc640,bottom_right=0xff953ee6)" \
   "inactive_color=gradient(top_left=0xff45c4c0,bottom_right=0xffba3aa5)" \
-  width=3
+  width=10
