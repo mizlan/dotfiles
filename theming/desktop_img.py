@@ -48,6 +48,6 @@ def set_mac_wallpaper(img):
     subprocess.call(["killall", "Dock"])
 
 if sys.argv[1] == 'light':
-    set_mac_wallpaper('/Users/ml/Downloads/cropped-3840-2160-918434.jpg')
+    set_mac_wallpaper('/Users/ml/wallpapers/cropped-3840-2160-paper_airplane.png')
 else:
-    set_mac_wallpaper('/Users/ml/Downloads/cropped-3840-2160-918434.jpg')
+    set_mac_wallpaper('/Users/ml/wallpapers/cropped-3840-2160-paper_airplane.png')

@@ -301,14 +301,6 @@ require("lazy").setup({
       })
     end
   },
-  { "shaunsingh/seoul256.nvim" },
-  { "https://github.com/vigoux/oak" },
-  -- { "https://github.com/savq/melange-nvim",
-  --   lazy = false,
-  --   config = function ()
-  --     vim.cmd[[colorscheme melange]]
-  --   end
-  -- },
   { "rebelot/kanagawa.nvim" },
   --
   -- {
@@ -356,8 +348,6 @@ vim.opt.splitbelow = true
 vim.opt.undofile = true
 
 vim.cmd [[set ts=2 sw=2 sts=2 et]]
-
--- vim.opt.guicursor = 'a:hor20'
 
 vim.opt.ignorecase = true
 vim.opt.wrap = false
