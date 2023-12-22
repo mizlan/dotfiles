@@ -1,8 +1,8 @@
 dotfiles managed by GNU stow
 
-[reddit post](https://www.reddit.com/r/unixporn/comments/182g9cx/yabai_gradient_borders_on_macos/)
+Most recently, my setup reflects the following [reddit post](https://www.reddit.com/r/unixporn/comments/182g9cx/yabai_gradient_borders_on_macos/).
 
-light and dark modes:
+Light and dark modes:
 
 > [!NOTE]
 > The dotfiles no longer reflect the following pictures:
