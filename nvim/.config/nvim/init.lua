@@ -12,6 +12,33 @@ end
 vim.opt.rtp:prepend(lazypath)
 vim.g.python3_host_prog = '~/GlobalVenv/bin/python3.9'
 vim.opt.termguicolors = true
+
+local on_attach = function(_, bufnr)
+  local bufopts = { noremap = true, silent = true, buffer = bufnr }
+
+  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, bufopts)
+  vim.keymap.set('n', ']d', vim.diagnostic.goto_next, bufopts)
+  vim.keymap.set('n', '[D', function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR, }) end,
+    bufopts)
+  vim.keymap.set('n', ']D', function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR, }) end,
+    bufopts)
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<leader>sig', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<leader>aws', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<leader>rws', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<leader>lws', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, bufopts)
+  vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<leader>f<space>', function() vim.lsp.buf.format { async = true } end, bufopts)
+end
+
 require("lazy").setup({
   {
     'https://github.com/rose-pine/neovim',
@@ -66,7 +93,7 @@ require("lazy").setup({
     opts = {
       options = {
         theme = 'auto',
-        section_separators = { left = '', right = '' },
+        section_separators = { left = '', right = '' },
         component_separators = ''
       }
     }
@@ -76,9 +103,6 @@ require("lazy").setup({
     main = 'nvim-treesitter.configs',
     opts = {
       highlight = { enable = true },
-      context_commentstring = {
-        enable = true,
-      },
     }
   },
   { 'JoosepAlviste/nvim-ts-context-commentstring' },
@@ -113,7 +137,23 @@ require("lazy").setup({
   -- { 'https://github.com/IndianBoy42/iswap.nvim', branch = 'expand_key' },
   'https://github.com/nvim-telescope/telescope.nvim',
   'https://github.com/tpope/vim-fugitive',
-  'https://github.com/lewis6991/gitsigns.nvim',
+  {
+    'https://github.com/lewis6991/gitsigns.nvim',
+    config = function()
+      vim.opt.signcolumn = 'yes'
+      require('gitsigns').setup {
+        on_attach = function()
+          vim.keymap.set({ "n", "v" }, "<leader>sh", "<cmd>Gitsigns stage_hunk<cr>")
+          vim.keymap.set("n", "<leader>sb", "<Cmd>Gitsigns stage_buffer<CR>")
+          vim.keymap.set("n", "<leader>rh", "<Cmd>Gitsigns reset_hunk<CR>")
+          vim.keymap.set("n", "]h", "<cmd>Gitsigns next_hunk<cr>")
+          vim.keymap.set("n", "[h", "<cmd>Gitsigns prev_hunk<cr>")
+          vim.keymap.set("n", "<leader>pvh", "<cmd>Gitsigns preview_hunk_inline<cr>")
+        end
+      }
+    end
+  },
+
   { dir = '~/Code/longbow.nvim' },
   'https://github.com/nvim-treesitter/playground',
   -- 'https://github.com/folke/neodev.nvim',
@@ -150,7 +190,6 @@ require("lazy").setup({
   'hrsh7th/cmp-nvim-lsp',
   'https://github.com/hrsh7th/cmp-nvim-lsp-signature-help',
   'nvim-telescope/telescope-frecency.nvim',
-  'tami5/sqlite.lua',
   'https://github.com/JuliaEditorSupport/julia-vim',
   'https://github.com/Nymphium/vim-koka',
   {
@@ -160,7 +199,30 @@ require("lazy").setup({
       vim.g.vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
     end
   },
-  'https://github.com/MrcJkb/haskell-tools.nvim',
+  {
+    'https://github.com/MrcJkb/haskell-tools.nvim',
+    version = '^3', -- Recommended
+    ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject' },
+    config = function()
+      local ht = require('haskell-tools')
+      vim.g.haskell_tools = {
+        tools = {
+          hover = {
+            disable = true
+          }
+        },
+        hls = {
+          filetypes = { 'haskell', 'lhaskell', 'cabal' },
+          on_attach = function(client, bufnr)
+            on_attach(client, bufnr)
+            local opts = vim.tbl_extend('keep', { noremap = true, silent = true, }, { buffer = bufnr, })
+            vim.keymap.set('n', '<leader>cll', vim.lsp.codelens.run, opts)
+            vim.keymap.set('n', '<leader>hs', ht.hoogle.hoogle_signature, opts)
+          end,
+        },
+      }
+    end
+  },
   'https://github.com/itchyny/vim-haskell-indent',
   'https://github.com/L3MON4D3/LuaSnip',
   'https://github.com/vim-scripts/alex.vim',
@@ -189,9 +251,116 @@ require("lazy").setup({
   { 'https://github.com/smjonas/inc-rename.nvim', config = true },
   'https://github.com/natecraddock/telescope-zf-native.nvim',
   'https://github.com/ii14/neorepl.nvim',
-  'goolord/alpha-nvim',
+  {
+    'goolord/alpha-nvim',
+    config = function()
+      local alpha = require("alpha")
+      local dashboard = require("alpha.themes.dashboard")
+
+      dashboard.section.header.val = {
+        "   ⣴⣶⣤⡤⠦⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆          ",
+        "    ⠉⠻⢿⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦       ",
+        "          ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷    ⠻⠿⢿⣿⣧⣄     ",
+        "           ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈⠙⠿⠄    ",
+        "          ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿⣿⣛⣳⣤⣀⣀   ",
+        "   ⢠⣧⣶⣥⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛⠻⠿⠄  ",
+        "  ⣰⣿⣿⠛⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠⣄⣾⠄   ",
+        " ⣠⣿⠿⠛ ⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿⣿⣷⡄  ",
+        " ⠙⠃   ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻⢷⣄ ",
+        "      ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆     ",
+        "       ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃     ",
+      }
+
+      dashboard.section.header.opts.hl = 'Function'
+
+      local leader = "SPC"
+      local function button(sc, txt, keybind, keybind_opts)
+        local sc_ = sc:gsub("%s", ""):gsub(leader, "<leader>")
+
+        local opts = {
+          position = "center",
+          shortcut = sc,
+          cursor = 3,
+          width = 30,
+          align_shortcut = "right",
+          hl_shortcut = "WinSeparator",
+          hl = {
+            { 'LineNr', 0, 17 }, -- highlight the part after the icon glyph
+          },
+        }
+        if keybind then
+          keybind_opts = keybind_opts or { noremap = true, silent = true, nowait = true }
+          opts.keymap = { "n", sc_, keybind, keybind_opts }
+        end
+
+        local function on_press()
+          local key = vim.api.nvim_replace_termcodes(keybind or sc_ .. "<Ignore>", true, false, true)
+          vim.api.nvim_feedkeys(key, "t", false)
+        end
+
+        return {
+          type = "button",
+          val = txt,
+          on_press = on_press,
+          opts = opts,
+        }
+      end
+
+      -- Set menu
+      dashboard.section.buttons.val = {
+        button("SPC o f", "  recents", ":Recent<CR>"),
+        button("-      ", "  browse", ":Oil<CR>"),
+        button("SPC g g", "  git", ":tab Git<CR>"),
+        button("i      ", "  new-file", ":ene <BAR> startinsert <CR>"),
+        button("SPC o o", "  oldfiles", ":Telescope oldfiles theme=dropdown<CR>"),
+      }
+
+      dashboard.section.buttons.opts = {
+        spacing = 0,
+      }
+
+      local function headerPadding()
+        return vim.fn.max({ 2, vim.fn.round((vim.fn.winheight(0) - 18) / 2) })
+      end
+
+      dashboard.config.layout = {
+        { type = 'padding', val = headerPadding },
+        dashboard.section.header,
+        { type = 'padding', val = 2 },
+        dashboard.section.buttons,
+        dashboard.section.footer,
+      }
+
+      alpha.setup(dashboard.opts)
+
+      vim.cmd([[
+        autocmd FileType alpha setlocal nofoldenable
+      ]])
+    end
+  },
   'https://github.com/jaawerth/fennel.vim',
-  'https://github.com/bfredl/nvim-miniyank',
+  {
+    'https://github.com/bfredl/nvim-miniyank',
+    config = function()
+      vim.cmd [[
+        augroup highlight_yank
+          autocmd!
+          autocmd TextYankPost * silent! lua vim.highlight.on_yank()
+        augroup END
+      ]]
+
+      vim.cmd [[
+        map p <Plug>(miniyank-autoput)
+        map P <Plug>(miniyank-autoPut)
+        map <leader>n <Plug>(miniyank-cycle)
+        map <leader>N <Plug>(miniyank-cycleback)
+        map <Leader><Space>c <Plug>(miniyank-tochar)
+        map <Leader><Space>l <Plug>(miniyank-toline)
+        map <Leader><Space>b <Plug>(miniyank-toblock)
+      ]]
+    end
+  },
+
   -- { "lukas-reineke/indent-blankline.nvim" },
   {
     'https://github.com/linty-org/readline.nvim',
@@ -221,7 +390,6 @@ require("lazy").setup({
   { 'pwntester/octo.nvim',                        config = true },
   { 'moll/vim-bbye' },
   'rhysd/conflict-marker.vim',
-  -- { 'junegunn/seoul256.vim' },
   {
     'https://github.com/chrisgrieser/nvim-spider',
     config = function()
@@ -232,7 +400,23 @@ require("lazy").setup({
     end
   },
   'wakatime/vim-wakatime',
-  'anuvyklack/hydra.nvim',
+  {
+    'anuvyklack/hydra.nvim',
+    config = function()
+      local Hydra = require('hydra')
+      Hydra({
+        name = 'Side scroll',
+        mode = 'n',
+        body = 'z',
+        heads = {
+          { 'h', '5zh' },
+          { 'l', '5zl', { desc = '←/→' } },
+          { 'H', 'zH' },
+          { 'L', 'zL', { desc = 'half screen ←/→' } },
+        }
+      })
+    end
+  },
   'https://github.com/folke/tokyonight.nvim/',
   'sheerun/vim-polyglot',
   'https://github.com/tpope/vim-eunuch',
@@ -301,7 +485,6 @@ require("lazy").setup({
       })
     end
   },
-  { "rebelot/kanagawa.nvim" },
   --
   -- {
   --   "https://github.com/ludovicchabant/vim-gutentags",
@@ -357,32 +540,6 @@ vim.o.shortmess = vim.o.shortmess .. 'c'
 
 vim.diagnostic.config({ signs = false })
 
-local on_attach = function(_, bufnr)
-  local bufopts = { noremap = true, silent = true, buffer = bufnr }
-
-  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, bufopts)
-  vim.keymap.set('n', ']d', vim.diagnostic.goto_next, bufopts)
-  vim.keymap.set('n', '[D', function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR, }) end,
-    bufopts)
-  vim.keymap.set('n', ']D', function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR, }) end,
-    bufopts)
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<leader>sig', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', '<leader>aws', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<leader>rws', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<leader>lws', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, bufopts)
-  vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<leader>f<space>', function() vim.lsp.buf.format { async = true } end, bufopts)
-end
-
 require('lspconfig')['ocamllsp'].setup {
   on_attach = on_attach
 }
@@ -412,31 +569,6 @@ require('lspconfig')['pyright'].setup {
   -- cmd = { "pyright-langserver", "--stdio", "-v", "/Users/ml/GlobalVenv" }
 }
 
-require('lspconfig')['lua_ls'].setup {
-  on_attach = on_attach,
-  settings = {
-    Lua = {
-      runtime = {
-        version = 'LuaJIT',
-      },
-      diagnostics = {
-        globals = {
-          'vim',
-          'require'
-        },
-        unusedLocalExclude = { "_*" },
-      },
-      workspace = {
-        library = vim.api.nvim_get_runtime_file("", true),
-      },
-      telemetry = {
-        enable = false,
-      },
-    },
-  },
-
-}
-
 require('lspconfig')['gopls'].setup {
   on_attach = on_attach
 }
@@ -459,22 +591,9 @@ require('lspconfig')['zls'].setup {
 
 -- ENDLSP
 
-vim.opt.signcolumn = 'yes'
-
 local function nc(keys, cmd)
   vim.keymap.set("n", "<leader>" .. keys, "<cmd>" .. cmd .. "<cr>")
 end
-
-require('gitsigns').setup {
-  on_attach = function()
-    vim.keymap.set({ "n", "v" }, "<leader>sh", "<cmd>Gitsigns stage_hunk<cr>")
-    nc("sb", "Gitsigns stage_buffer")
-    nc("rh", "Gitsigns reset_hunk")
-    vim.keymap.set("n", "]h", "<cmd>Gitsigns next_hunk<cr>")
-    vim.keymap.set("n", "[h", "<cmd>Gitsigns prev_hunk<cr>")
-    nc("pvh", "Gitsigns preview_hunk_inline")
-  end
-}
 
 vim.opt.showmode = false
 
@@ -498,33 +617,6 @@ command! -range=% TB <line1>,<line2>w !nc termbin.com 9999 | tr -d '\n' | pbcopy
 
 vim.cmd [[set formatoptions-=cro]]
 
-local ht = require('haskell-tools')
-local def_opts = { noremap = true, silent = true, }
-ht.setup {
-  tools = {
-    hover = {
-      disable = true
-    }
-  },
-  hls = {
-    filetypes = { 'haskell', 'lhaskell', 'cabal' },
-    on_attach = function(client, bufnr)
-      on_attach(client, bufnr)
-      local opts = vim.tbl_extend('keep', def_opts, { buffer = bufnr, })
-      vim.keymap.set('n', '<leader>cll', vim.lsp.codelens.run, opts)
-      vim.keymap.set('n', '<leader>hs', ht.hoogle.hoogle_signature, opts)
-    end,
-  },
-}
-
--- -- Suggested keymaps that do not depend on haskell-language-server
--- -- Toggle a GHCi repl for the current package
--- vim.keymap.set('n', '<leader>rr', ht.repl.toggle, def_opts)
--- -- Toggle a GHCi repl for the current buffer
--- vim.keymap.set('n', '<leader>rf', function()
---   ht.repl.toggle(vim.api.nvim_buf_get_name(0))
--- end, def_opts)
--- vim.keymap.set('n', '<leader>rq', ht.repl.quit, def_opts)
 
 local actions = require('telescope.actions')
 require("telescope").setup {
@@ -556,7 +648,7 @@ require("telescope").setup {
 }
 
 nc("of", "Telescope frecency theme=dropdown")
-nc("ff", "Telescope find_files")
+nc("ff", "Telescope find_files theme=dropdown")
 nc("d", "Telescope resume")
 nc("oo", "Telescope oldfiles theme=dropdown")
 nc(",", "Telescope buffers theme=dropdown")
@@ -598,7 +690,7 @@ local themes = require('telescope.themes')
 vim.api.nvim_create_user_command('Recent', function()
   local Path = require "plenary.path"
   local os_home = vim.loop.os_homedir()
-  require 'telescope'.extensions.frecency.frecency(themes.get_ivy({
+  require 'telescope'.extensions.frecency.frecency(themes.get_dropdown({
     path_display = function(_, filename)
       if vim.startswith(filename, os_home --[[@as string]]) then
         filename = "~/" .. Path:new(filename):make_relative(os_home)
@@ -610,109 +702,7 @@ vim.api.nvim_create_user_command('Recent', function()
 end, {})
 require("telescope").load_extension "file_browser"
 
-local alpha = require("alpha")
-local dashboard = require("alpha.themes.dashboard")
-
-dashboard.section.header.val = {
-  "   ⣴⣶⣤⡤⠦⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆          ",
-  "    ⠉⠻⢿⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦       ",
-  "          ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷    ⠻⠿⢿⣿⣧⣄     ",
-  "           ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈⠙⠿⠄    ",
-  "          ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿⣿⣛⣳⣤⣀⣀   ",
-  "   ⢠⣧⣶⣥⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛⠻⠿⠄  ",
-  "  ⣰⣿⣿⠛⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠⣄⣾⠄   ",
-  " ⣠⣿⠿⠛ ⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿⣿⣷⡄  ",
-  " ⠙⠃   ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻⢷⣄ ",
-  "      ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆     ",
-  "       ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃     ",
-}
-
-dashboard.section.header.opts.hl = 'Function'
-
-local leader = "SPC"
-local function button(sc, txt, keybind, keybind_opts)
-  local sc_ = sc:gsub("%s", ""):gsub(leader, "<leader>")
-
-  local opts = {
-    position = "center",
-    shortcut = sc,
-    cursor = 3,
-    width = 30,
-    align_shortcut = "right",
-    hl_shortcut = "WinSeparator",
-    hl = {
-      { 'LineNr', 0, 17 }, -- highlight the part after the icon glyph
-    },
-  }
-  if keybind then
-    keybind_opts = keybind_opts or { noremap = true, silent = true, nowait = true }
-    opts.keymap = { "n", sc_, keybind, keybind_opts }
-  end
-
-  local function on_press()
-    local key = vim.api.nvim_replace_termcodes(keybind or sc_ .. "<Ignore>", true, false, true)
-    vim.api.nvim_feedkeys(key, "t", false)
-  end
-
-  return {
-    type = "button",
-    val = txt,
-    on_press = on_press,
-    opts = opts,
-  }
-end
-
--- Set menu
-dashboard.section.buttons.val = {
-  button("SPC o f", "  recents", ":Recent<CR>"),
-  button("-      ", "  browse", ":Oil<CR>"),
-  button("SPC g g", "  git", ":tab Git<CR>"),
-  button("i      ", "  new-file", ":ene <BAR> startinsert <CR>"),
-  button("SPC o o", "  oldfiles", ":Telescope oldfiles theme=dropdown<CR>"),
-}
-
-dashboard.section.buttons.opts = {
-  spacing = 0,
-}
-
-local function headerPadding()
-  return vim.fn.max({ 2, vim.fn.round((vim.fn.winheight(0) - 18) / 2) })
-end
-
-dashboard.config.layout = {
-  { type = 'padding', val = headerPadding },
-  dashboard.section.header,
-  { type = 'padding', val = 2 },
-  dashboard.section.buttons,
-  dashboard.section.footer,
-}
-
-alpha.setup(dashboard.opts)
-
-vim.cmd([[
-    autocmd FileType alpha setlocal nofoldenable
-]])
-
-vim.cmd [[
-augroup highlight_yank
-  autocmd!
-  autocmd TextYankPost * silent! lua vim.highlight.on_yank()
-augroup END
-]]
-
-vim.cmd [[
-map p <Plug>(miniyank-autoput)
-map P <Plug>(miniyank-autoPut)
-map <leader>n <Plug>(miniyank-cycle)
-map <leader>N <Plug>(miniyank-cycleback)
-map <Leader><Space>c <Plug>(miniyank-tochar)
-map <Leader><Space>l <Plug>(miniyank-toline)
-map <Leader><Space>b <Plug>(miniyank-toblock)
-]]
-
 -- adding comment
-
-local Hydra = require('hydra')
 
 vim.keymap.set('n', '<leader>cd', ':lcd %:h<CR>')
 
@@ -739,20 +729,6 @@ endfunc
 ]]
 
 
-Hydra({
-  name = 'Side scroll',
-  mode = 'n',
-  body = 'z',
-  heads = {
-    { 'h', '5zh' },
-    { 'l', '5zl', { desc = '←/→' } },
-    { 'H', 'zH' },
-    { 'L', 'zL',  { desc = 'half screen ←/→' } },
-  }
-})
-
-local map = vim.keymap.set
-
 local function neovideScale(amount)
   local temp = vim.g.neovide_scale_factor + amount
 
@@ -763,10 +739,10 @@ local function neovideScale(amount)
   vim.g.neovide_scale_factor = temp
 end
 
-map("n", "<C-=>", function()
+vim.keymap.set("n", "<C-=>", function()
   neovideScale(0.1)
 end)
 
-map("n", "<C-->", function()
+vim.keymap.set("n", "<C-->", function()
   neovideScale(-0.1)
 end)
