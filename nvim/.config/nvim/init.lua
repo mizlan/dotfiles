@@ -13,31 +13,37 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.python3_host_prog = '~/GlobalVenv/bin/python3.9'
 vim.opt.termguicolors = true
 
-local on_attach = function(_, bufnr)
-  local bufopts = { noremap = true, silent = true, buffer = bufnr }
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ','
 
-  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, bufopts)
-  vim.keymap.set('n', ']d', vim.diagnostic.goto_next, bufopts)
-  vim.keymap.set('n', '[D', function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR, }) end,
-    bufopts)
-  vim.keymap.set('n', ']D', function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR, }) end,
-    bufopts)
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<leader>sig', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', '<leader>aws', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<leader>rws', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<leader>lws', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, bufopts)
-  vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<leader>f<space>', function() vim.lsp.buf.format { async = true } end, bufopts)
-end
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    local bufopts = { noremap = true, silent = true, buffer = ev.buf }
+
+    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, bufopts)
+    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, bufopts)
+    vim.keymap.set('n', '[D', function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR, }) end,
+      bufopts)
+    vim.keymap.set('n', ']D', function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR, }) end,
+      bufopts)
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+    vim.keymap.set('n', '<leader>sig', vim.lsp.buf.signature_help, bufopts)
+    vim.keymap.set('n', '<leader>aws', vim.lsp.buf.add_workspace_folder, bufopts)
+    vim.keymap.set('n', '<leader>rws', vim.lsp.buf.remove_workspace_folder, bufopts)
+    vim.keymap.set('n', '<leader>lws', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, bufopts)
+    vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
+    vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, bufopts)
+    vim.keymap.set('n', '<leader>f<space>', function() vim.lsp.buf.format { async = true } end, bufopts)
+  end,
+})
 
 require("lazy").setup({
   {
@@ -120,11 +126,42 @@ require("lazy").setup({
   },
   {
     'norcalli/nvim-colorizer.lua',
-    opts = {
-      css = { rgb_fn = true, }
-    }
+    config = function()
+      require 'colorizer'.setup(nil, { css = true, })
+    end
   },
-  'https://github.com/neovim/nvim-lspconfig',
+  {
+    'https://github.com/neovim/nvim-lspconfig',
+    config = function()
+      vim.diagnostic.config({ signs = false })
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      capabilities.textDocument.foldingRange = {
+        dynamicRegistration = false,
+        lineFoldingOnly = true
+      }
+      require('lspconfig')['ocamllsp'].setup {
+      }
+      require('lspconfig')['clangd'].setup {
+        capabilities = capabilities
+      }
+      require('lspconfig')['tsserver'].setup {
+      }
+      require 'lspconfig'.tailwindcss.setup {}
+      require('lspconfig')['pyright'].setup {
+        -- cmd = { "pyright-langserver", "--stdio", "-v", "/Users/ml/GlobalVenv" }
+      }
+      require('lspconfig')['gopls'].setup {
+      }
+      require('lspconfig')['cssls'].setup {
+        capabilities = capabilities,
+      }
+      require('lspconfig')['typst_lsp'].setup {
+        settings = {
+          exportPdf = "onSave",
+        }
+      }
+    end
+  },
   'https://github.com/romainl/vim-cool',
   {
     dir = '~/Repositories/indianboy42/iswap.nvim',
@@ -135,7 +172,6 @@ require("lazy").setup({
     }
   },
   -- { 'https://github.com/IndianBoy42/iswap.nvim', branch = 'expand_key' },
-  'https://github.com/nvim-telescope/telescope.nvim',
   'https://github.com/tpope/vim-fugitive',
   {
     'https://github.com/lewis6991/gitsigns.nvim',
@@ -156,7 +192,6 @@ require("lazy").setup({
 
   { dir = '~/Code/longbow.nvim' },
   'https://github.com/nvim-treesitter/playground',
-  -- 'https://github.com/folke/neodev.nvim',
   'https://github.com/stevearc/dressing.nvim',
   {
     'https://github.com/hrsh7th/nvim-cmp',
@@ -189,9 +224,94 @@ require("lazy").setup({
   },
   'hrsh7th/cmp-nvim-lsp',
   'https://github.com/hrsh7th/cmp-nvim-lsp-signature-help',
+  {
+    'https://github.com/nvim-telescope/telescope.nvim',
+    lazy = false,
+    init = function()
+      print('bruh')
+      vim.keymap.set('n', '<Leader>ff', '<Cmd>Telescope find_files<CR>', { desc = "find file" })
+      vim.keymap.set('n', '<Leader>fr', '<Cmd>Telescope frecency<CR>', { desc = "find frecent file" })
+      vim.keymap.set('n', '<Leader>fo', '<Cmd>Telescope oldfiles theme=ivy<CR>', { desc = "find recent file" })
+      vim.keymap.set('n', '<Leader>,', '<Cmd>Telescope buffers ignore_current_buffer=true theme=dropdown<CR>',
+        { desc = "switch to buffer" })
+      vim.keymap.set('n', [[<Leader>']], '<Cmd>Telescope resume<CR>', { desc = "resume previous search" })
+      vim.keymap.set('n', [[<Leader>sp]], '<Cmd>Telescope live_grep_args<CR>', { desc = "ripgrep" })
+      vim.keymap.set('n', '<Leader>gg', '<Cmd>0Git<CR>', { desc = "fugitive" })
+    end,
+    config = function()
+      local actions = require('telescope.actions')
+      local lga_actions = require("telescope-live-grep-args.actions")
+      require("telescope").setup {
+        defaults = {
+          mappings = {
+            i = {
+              ["<Down>"] = actions.cycle_history_next,
+              ["<Up>"] = actions.cycle_history_prev,
+            },
+          },
+          history = {
+            cycle_wrap = true,
+          },
+          path_display = { absolute = true },
+          prompt_prefix = "   ",
+          selection_caret = "  ",
+          entry_prefix = "  ",
+        },
+        pickers = {
+          find_files = {
+            theme = 'ivy',
+            layout_config = {
+              height = 0.5
+            }
+          },
+          frecency = {
+            theme = "ivy"
+          }
+        },
+        extensions = {
+          file_browser = {
+            theme = "ivy",
+            hijack_netrw = true,
+          },
+          frecency = {
+            show_scores = true,
+            auto_validate = false,
+          },
+          live_grep_args = {
+            auto_quoting = true,
+            mappings = {
+              i = {
+                ["<C-k>"] = lga_actions.quote_prompt(),
+                ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+              },
+            },
+            theme = "dropdown", -- use dropdown theme
+          }
+        },
+      }
+      require("telescope").load_extension("frecency")
+      require("telescope").load_extension "file_browser"
+      require("telescope").load_extension("zf-native")
+      local themes = require('telescope.themes')
+      vim.api.nvim_create_user_command('Recent', function()
+        local Path = require "plenary.path"
+        local os_home = vim.loop.os_homedir()
+        require 'telescope'.extensions.frecency.frecency(themes.get_dropdown({
+          path_display = function(_, filename)
+            if vim.startswith(filename, os_home --[[@as string]]) then
+              filename = "~/" .. Path:new(filename):make_relative(os_home)
+            end
+            return filename
+          end,
+          sorter = require 'telescope.config'.values.file_sorter(),
+        }))
+      end, {})
+    end
+  },
   'nvim-telescope/telescope-frecency.nvim',
-  'https://github.com/JuliaEditorSupport/julia-vim',
-  'https://github.com/Nymphium/vim-koka',
+  { 'https://github.com/nvim-telescope/telescope-live-grep-args.nvim' },
+  'https://github.com/nvim-telescope/telescope-file-browser.nvim',
+  'https://github.com/natecraddock/telescope-zf-native.nvim',
   {
     'lervag/vimtex',
     config = function()
@@ -213,8 +333,7 @@ require("lazy").setup({
         },
         hls = {
           filetypes = { 'haskell', 'lhaskell', 'cabal' },
-          on_attach = function(client, bufnr)
-            on_attach(client, bufnr)
+          on_attach = function(_client, bufnr)
             local opts = vim.tbl_extend('keep', { noremap = true, silent = true, }, { buffer = bufnr, })
             vim.keymap.set('n', '<leader>cll', vim.lsp.codelens.run, opts)
             vim.keymap.set('n', '<leader>hs', ht.hoogle.hoogle_signature, opts)
@@ -224,10 +343,26 @@ require("lazy").setup({
     end
   },
   'https://github.com/itchyny/vim-haskell-indent',
-  'https://github.com/L3MON4D3/LuaSnip',
+  {
+    'https://github.com/L3MON4D3/LuaSnip',
+    config = function()
+      vim.cmd [[
+      " press <Tab> to expand or jump in a snippet. These can also be mapped separately
+      " via <Plug>luasnip-expand-snippet and <Plug>luasnip-jump-next.
+      imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
+      inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
+      snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
+      snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
+      " For changing choices in choiceNodes (not strictly necessary for a basic setup).
+      imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+      smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+      ]]
+      require("luasnip.loaders.from_snipmate").lazy_load()
+    end
+  },
   'https://github.com/vim-scripts/alex.vim',
   'nvim-tree/nvim-web-devicons',
-  { 'kevinhwang91/nvim-ufo', config = true },
+  { 'kevinhwang91/nvim-ufo',                                          config = true },
   'kevinhwang91/promise-async',
   'https://github.com/hrsh7th/cmp-buffer',
   {
@@ -237,19 +372,16 @@ require("lazy").setup({
       vim.keymap.set("n", "-", require("oil").open, { desc = "Open parent directory" })
     end
   },
-  'https://github.com/nvim-telescope/telescope-file-browser.nvim',
   {
     'https://github.com/junegunn/vim-easy-align',
     config = function()
       vim.cmd [[nmap ga <Plug>(EasyAlign)]]
     end
   },
-  { 'ruifm/gitlinker.nvim',  config = true },
+  { 'ruifm/gitlinker.nvim',                       config = true },
   'kaarmu/typst.vim',
-  'https://github.com/ziglang/zig.vim',
   'https://github.com/dhruvasagar/vim-table-mode',
   { 'https://github.com/smjonas/inc-rename.nvim', config = true },
-  'https://github.com/natecraddock/telescope-zf-native.nvim',
   'https://github.com/ii14/neorepl.nvim',
   {
     'goolord/alpha-nvim',
@@ -308,11 +440,11 @@ require("lazy").setup({
 
       -- Set menu
       dashboard.section.buttons.val = {
-        button("SPC o f", "  recents", ":Recent<CR>"),
+        button("SPC f r", "  recents", ":Recent<CR>"),
         button("-      ", "  browse", ":Oil<CR>"),
-        button("SPC g g", "  git", ":tab Git<CR>"),
+        button("SPC g g", "  git", ":0 Git<CR>"),
         button("i      ", "  new-file", ":ene <BAR> startinsert <CR>"),
-        button("SPC o o", "  oldfiles", ":Telescope oldfiles theme=dropdown<CR>"),
+        button("SPC f o", "  oldfiles", ":Telescope oldfiles theme=dropdown<CR>"),
       }
 
       dashboard.section.buttons.opts = {
@@ -348,7 +480,6 @@ require("lazy").setup({
           autocmd TextYankPost * silent! lua vim.highlight.on_yank()
         augroup END
       ]]
-
       vim.cmd [[
         map p <Plug>(miniyank-autoput)
         map P <Plug>(miniyank-autoPut)
@@ -387,7 +518,7 @@ require("lazy").setup({
       vim.fn["firenvim#install"](0)
     end
   },
-  { 'pwntester/octo.nvim',                        config = true },
+  { 'pwntester/octo.nvim', config = true },
   { 'moll/vim-bbye' },
   'rhysd/conflict-marker.vim',
   {
@@ -465,6 +596,9 @@ require("lazy").setup({
         extensions = {
           typ = "typst",
           v = "coq",
+        },
+        complex = {
+          [".*rc"] = "sh"
         }
       }
     }
@@ -499,6 +633,20 @@ require("lazy").setup({
   --   end,
   --   cmd = "GutentagsUpdate"
   -- },
+  { "folke/neodev.nvim",                         opts = {} },
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+    end,
+    opts = {
+      triggers_nowait = {
+        "<leader>"
+      }
+    }
+  },
 
 }, {
   install = {
@@ -520,10 +668,8 @@ require("lazy").setup({
   },
 })
 
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ','
 vim.opt.cmdheight = 1
-vim.opt.laststatus = 0
+vim.opt.laststatus = 3
 
 vim.opt.splitright = true
 vim.opt.splitbelow = true
@@ -538,56 +684,6 @@ vim.opt.wrap = false
 vim.o.completeopt = 'menuone,noinsert,noselect'
 vim.o.shortmess = vim.o.shortmess .. 'c'
 
-vim.diagnostic.config({ signs = false })
-
-require('lspconfig')['ocamllsp'].setup {
-  on_attach = on_attach
-}
-
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-capabilities.textDocument.foldingRange = {
-  dynamicRegistration = false,
-  lineFoldingOnly = true
-}
-require('lspconfig')['clangd'].setup {
-  on_attach = on_attach,
-  capabilities = capabilities
-}
-
-require('lspconfig')['julials'].setup {
-  on_attach = on_attach
-}
-
-require('lspconfig')['tsserver'].setup {
-  on_attach = on_attach
-}
-
-require 'lspconfig'.tailwindcss.setup {}
-
-require('lspconfig')['pyright'].setup {
-  on_attach = on_attach,
-  -- cmd = { "pyright-langserver", "--stdio", "-v", "/Users/ml/GlobalVenv" }
-}
-
-require('lspconfig')['gopls'].setup {
-  on_attach = on_attach
-}
-
-require('lspconfig')['cssls'].setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
-
-require('lspconfig')['typst_lsp'].setup {
-  on_attach = on_attach,
-  settings = {
-    exportPdf = "onSave",
-  }
-}
-
-require('lspconfig')['zls'].setup {
-  on_attach = on_attach,
-}
 
 -- ENDLSP
 
@@ -596,14 +692,6 @@ local function nc(keys, cmd)
 end
 
 vim.opt.showmode = false
-
-vim.opt.linespace = 15
-vim.g.neovide_cursor_vfx_mode = 'railgun'
-vim.g.neovide_cursor_vfx_particle_lifetime = 1.5
-vim.g.neovide_cursor_vfx_particle_density = 17.0
-vim.g.neovide_cursor_vfx_particle_phase = 4.5
-vim.g.neovide_cursor_vfx_particle_curl = 4.0
-vim.opt.guifont = 'JetBrains Mono:h24'
 
 vim.cmd [[
 command! -range=% SP <line1>,<line2>w !curl -F 'sprunge=<-' http://sprunge.us | tr -d '\n' | pbcopy
@@ -618,65 +706,11 @@ command! -range=% TB <line1>,<line2>w !nc termbin.com 9999 | tr -d '\n' | pbcopy
 vim.cmd [[set formatoptions-=cro]]
 
 
-local actions = require('telescope.actions')
-require("telescope").setup {
-  defaults = {
-    mappings = {
-      i = {
-        ["<Down>"] = actions.cycle_history_next,
-        ["<Up>"] = actions.cycle_history_prev,
-      },
-    },
-    history = {
-      cycle_wrap = true,
-    },
-    path_display = { absolute = true },
-    prompt_prefix = "   ",
-    selection_caret = "  ",
-    entry_prefix = "  ",
-  },
-  extensions = {
-    file_browser = {
-      theme = "ivy",
-      hijack_netrw = true,
-    },
-    frecency = {
-      show_scores = true,
-      auto_validate = false
-    }
-  },
-}
-
-nc("of", "Telescope frecency theme=dropdown")
-nc("ff", "Telescope find_files theme=dropdown")
-nc("d", "Telescope resume")
-nc("oo", "Telescope oldfiles theme=dropdown")
-nc(",", "Telescope buffers theme=dropdown")
-nc("rg", "Telescope live_grep")
-nc("gg", "tab Git")
-
 vim.cmd [[
 nn <Leader>s<Right> <cmd>ISwapNodeWithRight<CR>
 nn <Leader>s<Left> <cmd>ISwapNodeWithLeft<CR>
 nn <Leader>ss <cmd>ISwap<CR>
 ]]
-
-vim.cmd [[
-" press <Tab> to expand or jump in a snippet. These can also be mapped separately
-" via <Plug>luasnip-expand-snippet and <Plug>luasnip-jump-next.
-imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
-" -1 for jumping backwards.
-inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
-
-snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
-snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
-
-" For changing choices in choiceNodes (not strictly necessary for a basic setup).
-imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
-smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
-]]
-
-require("luasnip.loaders.from_snipmate").lazy_load()
 
 vim.o.foldlevel = 10
 
@@ -684,31 +718,9 @@ vim.cmd [[
 au ColorScheme * hi! link NonText WinSeparator
 ]]
 
-require "telescope".load_extension("frecency")
-require("telescope").load_extension("zf-native")
-local themes = require('telescope.themes')
-vim.api.nvim_create_user_command('Recent', function()
-  local Path = require "plenary.path"
-  local os_home = vim.loop.os_homedir()
-  require 'telescope'.extensions.frecency.frecency(themes.get_dropdown({
-    path_display = function(_, filename)
-      if vim.startswith(filename, os_home --[[@as string]]) then
-        filename = "~/" .. Path:new(filename):make_relative(os_home)
-      end
-      return filename
-    end,
-    sorter = require 'telescope.config'.values.file_sorter(),
-  }))
-end, {})
-require("telescope").load_extension "file_browser"
-
 -- adding comment
 
 vim.keymap.set('n', '<leader>cd', ':lcd %:h<CR>')
-
-vim.cmd [[
-command! TW let &textwidth = min([&columns, 80]) | norm gqip
-]]
 
 vim.cmd [[
 function! Slick()
@@ -728,6 +740,13 @@ function! SynStack()
 endfunc
 ]]
 
+vim.opt.linespace = 15
+vim.g.neovide_cursor_vfx_mode = 'railgun'
+vim.g.neovide_cursor_vfx_particle_lifetime = 1.5
+vim.g.neovide_cursor_vfx_particle_density = 17.0
+vim.g.neovide_cursor_vfx_particle_phase = 4.5
+vim.g.neovide_cursor_vfx_particle_curl = 4.0
+vim.opt.guifont = 'JetBrains Mono:h24'
 
 local function neovideScale(amount)
   local temp = vim.g.neovide_scale_factor + amount
