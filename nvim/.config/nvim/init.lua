@@ -70,6 +70,18 @@ require("lazy").setup({
       require('rose-pine').setup({
         dark_variant = 'moon',
         disable_italics = true,
+        highlight_groups = {
+          TelescopeBorder = { fg = "overlay", bg = "overlay" },
+          TelescopeNormal = { fg = "subtle", bg = "overlay" },
+          TelescopeSelection = { fg = "text", bg = "highlight_med" },
+          TelescopeSelectionCaret = { fg = "love", bg = "highlight_med" },
+          TelescopeMultiSelection = { fg = "text", bg = "highlight_high" },
+          TelescopeTitle = { fg = "base", bg = "love" },
+          TelescopePromptTitle = { fg = "base", bg = "pine" },
+          TelescopePreviewTitle = { fg = "base", bg = "iris" },
+          TelescopePromptNormal = { fg = "text", bg = "surface" },
+          TelescopePromptBorder = { fg = "surface", bg = "surface" },
+        }
       })
       vim.cmd [[colorscheme rose-pine]]
     end
@@ -230,9 +242,9 @@ require("lazy").setup({
     init = function()
       print('bruh')
       vim.keymap.set('n', '<Leader>ff', '<Cmd>Telescope find_files<CR>', { desc = "find file" })
-      vim.keymap.set('n', '<Leader>fr', '<Cmd>Telescope frecency<CR>', { desc = "find frecent file" })
+      vim.keymap.set('n', '<Leader>fr', '<Cmd>Recent<CR>', { desc = "find frecent file" })
       vim.keymap.set('n', '<Leader>fo', '<Cmd>Telescope oldfiles theme=ivy<CR>', { desc = "find recent file" })
-      vim.keymap.set('n', '<Leader>,', '<Cmd>Telescope buffers ignore_current_buffer=true theme=dropdown<CR>',
+      vim.keymap.set('n', '<Leader>,', '<Cmd>Telescope buffers ignore_current_buffer=true theme=ivy<CR>',
         { desc = "switch to buffer" })
       vim.keymap.set('n', [[<Leader>']], '<Cmd>Telescope resume<CR>', { desc = "resume previous search" })
       vim.keymap.set('n', [[<Leader>sp]], '<Cmd>Telescope live_grep_args<CR>', { desc = "ripgrep" })
@@ -258,6 +270,12 @@ require("lazy").setup({
           entry_prefix = "  ",
         },
         pickers = {
+          buffers = {
+            theme = 'ivy',
+            layout_config = {
+              height = 0.5
+            }
+          },
           find_files = {
             theme = 'ivy',
             layout_config = {
@@ -296,7 +314,7 @@ require("lazy").setup({
       vim.api.nvim_create_user_command('Recent', function()
         local Path = require "plenary.path"
         local os_home = vim.loop.os_homedir()
-        require 'telescope'.extensions.frecency.frecency(themes.get_dropdown({
+        require 'telescope'.extensions.frecency.frecency(themes.get_ivy({
           path_display = function(_, filename)
             if vim.startswith(filename, os_home --[[@as string]]) then
               filename = "~/" .. Path:new(filename):make_relative(os_home)
@@ -304,6 +322,9 @@ require("lazy").setup({
             return filename
           end,
           sorter = require 'telescope.config'.values.file_sorter(),
+          layout_config = {
+            height = 0.5
+          }
         }))
       end, {})
     end
@@ -598,7 +619,7 @@ require("lazy").setup({
           v = "coq",
         },
         complex = {
-          [".*rc"] = "sh"
+          [".*rc$"] = "sh"
         }
       }
     }
