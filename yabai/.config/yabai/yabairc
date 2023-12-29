@@ -1,8 +1,5 @@
-gapsize=20
+gapsize=28
 margin=20
-
-# gapsize=28
-# margin=20
 
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa && sleep 1 && yabai -m config window_shadow off"
 sudo yabai --load-sa
@@ -35,16 +32,16 @@ yabai -m config                           \
 yabai -m signal --add event=window_created action='echo r | nc 127.0.0.1 1337'
 yabai -m signal --add event=window_destroyed action='echo r | nc 127.0.0.1 1337'
 
-yabai -m signal --add event=mission_control_exit action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
-yabai -m signal --add event=display_added action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
-yabai -m signal --add event=display_removed action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
-yabai -m signal --add event=window_created action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-yabai -m signal --add event=window_destroyed action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-yabai -m signal --add event=window_focused action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-yabai -m signal --add event=window_moved action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-yabai -m signal --add event=window_resized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-yabai -m signal --add event=window_minimized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-yabai -m signal --add event=window_deminimized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+# yabai -m signal --add event=mission_control_exit action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
+# yabai -m signal --add event=display_added action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
+# yabai -m signal --add event=display_removed action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
+# yabai -m signal --add event=window_created action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+# yabai -m signal --add event=window_destroyed action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+# yabai -m signal --add event=window_focused action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+# yabai -m signal --add event=window_moved action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+# yabai -m signal --add event=window_resized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+# yabai -m signal --add event=window_minimized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+# yabai -m signal --add event=window_deminimized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
 
 # yabai -m signal --add event=space_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq .[0].id)"
 
@@ -62,19 +59,19 @@ yabai -m rule --add title="^ephemeral-" manage=off grid=6:4:1:1:2:4
 
 # TLDraw
 
-curspace=$(yabai -m query --spaces --space | jq .index)
-
-yabai -m space --focus 1
-yabai -m space --focus 2
-yabai -m space --focus 3
-yabai -m space --focus 4
-yabai -m space --focus 5
-yabai -m space --focus 6
-yabai -m space --focus 7
-yabai -m space --focus 8
-yabai -m space --focus 9
-
-yabai -m space --focus $curspace
+# curspace=$(yabai -m query --spaces --space | jq .index)
+#
+# yabai -m space --focus 1
+# yabai -m space --focus 2
+# yabai -m space --focus 3
+# yabai -m space --focus 4
+# yabai -m space --focus 5
+# yabai -m space --focus 6
+# yabai -m space --focus 7
+# yabai -m space --focus 8
+# yabai -m space --focus 9
+#
+# yabai -m space --focus $curspace
 
 $HOME/.config/yabai/centerstubborn.sh
 

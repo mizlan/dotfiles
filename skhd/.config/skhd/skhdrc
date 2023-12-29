@@ -48,6 +48,7 @@ alt - 6 : yabai -m space --focus 6
 alt - 7 : yabai -m space --focus 7
 alt - 8 : yabai -m space --focus 8
 alt - 9 : yabai -m space --focus 9
+alt - 0 : yabai -m space --focus 10
 
 shift + alt - 1 : yabai -m window --space 1 && echo 'r' | nc 127.0.0.1 1337
 shift + alt - 2 : yabai -m window --space 2 && echo 'r' | nc 127.0.0.1 1337
@@ -58,7 +59,10 @@ shift + alt - 6 : yabai -m window --space 6 && echo 'r' | nc 127.0.0.1 1337
 shift + alt - 7 : yabai -m window --space 7 && echo 'r' | nc 127.0.0.1 1337
 shift + alt - 8 : yabai -m window --space 8 && echo 'r' | nc 127.0.0.1 1337
 shift + alt - 9 : yabai -m window --space 9 && echo 'r' | nc 127.0.0.1 1337
-ctrl + alt - p : yabai -m window --toggle sticky --toggle topmost --toggle border --toggle pip
+
+ctrl + alt - p : yabai -m window --toggle sticky --toggle topmost --toggle pip
+
+fn - x : yabai -m window --toggle float --toggle topmost
 
 cmd + shift - space : yabai -m query --windows | jq -r '.[] | [.id, .app] | join (" ")' | choose | awk '{ print $1 }' | xargs -I{} yabai -m window --focus {}
 
