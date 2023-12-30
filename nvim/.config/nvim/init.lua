@@ -10,6 +10,7 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+
 vim.g.python3_host_prog = '~/GlobalVenv/bin/python3.9'
 vim.opt.termguicolors = true
 
@@ -23,9 +24,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, bufopts)
     vim.keymap.set('n', ']d', vim.diagnostic.goto_next, bufopts)
-    vim.keymap.set('n', '[D', function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR, }) end,
+    vim.keymap.set('n', '[D', function()
+        vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR, })
+      end,
       bufopts)
-    vim.keymap.set('n', ']D', function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR, }) end,
+    vim.keymap.set('n', ']D', function()
+        vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR, })
+      end,
       bufopts)
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
@@ -188,15 +193,15 @@ require("lazy").setup({
   {
     'https://github.com/lewis6991/gitsigns.nvim',
     config = function()
-      vim.opt.signcolumn = 'yes'
       require('gitsigns').setup {
         on_attach = function()
-          vim.keymap.set({ "n", "v" }, "<leader>sh", "<cmd>Gitsigns stage_hunk<cr>")
-          vim.keymap.set("n", "<leader>sb", "<Cmd>Gitsigns stage_buffer<CR>")
-          vim.keymap.set("n", "<leader>rh", "<Cmd>Gitsigns reset_hunk<CR>")
-          vim.keymap.set("n", "]h", "<cmd>Gitsigns next_hunk<cr>")
-          vim.keymap.set("n", "[h", "<cmd>Gitsigns prev_hunk<cr>")
-          vim.keymap.set("n", "<leader>pvh", "<cmd>Gitsigns preview_hunk_inline<cr>")
+          vim.keymap.set({ "n", "v" }, "<leader>sh", "<cmd>Gitsigns stage_hunk<cr>", { desc = "stage hunk" })
+          vim.keymap.set("n", "<leader>sb", "<Cmd>Gitsigns stage_buffer<CR>", { desc = "stage buffer" })
+          vim.keymap.set("n", "<leader>rh", "<Cmd>Gitsigns reset_hunk<CR>", { desc = "reset hunk" })
+          vim.keymap.set("n", "]h", "<cmd>Gitsigns next_hunk<cr>", { desc = "next hunk" })
+          vim.keymap.set("n", "[h", "<cmd>Gitsigns prev_hunk<cr>", { desc = "previous hunk" })
+          vim.keymap.set("n", "<leader>phi", "<cmd>Gitsigns preview_hunk_inline<cr>", { desc = "preview hunk inline" })
+          vim.keymap.set("n", "<leader>pho", "<cmd>Gitsigns preview_hunk<cr>", { desc = "preview hunk overlay" })
         end
       }
     end
@@ -229,13 +234,15 @@ require("lazy").setup({
           {
             name = 'buffer',
             option = { get_bufnrs = function() return vim.api.nvim_list_bufs() end }
-          }
+          },
+          { name = 'conjure' },
         })
       })
     end
   },
   'hrsh7th/cmp-nvim-lsp',
   'https://github.com/hrsh7th/cmp-nvim-lsp-signature-help',
+  'https://github.com/PaterJason/cmp-conjure',
   {
     'https://github.com/nvim-telescope/telescope.nvim',
     lazy = false,
@@ -530,7 +537,12 @@ require("lazy").setup({
       vim.keymap.set('x', '<C-b>', "<Left>")
     end
   },
-  'Olical/conjure',
+  {
+    'Olical/conjure',
+    config = function()
+      vim.g['conjure#mapping#prefix'] = '<Leader>'
+    end
+  },
   {
     'glacambre/firenvim',
     cond = not not vim.g.started_by_firenvim,
@@ -569,7 +581,6 @@ require("lazy").setup({
       })
     end
   },
-  'https://github.com/folke/tokyonight.nvim/',
   'sheerun/vim-polyglot',
   'https://github.com/tpope/vim-eunuch',
   {
@@ -668,6 +679,7 @@ require("lazy").setup({
       }
     }
   },
+  'https://github.com/wlangstroth/vim-racket',
 
 }, {
   install = {
@@ -689,7 +701,8 @@ require("lazy").setup({
   },
 })
 
-vim.opt.cmdheight = 1
+vim.opt.signcolumn = 'yes'
+vim.opt.cmdheight = 0
 vim.opt.laststatus = 3
 
 vim.opt.splitright = true
@@ -704,14 +717,6 @@ vim.opt.wrap = false
 
 vim.o.completeopt = 'menuone,noinsert,noselect'
 vim.o.shortmess = vim.o.shortmess .. 'c'
-
-
--- ENDLSP
-
-local function nc(keys, cmd)
-  vim.keymap.set("n", "<leader>" .. keys, "<cmd>" .. cmd .. "<cr>")
-end
-
 vim.opt.showmode = false
 
 vim.cmd [[
@@ -726,7 +731,6 @@ command! -range=% TB <line1>,<line2>w !nc termbin.com 9999 | tr -d '\n' | pbcopy
 
 vim.cmd [[set formatoptions-=cro]]
 
-
 vim.cmd [[
 nn <Leader>s<Right> <cmd>ISwapNodeWithRight<CR>
 nn <Leader>s<Left> <cmd>ISwapNodeWithLeft<CR>
@@ -738,8 +742,6 @@ vim.o.foldlevel = 10
 vim.cmd [[
 au ColorScheme * hi! link NonText WinSeparator
 ]]
-
--- adding comment
 
 vim.keymap.set('n', '<leader>cd', ':lcd %:h<CR>')
 
@@ -761,7 +763,7 @@ function! SynStack()
 endfunc
 ]]
 
-vim.opt.linespace = 15
+vim.opt.linespace = 10
 vim.g.neovide_cursor_vfx_mode = 'railgun'
 vim.g.neovide_cursor_vfx_particle_lifetime = 1.5
 vim.g.neovide_cursor_vfx_particle_density = 17.0
