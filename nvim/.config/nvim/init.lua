@@ -37,9 +37,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
     vim.keymap.set('n', '<leader>sig', vim.lsp.buf.signature_help, bufopts)
-    vim.keymap.set('n', '<leader>aws', vim.lsp.buf.add_workspace_folder, bufopts)
-    vim.keymap.set('n', '<leader>rws', vim.lsp.buf.remove_workspace_folder, bufopts)
-    vim.keymap.set('n', '<leader>lws', function()
+    vim.keymap.set('n', '<leader>wsa', vim.lsp.buf.add_workspace_folder, bufopts)
+    vim.keymap.set('n', '<leader>wsr', vim.lsp.buf.remove_workspace_folder, bufopts)
+    vim.keymap.set('n', '<leader>wsl', function()
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, bufopts)
     vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
@@ -60,7 +60,6 @@ require("lazy").setup({
         pattern = { "rose-pine*" },
         callback = function(_ev)
           vim.cmd [[
-          hi! link IndentBlanklineChar NonText
           hi def CoqtailChecked guibg=#d9e1dd
           hi def CoqtailSent guibg=#f2e9e1
           hi! GitSignsAdd        guifg=#bacfc4 blend=20
@@ -76,19 +75,21 @@ require("lazy").setup({
         dark_variant = 'moon',
         disable_italics = true,
         highlight_groups = {
-          TelescopeBorder = { fg = "overlay", bg = "overlay" },
-          TelescopeNormal = { fg = "subtle", bg = "overlay" },
-          TelescopeSelection = { fg = "text", bg = "highlight_med" },
+          Visual                  = { bg = "foam", blend = 14 },
+          WinSeparator            = { fg = "highlight_med" },
+          -- String                  = { fg = "iris", bg = "iris", blend = 5 },
+          IblScope                = { fg = "highlight_med" },
+          IblIndent               = { fg = "highlight_low" },
           TelescopeSelectionCaret = { fg = "love", bg = "highlight_med" },
           TelescopeMultiSelection = { fg = "text", bg = "highlight_high" },
-          TelescopeTitle = { fg = "base", bg = "love" },
-          TelescopePromptTitle = { fg = "base", bg = "pine" },
-          TelescopePreviewTitle = { fg = "base", bg = "iris" },
-          TelescopePromptNormal = { fg = "text", bg = "surface" },
-          TelescopePromptBorder = { fg = "surface", bg = "surface" },
+          TelescopeTitle          = { fg = "base", bg = "love" },
+          TelescopePromptTitle    = { fg = "base", bg = "pine" },
+          TelescopePreviewTitle   = { fg = "base", bg = "iris" },
+          TelescopePromptNormal   = { fg = "text", bg = "surface" },
+          TelescopePromptBorder   = { fg = "surface", bg = "surface" },
         }
       })
-      vim.cmd [[colorscheme rose-pine]]
+      vim.cmd [[colorscheme rose-pine-dawn]]
     end
   },
   {
@@ -100,7 +101,6 @@ require("lazy").setup({
         pattern = { "everforest" },
         callback = function(_ev)
           vim.cmd [[
-          hi! link IndentBlanklineChar NonText
           hi def CoqtailChecked guibg=#425047
           hi def CoqtailSent guibg=#343f44
           ]]
@@ -123,10 +123,22 @@ require("lazy").setup({
   },
   {
     'https://github.com/nvim-treesitter/nvim-treesitter',
-    main = 'nvim-treesitter.configs',
-    opts = {
-      highlight = { enable = true },
-    }
+    config = function()
+      require('nvim-treesitter.configs').setup {
+        highlight = { enable = true },
+      }
+      local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+      parser_config.koka = {
+        install_info = {
+          url = "~/Repositories/tree-sitter-koka", -- local path or git repo
+          files = { "src/parser.c", "src/scanner.c" },       -- note that some parsers also require src/scanner.c or src/scanner.cc
+          branch = "main",                  -- default branch in case of git repo if different from master
+          generate_requires_npm = false,    -- if stand-alone parser without npm dependencies
+          requires_generate_from_grammar = true, -- if folder contains pre-generated src/parser.c
+        },
+        filetype = "koka",                    -- if filetype does not match the parser name
+      }
+    end
   },
   { 'JoosepAlviste/nvim-ts-context-commentstring' },
   {
@@ -145,38 +157,6 @@ require("lazy").setup({
     'norcalli/nvim-colorizer.lua',
     config = function()
       require 'colorizer'.setup(nil, { css = true, })
-    end
-  },
-  {
-    'https://github.com/neovim/nvim-lspconfig',
-    config = function()
-      vim.diagnostic.config({ signs = false })
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
-      capabilities.textDocument.foldingRange = {
-        dynamicRegistration = false,
-        lineFoldingOnly = true
-      }
-      require('lspconfig')['ocamllsp'].setup {
-      }
-      require('lspconfig')['clangd'].setup {
-        capabilities = capabilities
-      }
-      require('lspconfig')['tsserver'].setup {
-      }
-      require 'lspconfig'.tailwindcss.setup {}
-      require('lspconfig')['pyright'].setup {
-        -- cmd = { "pyright-langserver", "--stdio", "-v", "/Users/ml/GlobalVenv" }
-      }
-      require('lspconfig')['gopls'].setup {
-      }
-      require('lspconfig')['cssls'].setup {
-        capabilities = capabilities,
-      }
-      require('lspconfig')['typst_lsp'].setup {
-        settings = {
-          exportPdf = "onSave",
-        }
-      }
     end
   },
   'https://github.com/romainl/vim-cool',
@@ -247,7 +227,6 @@ require("lazy").setup({
     'https://github.com/nvim-telescope/telescope.nvim',
     lazy = false,
     init = function()
-      print('bruh')
       vim.keymap.set('n', '<Leader>ff', '<Cmd>Telescope find_files<CR>', { desc = "find file" })
       vim.keymap.set('n', '<Leader>fr', '<Cmd>Recent<CR>', { desc = "find frecent file" })
       vim.keymap.set('n', '<Leader>fo', '<Cmd>Telescope oldfiles theme=ivy<CR>', { desc = "find recent file" })
@@ -278,12 +257,14 @@ require("lazy").setup({
         },
         pickers = {
           buffers = {
+            previewer = false,
             theme = 'ivy',
             layout_config = {
               height = 0.5
             }
           },
           find_files = {
+            previewer = false,
             theme = 'ivy',
             layout_config = {
               height = 0.5
@@ -299,7 +280,7 @@ require("lazy").setup({
             hijack_netrw = true,
           },
           frecency = {
-            show_scores = true,
+            show_scores = false,
             auto_validate = false,
           },
           live_grep_args = {
@@ -310,7 +291,10 @@ require("lazy").setup({
                 ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
               },
             },
-            theme = "dropdown", -- use dropdown theme
+            theme = "ivy", -- use dropdown theme
+            layout_config = {
+              height = 0.5
+            }
           }
         },
       }
@@ -331,7 +315,8 @@ require("lazy").setup({
           sorter = require 'telescope.config'.values.file_sorter(),
           layout_config = {
             height = 0.5
-          }
+          },
+          previewer = false
         }))
       end, {})
     end
@@ -349,7 +334,7 @@ require("lazy").setup({
   },
   {
     'https://github.com/MrcJkb/haskell-tools.nvim',
-    version = '^3', -- Recommended
+    version = '^3',
     ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject' },
     config = function()
       local ht = require('haskell-tools')
@@ -371,6 +356,8 @@ require("lazy").setup({
     end
   },
   'https://github.com/itchyny/vim-haskell-indent',
+  'https://github.com/Nymphium/vim-koka',
+  'https://github.com/rachitnigam/pyret-lang.vim',
   {
     'https://github.com/L3MON4D3/LuaSnip',
     config = function()
@@ -390,15 +377,19 @@ require("lazy").setup({
   },
   'https://github.com/vim-scripts/alex.vim',
   'nvim-tree/nvim-web-devicons',
-  { 'kevinhwang91/nvim-ufo',                                          config = true },
+  {
+    'kevinhwang91/nvim-ufo',
+    init = function() vim.o.foldlevel = 99 end,
+    config = true
+  },
   'kevinhwang91/promise-async',
   'https://github.com/hrsh7th/cmp-buffer',
   {
     'https://github.com/stevearc/oil.nvim',
-    config = function()
-      require("oil").setup {}
+    init = function()
       vim.keymap.set("n", "-", require("oil").open, { desc = "Open parent directory" })
-    end
+    end,
+    config = true
   },
   {
     'https://github.com/junegunn/vim-easy-align',
@@ -406,7 +397,7 @@ require("lazy").setup({
       vim.cmd [[nmap ga <Plug>(EasyAlign)]]
     end
   },
-  { 'ruifm/gitlinker.nvim',                       config = true },
+  { 'ruifm/gitlinker.nvim',                                           config = true },
   'kaarmu/typst.vim',
   'https://github.com/dhruvasagar/vim-table-mode',
   { 'https://github.com/smjonas/inc-rename.nvim', config = true },
@@ -520,7 +511,6 @@ require("lazy").setup({
     end
   },
 
-  -- { "lukas-reineke/indent-blankline.nvim" },
   {
     'https://github.com/linty-org/readline.nvim',
     config = function()
@@ -551,7 +541,7 @@ require("lazy").setup({
       vim.fn["firenvim#install"](0)
     end
   },
-  { 'pwntester/octo.nvim', config = true },
+  { 'pwntester/octo.nvim',                        config = true },
   { 'moll/vim-bbye' },
   'rhysd/conflict-marker.vim',
   {
@@ -592,23 +582,51 @@ require("lazy").setup({
   'rstacruz/vim-closer',
   {
     "williamboman/mason.nvim",
-    config = true
+    lazy = false,
+  },
+  {
+    'https://github.com/neovim/nvim-lspconfig',
+    config = function()
+      vim.diagnostic.config({ signs = false })
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      require('lspconfig')['ocamllsp'].setup {
+      }
+      require('lspconfig')['clangd'].setup {
+      }
+      require('lspconfig')['tsserver'].setup {
+      }
+      require 'lspconfig'.tailwindcss.setup {}
+      require('lspconfig')['pyright'].setup {
+      }
+      require('lspconfig')['gopls'].setup {
+      }
+      require('lspconfig')['cssls'].setup {
+        capabilities = capabilities,
+      }
+      require('lspconfig')['typst_lsp'].setup {
+        settings = {
+          exportPdf = "onSave",
+        }
+      }
+    end
   },
   {
     "williamboman/mason-lspconfig.nvim",
-    -- config = function()
-    --   require("mason-lspconfig").setup()
-    --   require("mason-lspconfig").setup_handlers {
-    --     ["typst_lsp"] = function()
-    --       require("lspconfig")["typst_lsp"].setup {
-    --         settings = {
-    --           exportPdf = "onType" -- Choose onType, onSave or never.
-    --           -- serverPath = "" -- Normally, there is no need to uncomment it.
-    --         }
-    --       }
-    --     end,
-    --   }
-    -- end
+    config = function()
+      require("mason").setup()
+      require("mason-lspconfig").setup {
+        ensure_installed = { "ocamllsp", "hls" }
+      }
+      require("mason-lspconfig").setup_handlers {
+        ["typst_lsp"] = function()
+          require("lspconfig")["typst_lsp"].setup {
+            settings = {
+              exportPdf = "onType"
+            }
+          }
+        end,
+      }
+    end
   },
   {
     'https://github.com/whonore/Coqtail',
@@ -623,11 +641,13 @@ require("lazy").setup({
   },
   {
     'nathom/filetype.nvim',
+    lazy = false,
     opts = {
       overrides = {
         extensions = {
           typ = "typst",
           v = "coq",
+          kk = "koka",
         },
         complex = {
           [".*rc$"] = "sh"
@@ -640,10 +660,10 @@ require("lazy").setup({
     "https://github.com/nanotech/jellybeans.vim",
     config = function()
       vim.api.nvim_create_autocmd({ "ColorScheme" }, {
-        pattern = { "everforest" },
+        pattern = { "jellybeans" },
         callback = function(_ev)
           vim.cmd [[
-          hi! link IndentBlanklineChar NonText
+          " hi! link IndentBlanklineChar NonText
           hi def CoqtailChecked guibg=#425047
           hi def CoqtailSent guibg=#343f44
           ]]
@@ -679,6 +699,16 @@ require("lazy").setup({
       }
     }
   },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {
+      indent = {
+        char = "▏",
+        smart_indent_cap = true,
+      },
+    }
+  },
   'https://github.com/wlangstroth/vim-racket',
 
 }, {
@@ -702,7 +732,7 @@ require("lazy").setup({
 })
 
 vim.opt.signcolumn = 'yes'
-vim.opt.cmdheight = 0
+vim.opt.cmdheight = 1
 vim.opt.laststatus = 3
 
 vim.opt.splitright = true
@@ -735,8 +765,6 @@ nn <Leader>s<Left> <cmd>ISwapNodeWithLeft<CR>
 nn <Leader>ss <cmd>ISwap<CR>
 ]]
 
-vim.o.foldlevel = 10
-
 vim.cmd [[
 au ColorScheme * hi! link NonText WinSeparator
 ]]
@@ -752,15 +780,6 @@ endfunction
 command FollowSymlink call Slick()
 ]]
 
-vim.cmd [[
-function! SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
-]]
-
 vim.opt.linespace = 10
 vim.g.neovide_cursor_vfx_mode = 'railgun'
 vim.g.neovide_cursor_vfx_particle_lifetime = 1.5
@@ -771,11 +790,7 @@ vim.opt.guifont = 'JetBrains Mono:h24'
 
 local function neovideScale(amount)
   local temp = vim.g.neovide_scale_factor + amount
-
-  if temp < 0.5 then
-    return
-  end
-
+  if temp < 0.5 then return end
   vim.g.neovide_scale_factor = temp
 end
 
@@ -786,3 +801,20 @@ end)
 vim.keymap.set("n", "<C-->", function()
   neovideScale(-0.1)
 end)
+
+-- ref: https://github.com/lukas-reineke/indent-blankline.nvim/issues/132#issuecomment-1781195298
+local ibl_visual_hide = vim.api.nvim_create_augroup("ibl_visual_hide", { clear = true })
+vim.api.nvim_create_autocmd("ModeChanged",
+  {
+    group = ibl_visual_hide,
+    pattern = "[vV\x16]*:*", -- visual → anything
+    command = "IBLEnable",
+    desc = "Enable IBL in non-Visual mode"
+  })
+vim.api.nvim_create_autocmd("ModeChanged",
+  {
+    group = ibl_visual_hide,
+    pattern = "*:[vV\x16]*", -- anything → visual
+    command = "IBLDisable",
+    desc = "Disable IBL in Visual mode"
+  })
