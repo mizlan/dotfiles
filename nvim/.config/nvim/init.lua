@@ -43,7 +43,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, bufopts)
     vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+    -- vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, bufopts)
     vim.keymap.set('n', '<leader>f<space>', function() vim.lsp.buf.format { async = true } end, bufopts)
@@ -112,13 +112,56 @@ require("lazy").setup({
   },
   'nvim-lua/plenary.nvim',
   {
+    'nathom/filetype.nvim',
+    lazy = false,
+    opts = {
+      overrides = {
+        extensions = {
+          typ = "typst",
+          v = "coq",
+          kk = "koka",
+          rkt = "racket",
+          pl = "prolog",
+        },
+        literal = {
+          skhdrc = "",
+        },
+        complex = {
+          [".*rc$"] = "sh"
+        }
+      }
+    }
+  },
+  {
     'https://github.com/nvim-lualine/lualine.nvim',
     opts = {
       options = {
         theme = 'auto',
-        section_separators = { left = '', right = '' },
-        component_separators = ''
-      }
+        component_separators = '│',
+        section_separators = { left = '', right = '' },
+      },
+      sections = {
+        lualine_a = {
+          { 'mode', separator = { left = '' }, right_padding = 2 },
+        },
+        lualine_b = { 'filename', 'branch' },
+        lualine_c = { 'fileformat' },
+        lualine_x = {},
+        lualine_y = { 'filetype', 'progress' },
+        lualine_z = {
+          { 'location', separator = { right = '' }, left_padding = 2 },
+        },
+      },
+      inactive_sections = {
+        lualine_a = { 'filename' },
+        lualine_b = {},
+        lualine_c = {},
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = { 'location' },
+      },
+      tabline = {},
+      extensions = {},
     }
   },
   {
@@ -130,17 +173,18 @@ require("lazy").setup({
       local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
       parser_config.koka = {
         install_info = {
-          url = "~/Repositories/tree-sitter-koka", -- local path or git repo
-          files = { "src/parser.c", "src/scanner.c" },       -- note that some parsers also require src/scanner.c or src/scanner.cc
-          branch = "main",                  -- default branch in case of git repo if different from master
-          generate_requires_npm = false,    -- if stand-alone parser without npm dependencies
-          requires_generate_from_grammar = true, -- if folder contains pre-generated src/parser.c
+          url = "https://github.com/mtoohey31/tree-sitter-koka", -- local path or git repo
+          files = { "src/parser.c", "src/scanner.c" },
+          branch = "main",
+          generate_requires_npm = false,
+          requires_generate_from_grammar = true,
         },
-        filetype = "koka",                    -- if filetype does not match the parser name
+        filetype = "koka", -- if filetype does not match the parser name
       }
     end
   },
   { 'JoosepAlviste/nvim-ts-context-commentstring' },
+  { 'Mofiqul/vscode.nvim' },
   {
     'https://github.com/numToStr/Comment.nvim',
     opts = function()
@@ -170,6 +214,15 @@ require("lazy").setup({
   },
   -- { 'https://github.com/IndianBoy42/iswap.nvim', branch = 'expand_key' },
   'https://github.com/tpope/vim-fugitive',
+  {
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim",
+      "nvim-telescope/telescope.nvim",
+    },
+    config = true
+  },
   {
     'https://github.com/lewis6991/gitsigns.nvim',
     config = function()
@@ -229,8 +282,8 @@ require("lazy").setup({
     init = function()
       vim.keymap.set('n', '<Leader>ff', '<Cmd>Telescope find_files<CR>', { desc = "find file" })
       vim.keymap.set('n', '<Leader>fr', '<Cmd>Recent<CR>', { desc = "find frecent file" })
-      vim.keymap.set('n', '<Leader>fo', '<Cmd>Telescope oldfiles theme=ivy<CR>', { desc = "find recent file" })
-      vim.keymap.set('n', '<Leader>,', '<Cmd>Telescope buffers ignore_current_buffer=true theme=ivy<CR>',
+      vim.keymap.set('n', '<Leader>fo', '<Cmd>Telescope oldfiles<CR>', { desc = "find recent file" })
+      vim.keymap.set('n', '<Leader>,', '<Cmd>Telescope buffers ignore_current_buffer=true<CR>',
         { desc = "switch to buffer" })
       vim.keymap.set('n', [[<Leader>']], '<Cmd>Telescope resume<CR>', { desc = "resume previous search" })
       vim.keymap.set('n', [[<Leader>sp]], '<Cmd>Telescope live_grep_args<CR>', { desc = "ripgrep" })
@@ -257,6 +310,13 @@ require("lazy").setup({
         },
         pickers = {
           buffers = {
+            previewer = false,
+            theme = 'ivy',
+            layout_config = {
+              height = 0.5
+            }
+          },
+          oldfiles = {
             previewer = false,
             theme = 'ivy',
             layout_config = {
@@ -351,6 +411,15 @@ require("lazy").setup({
             vim.keymap.set('n', '<leader>cll', vim.lsp.codelens.run, opts)
             vim.keymap.set('n', '<leader>hs', ht.hoogle.hoogle_signature, opts)
           end,
+          settings = {
+            haskell = {
+              plugin = {
+                stan = {
+                  globalOn = false
+                }
+              }
+            }
+          }
         },
       }
     end
@@ -397,10 +466,19 @@ require("lazy").setup({
       vim.cmd [[nmap ga <Plug>(EasyAlign)]]
     end
   },
-  { 'ruifm/gitlinker.nvim',                                           config = true },
+  { 'ruifm/gitlinker.nvim', config = true },
   'kaarmu/typst.vim',
   'https://github.com/dhruvasagar/vim-table-mode',
-  { 'https://github.com/smjonas/inc-rename.nvim', config = true },
+  {
+    'https://github.com/smjonas/inc-rename.nvim',
+    lazy = false,
+    config = function()
+      require("inc_rename").setup()
+      vim.keymap.set("n", "<leader>rn", function()
+        return ":IncRename " .. vim.fn.expand("<cword>")
+      end, { expr = true })
+    end
+  },
   'https://github.com/ii14/neorepl.nvim',
   {
     'goolord/alpha-nvim',
@@ -463,7 +541,7 @@ require("lazy").setup({
         button("-      ", "  browse", ":Oil<CR>"),
         button("SPC g g", "  git", ":0 Git<CR>"),
         button("i      ", "  new-file", ":ene <BAR> startinsert <CR>"),
-        button("SPC f o", "  oldfiles", ":Telescope oldfiles theme=dropdown<CR>"),
+        button("SPC f o", "  oldfiles", ":Telescope oldfiles<CR>"),
       }
 
       dashboard.section.buttons.opts = {
@@ -541,7 +619,7 @@ require("lazy").setup({
       vim.fn["firenvim#install"](0)
     end
   },
-  { 'pwntester/octo.nvim',                        config = true },
+  { 'pwntester/octo.nvim',  config = true },
   { 'moll/vim-bbye' },
   'rhysd/conflict-marker.vim',
   {
@@ -571,7 +649,7 @@ require("lazy").setup({
       })
     end
   },
-  'sheerun/vim-polyglot',
+  -- 'sheerun/vim-polyglot',
   'https://github.com/tpope/vim-eunuch',
   {
     "chrisgrieser/nvim-early-retirement",
@@ -580,10 +658,10 @@ require("lazy").setup({
   },
   'rktjmp/lush.nvim',
   'rstacruz/vim-closer',
-  {
-    "williamboman/mason.nvim",
-    lazy = false,
-  },
+  -- {
+  --   "williamboman/mason.nvim",
+  --   lazy = false,
+  -- },
   {
     'https://github.com/neovim/nvim-lspconfig',
     config = function()
@@ -611,24 +689,6 @@ require("lazy").setup({
     end
   },
   {
-    "williamboman/mason-lspconfig.nvim",
-    config = function()
-      require("mason").setup()
-      require("mason-lspconfig").setup {
-        ensure_installed = { "ocamllsp", "hls" }
-      }
-      require("mason-lspconfig").setup_handlers {
-        ["typst_lsp"] = function()
-          require("lspconfig")["typst_lsp"].setup {
-            settings = {
-              exportPdf = "onType"
-            }
-          }
-        end,
-      }
-    end
-  },
-  {
     'https://github.com/whonore/Coqtail',
     lazy = false,
     config = function()
@@ -638,22 +698,6 @@ require("lazy").setup({
       vim.keymap.set({ 'n', 'i' }, '<C-c><C-k>', '<Plug>CoqUndo')
       vim.keymap.set({ 'n', 'i' }, '<C-c><C-g>', '<Plug>CoqJumpToEnd')
     end
-  },
-  {
-    'nathom/filetype.nvim',
-    lazy = false,
-    opts = {
-      overrides = {
-        extensions = {
-          typ = "typst",
-          v = "coq",
-          kk = "koka",
-        },
-        complex = {
-          [".*rc$"] = "sh"
-        }
-      }
-    }
   },
   { "https://github.com/pbrisbin/vim-colors-off" },
   {
@@ -672,19 +716,19 @@ require("lazy").setup({
     end
   },
   --
-  -- {
-  --   "https://github.com/ludovicchabant/vim-gutentags",
-  --   filetypes = { 'coq' },
-  --   config = function()
-  --     vim.g.gutentags_ctags_executable = '/opt/homebrew/bin/ctags'
-  --     vim.g.gutentags_gtags_options_file = 'coq.ctags'
-  --     vim.g.gutentags_add_default_project_roots = 0
-  --     vim.g.gutentags_generate_on_missing = 0
-  --     vim.g.gutentags_generate_on_new = 0
-  --     vim.g.gutentags_generate_on_write = 0
-  --   end,
-  --   cmd = "GutentagsUpdate"
-  -- },
+  {
+    "https://github.com/ludovicchabant/vim-gutentags",
+    filetypes = { 'coq' },
+    config = function()
+      vim.g.gutentags_ctags_executable = '/opt/homebrew/bin/ctags'
+      vim.g.gutentags_gtags_options_file = 'coq.ctags'
+      vim.g.gutentags_add_default_project_roots = 0
+      vim.g.gutentags_generate_on_missing = 0
+      vim.g.gutentags_generate_on_new = 0
+      vim.g.gutentags_generate_on_write = 0
+    end,
+    cmd = "GutentagsUpdate"
+  },
   { "folke/neodev.nvim",                         opts = {} },
   {
     "folke/which-key.nvim",
@@ -694,6 +738,7 @@ require("lazy").setup({
       vim.o.timeoutlen = 300
     end,
     opts = {
+      -- NOTWORKING
       triggers_nowait = {
         "<leader>"
       }
@@ -702,12 +747,31 @@ require("lazy").setup({
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
-    opts = {
-      indent = {
-        char = "▏",
-        smart_indent_cap = true,
-      },
-    }
+    config = function()
+      require("ibl").setup {
+        indent = {
+          char = "▏",
+          smart_indent_cap = true,
+        },
+      }
+      -- HACK
+      -- ref: https://github.com/lukas-reineke/indent-blankline.nvim/issues/132#issuecomment-1781195298
+      local ibl_visual_hide = vim.api.nvim_create_augroup("ibl_visual_hide", { clear = true })
+      vim.api.nvim_create_autocmd("ModeChanged",
+        {
+          group = ibl_visual_hide,
+          pattern = "[vV\x16]*:*", -- visual → anything
+          command = "IBLEnable",
+          desc = "Enable IBL in non-Visual mode"
+        })
+      vim.api.nvim_create_autocmd("ModeChanged",
+        {
+          group = ibl_visual_hide,
+          pattern = "*:[vV\x16]*", -- anything → visual
+          command = "IBLDisable",
+          desc = "Disable IBL in Visual mode"
+        })
+    end
   },
   'https://github.com/wlangstroth/vim-racket',
 
@@ -801,20 +865,3 @@ end)
 vim.keymap.set("n", "<C-->", function()
   neovideScale(-0.1)
 end)
-
--- ref: https://github.com/lukas-reineke/indent-blankline.nvim/issues/132#issuecomment-1781195298
-local ibl_visual_hide = vim.api.nvim_create_augroup("ibl_visual_hide", { clear = true })
-vim.api.nvim_create_autocmd("ModeChanged",
-  {
-    group = ibl_visual_hide,
-    pattern = "[vV\x16]*:*", -- visual → anything
-    command = "IBLEnable",
-    desc = "Enable IBL in non-Visual mode"
-  })
-vim.api.nvim_create_autocmd("ModeChanged",
-  {
-    group = ibl_visual_hide,
-    pattern = "*:[vV\x16]*", -- anything → visual
-    command = "IBLDisable",
-    desc = "Disable IBL in Visual mode"
-  })
