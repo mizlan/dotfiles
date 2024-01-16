@@ -341,7 +341,7 @@ require("lazy").setup({
       vim.g.haskell_tools = {
         tools = {
           hover = {
-            disable = true
+            enable = false
           }
         },
         hls = {
