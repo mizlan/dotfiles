@@ -2,7 +2,7 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # python
-eval "$(pyenv init -)"
+# eval "$(pyenv init -)"
 
 # perl
 # eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
@@ -33,3 +33,6 @@ export PATH="$PATH:$HOME/.zvm/bin"
 
 # kattis
 export PATH="$PATH:$HOME/Repositories/kattis-cli"
+
+# typst
+export PATH="$PATH:$HOME/Repositories/typst-lsp/target/release"

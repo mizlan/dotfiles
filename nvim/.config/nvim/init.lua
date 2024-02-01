@@ -14,6 +14,13 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.python3_host_prog = '~/GlobalVenv/bin/python3.9'
 vim.opt.termguicolors = true
 
+-- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
+-- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
+-- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
+-- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
+-- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
+-- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 
@@ -62,9 +69,11 @@ require("lazy").setup({
           vim.cmd [[
           hi def CoqtailChecked guibg=#d9e1dd
           hi def CoqtailSent guibg=#f2e9e1
-          hi! GitSignsAdd        guifg=#bacfc4 blend=20
-          hi! GitSignsChange     guifg=#e6d2c1 blend=20
-          hi! GitSignsDelete     guifg=#dbb6b4 blend=20
+          hi! GitSignsAdd        guifg=#bacfc4
+          hi! GitSignsChange     guifg=#e6d2c1
+          hi! GitSignsDelete     guifg=#dbb6b4
+          hi! DiffDelete         guibg=#ecd7d6
+          hi! DiffText           guibg=#f3ddd7
           hi! LuaLineDiffAdd    guifg=#56949f guibg=#faf4ed
           hi! LuaLineDiffChange guifg=#d7827e guibg=#faf4ed
           ]]
@@ -75,9 +84,8 @@ require("lazy").setup({
         dark_variant = 'moon',
         disable_italics = true,
         highlight_groups = {
-          Visual                  = { bg = "foam", blend = 14 },
+          Visual                  = { bg = "#e3e7e2" },
           WinSeparator            = { fg = "highlight_med" },
-          -- String                  = { fg = "iris", bg = "iris", blend = 5 },
           IblScope                = { fg = "highlight_med" },
           IblIndent               = { fg = "highlight_low" },
           TelescopeSelectionCaret = { fg = "love", bg = "highlight_med" },
@@ -106,7 +114,7 @@ require("lazy").setup({
           ]]
         end
       })
-      vim.g.everforest_background = 'medium'
+      vim.g.everforest_background = 'soft'
       vim.g.everforest_better_performance = 1
     end
   },
@@ -121,7 +129,9 @@ require("lazy").setup({
           v = "coq",
           kk = "koka",
           rkt = "racket",
+          ss = "racket",
           pl = "prolog",
+          html = "html",
         },
         literal = {
           skhdrc = "",
@@ -138,27 +148,7 @@ require("lazy").setup({
       options = {
         theme = 'auto',
         component_separators = '│',
-        section_separators = { left = '', right = '' },
-      },
-      sections = {
-        lualine_a = {
-          { 'mode', separator = { left = '' }, right_padding = 2 },
-        },
-        lualine_b = { 'filename', 'branch' },
-        lualine_c = { 'fileformat' },
-        lualine_x = {},
-        lualine_y = { 'filetype', 'progress' },
-        lualine_z = {
-          { 'location', separator = { right = '' }, left_padding = 2 },
-        },
-      },
-      inactive_sections = {
-        lualine_a = { 'filename' },
-        lualine_b = {},
-        lualine_c = {},
-        lualine_x = {},
-        lualine_y = {},
-        lualine_z = { 'location' },
+        section_separators = { left = '', right = '' },
       },
       tabline = {},
       extensions = {},
@@ -184,7 +174,6 @@ require("lazy").setup({
     end
   },
   { 'JoosepAlviste/nvim-ts-context-commentstring' },
-  { 'Mofiqul/vscode.nvim' },
   {
     'https://github.com/numToStr/Comment.nvim',
     opts = function()
@@ -313,21 +302,21 @@ require("lazy").setup({
             previewer = false,
             theme = 'ivy',
             layout_config = {
-              height = 0.5
+              height = 0.5,
             }
           },
           oldfiles = {
             previewer = false,
             theme = 'ivy',
             layout_config = {
-              height = 0.5
+              height = 0.5,
             }
           },
           find_files = {
             previewer = false,
             theme = 'ivy',
             layout_config = {
-              height = 0.5
+              height = 0.5,
             }
           },
           frecency = {
@@ -353,7 +342,7 @@ require("lazy").setup({
             },
             theme = "ivy", -- use dropdown theme
             layout_config = {
-              height = 0.5
+              height = 0.5,
             }
           }
         },
@@ -374,7 +363,7 @@ require("lazy").setup({
           end,
           sorter = require 'telescope.config'.values.file_sorter(),
           layout_config = {
-            height = 0.5
+            height = 0.5,
           },
           previewer = false
         }))
@@ -466,8 +455,14 @@ require("lazy").setup({
       vim.cmd [[nmap ga <Plug>(EasyAlign)]]
     end
   },
-  { 'ruifm/gitlinker.nvim', config = true },
+  { 'ruifm/gitlinker.nvim',                                           config = true },
   'kaarmu/typst.vim',
+  {
+    'chomosuke/typst-preview.nvim',
+    ft = 'typst',
+    version = '0.1.*',
+    build = function() require 'typst-preview'.update() end,
+  },
   'https://github.com/dhruvasagar/vim-table-mode',
   {
     'https://github.com/smjonas/inc-rename.nvim',
@@ -480,93 +475,6 @@ require("lazy").setup({
     end
   },
   'https://github.com/ii14/neorepl.nvim',
-  {
-    'goolord/alpha-nvim',
-    config = function()
-      local alpha = require("alpha")
-      local dashboard = require("alpha.themes.dashboard")
-
-      dashboard.section.header.val = {
-        "   ⣴⣶⣤⡤⠦⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆          ",
-        "    ⠉⠻⢿⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦       ",
-        "          ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷    ⠻⠿⢿⣿⣧⣄     ",
-        "           ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈⠙⠿⠄    ",
-        "          ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿⣿⣛⣳⣤⣀⣀   ",
-        "   ⢠⣧⣶⣥⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛⠻⠿⠄  ",
-        "  ⣰⣿⣿⠛⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠⣄⣾⠄   ",
-        " ⣠⣿⠿⠛ ⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿⣿⣷⡄  ",
-        " ⠙⠃   ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻⢷⣄ ",
-        "      ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆     ",
-        "       ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃     ",
-      }
-
-      dashboard.section.header.opts.hl = 'Function'
-
-      local leader = "SPC"
-      local function button(sc, txt, keybind, keybind_opts)
-        local sc_ = sc:gsub("%s", ""):gsub(leader, "<leader>")
-
-        local opts = {
-          position = "center",
-          shortcut = sc,
-          cursor = 3,
-          width = 30,
-          align_shortcut = "right",
-          hl_shortcut = "WinSeparator",
-          hl = {
-            { 'LineNr', 0, 17 }, -- highlight the part after the icon glyph
-          },
-        }
-        if keybind then
-          keybind_opts = keybind_opts or { noremap = true, silent = true, nowait = true }
-          opts.keymap = { "n", sc_, keybind, keybind_opts }
-        end
-
-        local function on_press()
-          local key = vim.api.nvim_replace_termcodes(keybind or sc_ .. "<Ignore>", true, false, true)
-          vim.api.nvim_feedkeys(key, "t", false)
-        end
-
-        return {
-          type = "button",
-          val = txt,
-          on_press = on_press,
-          opts = opts,
-        }
-      end
-
-      -- Set menu
-      dashboard.section.buttons.val = {
-        button("SPC f r", "  recents", ":Recent<CR>"),
-        button("-      ", "  browse", ":Oil<CR>"),
-        button("SPC g g", "  git", ":0 Git<CR>"),
-        button("i      ", "  new-file", ":ene <BAR> startinsert <CR>"),
-        button("SPC f o", "  oldfiles", ":Telescope oldfiles<CR>"),
-      }
-
-      dashboard.section.buttons.opts = {
-        spacing = 0,
-      }
-
-      local function headerPadding()
-        return vim.fn.max({ 2, vim.fn.round((vim.fn.winheight(0) - 18) / 2) })
-      end
-
-      dashboard.config.layout = {
-        { type = 'padding', val = headerPadding },
-        dashboard.section.header,
-        { type = 'padding', val = 2 },
-        dashboard.section.buttons,
-        dashboard.section.footer,
-      }
-
-      alpha.setup(dashboard.opts)
-
-      vim.cmd([[
-        autocmd FileType alpha setlocal nofoldenable
-      ]])
-    end
-  },
   'https://github.com/jaawerth/fennel.vim',
   {
     'https://github.com/bfredl/nvim-miniyank',
@@ -588,23 +496,6 @@ require("lazy").setup({
       ]]
     end
   },
-
-  {
-    'https://github.com/linty-org/readline.nvim',
-    config = function()
-      local readline = require 'readline'
-      vim.keymap.set('x', '<M-f>', readline.forward_word)
-      vim.keymap.set('x', '<M-b>', readline.backward_word)
-      vim.keymap.set('x', '<C-a>', readline.beginning_of_line)
-      vim.keymap.set('x', '<C-e>', readline.end_of_line)
-      vim.keymap.set('x', '<M-d>', readline.kill_word)
-      vim.keymap.set('x', '<M-BS>', readline.backward_kill_word)
-      vim.keymap.set('x', '<C-w>', readline.unix_word_rubout)
-      vim.keymap.set('x', '<C-k>', readline.kill_line)
-      vim.keymap.set('x', '<C-f>', "<Right>")
-      vim.keymap.set('x', '<C-b>', "<Left>")
-    end
-  },
   {
     'Olical/conjure',
     config = function()
@@ -619,7 +510,7 @@ require("lazy").setup({
       vim.fn["firenvim#install"](0)
     end
   },
-  { 'pwntester/octo.nvim',  config = true },
+  { 'pwntester/octo.nvim', config = true },
   { 'moll/vim-bbye' },
   'rhysd/conflict-marker.vim',
   {
@@ -692,11 +583,33 @@ require("lazy").setup({
     'https://github.com/whonore/Coqtail',
     lazy = false,
     config = function()
+      -- vscoq
+      -- vim.g.loaded_coqtail = 1
+      -- vim.g['coqtail#supported'] = 0
+
       vim.g.coqtail_nomap = 1
       vim.keymap.set({ 'n', 'i' }, '<C-c><C-l>', '<Plug>CoqToLine')
       vim.keymap.set({ 'n', 'i' }, '<C-c><C-j>', '<Plug>CoqNext')
       vim.keymap.set({ 'n', 'i' }, '<C-c><C-k>', '<Plug>CoqUndo')
       vim.keymap.set({ 'n', 'i' }, '<C-c><C-g>', '<Plug>CoqJumpToEnd')
+    end
+  },
+  {
+    'tomtomjhj/vscoq.nvim',
+    lazy = false,
+    config = function()
+      --   require 'vscoq'.setup {
+      --     vscoq = {
+      --       proof = {
+      --         mode = 0, -- manual
+      --       }
+      --     }
+      --   }
+      --   vim.keymap.set({ 'n', 'i' }, '<C-c><C-l>', '<Cmd>VsCoq interpretToPoint<CR>')
+      --   vim.keymap.set({ 'n', 'i' }, '<C-c><C-j>', '<Cmd>VsCoq stepForward<CR>')
+      --   vim.keymap.set({ 'n', 'i' }, '<C-c><C-k>', '<Cmd>VsCoq stepBackward<CR>')
+      --   vim.keymap.set({ 'n', 'i' }, '<C-c><C-e>', '<Cmd>VsCoq interpretToEnd<CR>')
+      --   vim.keymap.set({ 'n', 'i' }, '<C-c><C-g>', '<Cmd>VsCoq jumpToEnd<CR>')
     end
   },
   { "https://github.com/pbrisbin/vim-colors-off" },
@@ -715,20 +628,19 @@ require("lazy").setup({
       })
     end
   },
-  --
-  {
-    "https://github.com/ludovicchabant/vim-gutentags",
-    filetypes = { 'coq' },
-    config = function()
-      vim.g.gutentags_ctags_executable = '/opt/homebrew/bin/ctags'
-      vim.g.gutentags_gtags_options_file = 'coq.ctags'
-      vim.g.gutentags_add_default_project_roots = 0
-      vim.g.gutentags_generate_on_missing = 0
-      vim.g.gutentags_generate_on_new = 0
-      vim.g.gutentags_generate_on_write = 0
-    end,
-    cmd = "GutentagsUpdate"
-  },
+  -- {
+  --   "https://github.com/ludovicchabant/vim-gutentags",
+  --   filetypes = { 'coq' },
+  --   config = function()
+  --     vim.g.gutentags_ctags_executable = '/opt/homebrew/bin/ctags'
+  --     vim.g.gutentags_gtags_options_file = 'coq.ctags'
+  --     vim.g.gutentags_add_default_project_roots = 0
+  --     vim.g.gutentags_generate_on_missing = 0
+  --     vim.g.gutentags_generate_on_new = 0
+  --     vim.g.gutentags_generate_on_write = 0
+  --   end,
+  --   cmd = "GutentagsUpdate"
+  -- },
   { "folke/neodev.nvim",                         opts = {} },
   {
     "folke/which-key.nvim",
@@ -774,6 +686,15 @@ require("lazy").setup({
     end
   },
   'https://github.com/wlangstroth/vim-racket',
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    build = "cd app && npm install",
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
+    ft = { "markdown" },
+  },
 
 }, {
   install = {
@@ -836,32 +757,23 @@ au ColorScheme * hi! link NonText WinSeparator
 vim.keymap.set('n', '<leader>cd', ':lcd %:h<CR>')
 
 vim.cmd [[
-function! Slick()
+function! FollowSymlink()
   let fname = resolve(expand('%:p'))
   bwipeout
   exec "edit " . fname
 endfunction
-command FollowSymlink call Slick()
+command FollowSymlink call FollowSymlink()
 ]]
 
-vim.opt.linespace = 10
+vim.opt.linespace = 12
 vim.g.neovide_cursor_vfx_mode = 'railgun'
 vim.g.neovide_cursor_vfx_particle_lifetime = 1.5
 vim.g.neovide_cursor_vfx_particle_density = 17.0
 vim.g.neovide_cursor_vfx_particle_phase = 4.5
 vim.g.neovide_cursor_vfx_particle_curl = 4.0
-vim.opt.guifont = 'JetBrains Mono:h24'
 
-local function neovideScale(amount)
-  local temp = vim.g.neovide_scale_factor + amount
-  if temp < 0.5 then return end
-  vim.g.neovide_scale_factor = temp
+if vim.g.neovide then
+    vim.keymap.set({ "n", "v" }, "<C-+>", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>")
+    vim.keymap.set({ "n", "v" }, "<C-->", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>")
+    vim.keymap.set({ "n", "v" }, "<C-0>", ":lua vim.g.neovide_scale_factor = 1<CR>")
 end
-
-vim.keymap.set("n", "<C-=>", function()
-  neovideScale(0.1)
-end)
-
-vim.keymap.set("n", "<C-->", function()
-  neovideScale(-0.1)
-end)

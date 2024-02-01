@@ -32,24 +32,14 @@ yabai -m config                           \
 yabai -m signal --add event=window_created action='echo r | nc 127.0.0.1 1337'
 yabai -m signal --add event=window_destroyed action='echo r | nc 127.0.0.1 1337'
 
-# yabai -m signal --add event=mission_control_exit action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
-# yabai -m signal --add event=display_added action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
-# yabai -m signal --add event=display_removed action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
-# yabai -m signal --add event=window_created action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-# yabai -m signal --add event=window_destroyed action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-# yabai -m signal --add event=window_focused action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-# yabai -m signal --add event=window_moved action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-# yabai -m signal --add event=window_resized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-# yabai -m signal --add event=window_minimized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-# yabai -m signal --add event=window_deminimized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
-
-# yabai -m signal --add event=space_changed action="yabai -m window --focus \$(yabai -m query --windows --space | jq .[0].id)"
-
 # Logic 2010
 yabai -m rule --add app="^LogicProgram$" manage=off
 
 # choose
 yabai -m rule --add app="^choose$" manage=off
+
+# # Bitwarden Popup
+# yabai -m rule --add app="^Extension:.*Bitwarden$" manage=off
 
 # System Preferences
 yabai -m rule --add app="^System Settings$" manage=off

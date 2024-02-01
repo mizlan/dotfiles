@@ -1,3 +1,7 @@
+# NOTE
+# use SHELL=dash in the plist file for skhdrc
+# ref: https://github.com/koekeishiya/skhd/issues/42
+
 alt - 0x29 : yabai -m window --toggle zoom-fullscreen
 cmd + shift - f : yabai -m window --toggle zoom-fullscreen
 
@@ -6,8 +10,8 @@ ctrl + alt + cmd - r : yabai --restart-service
 ctrl + alt + cmd - c : /Users/ml/themechange.sh
 
 cmd + shift - return [
-  "firefox nightly" : echo 'c'        | nc 127.0.0.1 1337
-  *         : echo 'gFirefox Nightly' | nc 127.0.0.1 1337
+ "firefox" : echo 'c'        | nc 127.0.0.1 1337
+ *         : echo 'gFirefox' | nc 127.0.0.1 1337
 ]
 
 cmd + shift - e [
@@ -19,6 +23,10 @@ cmd + shift - p [
   "Skim" : echo 'c'     | nc 127.0.0.1 1337
   *      : echo 'gSkim' | nc 127.0.0.1 1337
 ]
+
+cmd + shift - x : echo 'gNeovide' | nc 127.0.0.1 1337
+
+cmd + shift - d : echo 'gDiscord' | nc 127.0.0.1 1337
 
 cmd + shift - j : echo 'c' | nc 127.0.0.1 1337
 cmd + shift - m : echo 'r' | nc 127.0.0.1 1337
@@ -66,8 +74,8 @@ fn - x : yabai -m window --toggle float --toggle topmost
 
 cmd + shift - space : yabai -m query --windows | jq -r '.[] | [.id, .app] | join (" ")' | choose | awk '{ print $1 }' | xargs -I{} yabai -m window --focus {}
 
-fn - n : yabai -m window --focus stack.next
-fn - p : yabai -m window --focus stack.prev
+alt + shift - n : yabai -m window --focus stack.next
+alt + shift - p : yabai -m window --focus stack.prev
 
 fn - t : kitty -1 --title "ephemeral-$(uuidgen)" --directory "$HOME"
 
