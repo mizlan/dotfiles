@@ -11,7 +11,7 @@ yabai -m config                           \
   mouse_action2              resize       \
   mouse_drop_action          stack        \
                                           \
-  mouse_modifier             fn           \
+  mouse_modifier             alt          \
   focus_follows_mouse        off          \
   mouse_follows_focus        off          \
                                           \
@@ -49,7 +49,7 @@ yabai -m rule --add title="^ephemeral-" manage=off grid=6:4:1:1:2:4
 
 $HOME/.config/yabai/centerstubborn.sh
 
-$HOME/Repositories/JankyBorders/bin/borders \
-  "active_color=gradient(top_left=0xffffc640,bottom_right=0xff953ee6)" \
-  "inactive_color=gradient(top_left=0xff45c4c0,bottom_right=0xffba3aa5)" \
+borders \
+  "active_color=gradient(top_left=0xffffc640,bottom_right=0xffba3aa5)" \
+  "inactive_color=gradient(top_left=0xaa45c4c0,bottom_right=0xaaba3aa5)" \
   width=10

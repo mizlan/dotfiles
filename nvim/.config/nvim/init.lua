@@ -14,29 +14,53 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.python3_host_prog = '~/GlobalVenv/bin/python3.9'
 vim.opt.termguicolors = true
 
--- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
--- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
--- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
--- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
--- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
--- "▏" │" "▎" "⎸"" "¦" "┆" "" "┊"
-
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
+
+vim.diagnostic.config {
+  underline = false,
+  virtual_text = false,
+  -- virtual_text = {
+  --   prefix = "",
+  --   suffix = " "
+  -- },
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = '󰝤',
+      [vim.diagnostic.severity.WARN] = '󰔶',
+      [vim.diagnostic.severity.HINT] = '',
+      [vim.diagnostic.severity.HINT] = '󰣏',
+    },
+  }
+}
+
+vim.filetype.add {
+  extension = {
+    typ = "typst",
+    v = "coq",
+    kk = "koka",
+    rkt = "racket",
+    ss = "racket",
+    pl = "prolog",
+  },
+  filename = {
+    ["yabairc"] = 'sh'
+  }
+}
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('UserLspConfig', {}),
   callback = function(ev)
     local bufopts = { noremap = true, silent = true, buffer = ev.buf }
 
-    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, bufopts)
-    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, bufopts)
+    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev_hl, bufopts)
+    vim.keymap.set('n', ']d', vim.diagnostic.goto_next_hl, bufopts)
     vim.keymap.set('n', '[D', function()
-        vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR, })
+        vim.diagnostic.goto_prev_hl({ severity = vim.diagnostic.severity.ERROR, })
       end,
       bufopts)
     vim.keymap.set('n', ']D', function()
-        vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR, })
+        vim.diagnostic.goto_next_hl({ severity = vim.diagnostic.severity.ERROR, })
       end,
       bufopts)
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
@@ -67,15 +91,6 @@ require("lazy").setup({
         pattern = { "rose-pine*" },
         callback = function(_ev)
           vim.cmd [[
-          hi def CoqtailChecked guibg=#d9e1dd
-          hi def CoqtailSent guibg=#f2e9e1
-          hi! GitSignsAdd        guifg=#bacfc4
-          hi! GitSignsChange     guifg=#e6d2c1
-          hi! GitSignsDelete     guifg=#dbb6b4
-          hi! DiffDelete         guibg=#ecd7d6
-          hi! DiffText           guibg=#f3ddd7
-          hi! LuaLineDiffAdd    guifg=#56949f guibg=#faf4ed
-          hi! LuaLineDiffChange guifg=#d7827e guibg=#faf4ed
           ]]
         end
       })
@@ -83,18 +98,39 @@ require("lazy").setup({
       require('rose-pine').setup({
         dark_variant = 'moon',
         disable_italics = true,
+        styles = {
+          bold = true,
+          italic = true,
+          transparency = false,
+        },
         highlight_groups = {
-          Visual                  = { bg = "#e3e7e2" },
-          WinSeparator            = { fg = "highlight_med" },
-          IblScope                = { fg = "highlight_med" },
-          IblIndent               = { fg = "highlight_low" },
-          TelescopeSelectionCaret = { fg = "love", bg = "highlight_med" },
-          TelescopeMultiSelection = { fg = "text", bg = "highlight_high" },
-          TelescopeTitle          = { fg = "base", bg = "love" },
-          TelescopePromptTitle    = { fg = "base", bg = "pine" },
-          TelescopePreviewTitle   = { fg = "base", bg = "iris" },
-          TelescopePromptNormal   = { fg = "text", bg = "surface" },
-          TelescopePromptBorder   = { fg = "surface", bg = "surface" },
+          DiagnosticVirtualTextError = { bg = "#f5e9e3" },
+          DiagnosticVirtualTextWarn  = { bg = "#f6ebdd" },
+          DiagnosticVirtualTextInfo  = { bg = "#eaeae5" },
+          DiagnosticVirtualTextHint  = { bg = "#efe8e6" },
+          Visual                     = { bg = "#e3e7e2" },
+          WinSeparator               = { fg = "highlight_med" },
+          IblScope                   = { fg = "highlight_med" },
+          IblIndent                  = { fg = "highlight_low" },
+          TelescopeSelectionCaret    = { fg = "love", bg = "highlight_med" },
+          TelescopeMultiSelection    = { fg = "text", bg = "highlight_high" },
+          TelescopeTitle             = { fg = "base", bg = "love" },
+          TelescopePromptTitle       = { fg = "base", bg = "pine" },
+          TelescopePreviewTitle      = { fg = "base", bg = "iris" },
+          TelescopePromptNormal      = { fg = "text", bg = "surface" },
+          TelescopePromptBorder      = { fg = "surface", bg = "surface" },
+          LuaLineDiffAdd             = { fg = "#56949f", bg = "#faf4ed" },
+          LuaLineDiffChange          = { fg = "#d7827e", bg = "#faf4ed" },
+          CoqtailChecked             = { bg = "#d9e1dd" },
+          CoqtailSent                = { bg = "#f2e9e1" },
+          GitSignsAdd                = { fg = "#bacfc4" },
+          GitSignsChange             = { fg = "#e6d2c1" },
+          GitSignsDelete             = { fg = "#dbb6b4" },
+          EphemeralError             = { bg = "#f5e9e3", inherit = false },
+          EphemeralWarn              = { bg = "#f6ebdd", inherit = false },
+          EphemeralInfo              = { bg = "#eaeae5", inherit = false },
+          EphemeralHint              = { bg = "#efe8e6", inherit = false },
+          EndOfBuffer                = { fg = "highlight_med" },
         }
       })
       vim.cmd [[colorscheme rose-pine-dawn]]
@@ -120,29 +156,6 @@ require("lazy").setup({
   },
   'nvim-lua/plenary.nvim',
   {
-    'nathom/filetype.nvim',
-    lazy = false,
-    opts = {
-      overrides = {
-        extensions = {
-          typ = "typst",
-          v = "coq",
-          kk = "koka",
-          rkt = "racket",
-          ss = "racket",
-          pl = "prolog",
-          html = "html",
-        },
-        literal = {
-          skhdrc = "",
-        },
-        complex = {
-          [".*rc$"] = "sh"
-        }
-      }
-    }
-  },
-  {
     'https://github.com/nvim-lualine/lualine.nvim',
     opts = {
       options = {
@@ -151,7 +164,6 @@ require("lazy").setup({
         section_separators = { left = '', right = '' },
       },
       tabline = {},
-      extensions = {},
     }
   },
   {
@@ -303,7 +315,12 @@ require("lazy").setup({
             theme = 'ivy',
             layout_config = {
               height = 0.5,
-            }
+            },
+            mappings = {
+              i = {
+                ["<C-k>"] = actions.delete_buffer,
+              },
+            },
           },
           oldfiles = {
             previewer = false,
@@ -415,7 +432,6 @@ require("lazy").setup({
   },
   'https://github.com/itchyny/vim-haskell-indent',
   'https://github.com/Nymphium/vim-koka',
-  'https://github.com/rachitnigam/pyret-lang.vim',
   {
     'https://github.com/L3MON4D3/LuaSnip',
     config = function()
@@ -449,6 +465,7 @@ require("lazy").setup({
     end,
     config = true
   },
+  "https://github.com/tpope/vim-characterize",
   {
     'https://github.com/junegunn/vim-easy-align',
     config = function()
@@ -510,7 +527,6 @@ require("lazy").setup({
       vim.fn["firenvim#install"](0)
     end
   },
-  { 'pwntester/octo.nvim', config = true },
   { 'moll/vim-bbye' },
   'rhysd/conflict-marker.vim',
   {
@@ -540,7 +556,6 @@ require("lazy").setup({
       })
     end
   },
-  -- 'sheerun/vim-polyglot',
   'https://github.com/tpope/vim-eunuch',
   {
     "chrisgrieser/nvim-early-retirement",
@@ -549,14 +564,9 @@ require("lazy").setup({
   },
   'rktjmp/lush.nvim',
   'rstacruz/vim-closer',
-  -- {
-  --   "williamboman/mason.nvim",
-  --   lazy = false,
-  -- },
   {
     'https://github.com/neovim/nvim-lspconfig',
     config = function()
-      vim.diagnostic.config({ signs = false })
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
       require('lspconfig')['ocamllsp'].setup {
       }
@@ -572,6 +582,7 @@ require("lazy").setup({
       require('lspconfig')['cssls'].setup {
         capabilities = capabilities,
       }
+      require 'lspconfig'.jdtls.setup {}
       require('lspconfig')['typst_lsp'].setup {
         settings = {
           exportPdf = "onSave",
@@ -613,21 +624,6 @@ require("lazy").setup({
     end
   },
   { "https://github.com/pbrisbin/vim-colors-off" },
-  {
-    "https://github.com/nanotech/jellybeans.vim",
-    config = function()
-      vim.api.nvim_create_autocmd({ "ColorScheme" }, {
-        pattern = { "jellybeans" },
-        callback = function(_ev)
-          vim.cmd [[
-          " hi! link IndentBlanklineChar NonText
-          hi def CoqtailChecked guibg=#425047
-          hi def CoqtailSent guibg=#343f44
-          ]]
-        end
-      })
-    end
-  },
   -- {
   --   "https://github.com/ludovicchabant/vim-gutentags",
   --   filetypes = { 'coq' },
@@ -695,7 +691,11 @@ require("lazy").setup({
     end,
     ft = { "markdown" },
   },
-
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+  }
 }, {
   install = {
     colorscheme = { "rose-pine" },
@@ -716,7 +716,7 @@ require("lazy").setup({
   },
 })
 
-vim.opt.signcolumn = 'yes'
+vim.opt.signcolumn = 'yes:3'
 vim.opt.cmdheight = 1
 vim.opt.laststatus = 3
 
@@ -750,10 +750,6 @@ nn <Leader>s<Left> <cmd>ISwapNodeWithLeft<CR>
 nn <Leader>ss <cmd>ISwap<CR>
 ]]
 
-vim.cmd [[
-au ColorScheme * hi! link NonText WinSeparator
-]]
-
 vim.keymap.set('n', '<leader>cd', ':lcd %:h<CR>')
 
 vim.cmd [[
@@ -765,15 +761,18 @@ endfunction
 command FollowSymlink call FollowSymlink()
 ]]
 
-vim.opt.linespace = 12
-vim.g.neovide_cursor_vfx_mode = 'railgun'
-vim.g.neovide_cursor_vfx_particle_lifetime = 1.5
-vim.g.neovide_cursor_vfx_particle_density = 17.0
-vim.g.neovide_cursor_vfx_particle_phase = 4.5
-vim.g.neovide_cursor_vfx_particle_curl = 4.0
-
 if vim.g.neovide then
-    vim.keymap.set({ "n", "v" }, "<C-+>", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>")
-    vim.keymap.set({ "n", "v" }, "<C-->", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>")
-    vim.keymap.set({ "n", "v" }, "<C-0>", ":lua vim.g.neovide_scale_factor = 1<CR>")
+  vim.opt.linespace = 12
+  vim.opt.guifont = {"JetBrains Mono", "Symbols Nerd Font Mono"}
+  vim.g.neovide_cursor_vfx_mode = 'railgun'
+  vim.g.neovide_cursor_vfx_particle_lifetime = 1.5
+  vim.g.neovide_cursor_vfx_particle_density = 17.0
+  vim.g.neovide_cursor_vfx_particle_phase = 4.5
+  vim.g.neovide_cursor_vfx_particle_curl = 4.0
+
+  vim.keymap.set({ "n", "v" }, "<C-+>", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>")
+  vim.keymap.set({ "n", "v" }, "<C-->", ":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>")
+  vim.keymap.set({ "n", "v" }, "<C-0>", ":lua vim.g.neovide_scale_factor = 1<CR>")
 end
+
+vim.opt.cursorline = true

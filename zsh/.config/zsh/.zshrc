@@ -1,9 +1,4 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+# interactive configuration
 
 bindkey -e
 
@@ -75,13 +70,11 @@ sync-cs() {
     -servercmd bin/unison-wrapper \
     -auto \
     -fastcheck true \
-    -path notes/CS_180 \
-    -path notes/CS_33 \
-    -path notes/CS_35L \
+    -path notes/131 \
     -ignore 'Name .git' \
     -ignore 'Name venv' \
     -ignore 'Name __pycache__' \
-   default $HOME ssh://michaell@cs33.seas.ucla.edu/D
+   default $HOME ssh://michaell@lnxsrv11.seas.ucla.edu/D
 }
 
 e-ssh() {
@@ -109,18 +102,12 @@ setopt SHARE_HISTORY
 
 alias bal='yabai -m space --balance'
 
-eval "$(atuin init zsh)"
-
 if test -n "$KITTY_INSTALLATION_DIR"; then
     export KITTY_SHELL_INTEGRATION="no-cursor"
     autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
     kitty-integration
     unfunction kitty-integration
 fi
-
-# tabtab source for packages
-# uninstall by removing these lines
-[[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
 
 export TLDR_AUTO_UPDATE_DISABLED=1
 
@@ -132,14 +119,14 @@ esac
 
 eval "$(zoxide init zsh)"
 
+export DIRENV_LOG_FORMAT=
 eval "$(direnv hook zsh)"
+
+eval "$(atuin init zsh)"
+
+eval "$(starship init zsh)"
 
 # this is slow; don't put it in .zshenv
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-source ~/.config/zsh/p10k/powerlevel10k.zsh-theme
-
-# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
-[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
