@@ -24,11 +24,11 @@ cmd + shift - p [
   *      : echo 'gSkim' | nc 127.0.0.1 1337
 ]
 
-cmd + shift - x : echo 'gNeovide' | nc 127.0.0.1 1337
+cmd + shift - x [
+  "Neovide" : echo 'c'     | nc 127.0.0.1 1337
+  *         : echo 'gNeovide' | nc 127.0.0.1 1337
+]
 
-cmd + shift - d : echo 'gDiscord' | nc 127.0.0.1 1337
-
-cmd + shift - j : echo 'c' | nc 127.0.0.1 1337
 cmd + shift - m : echo 'r' | nc 127.0.0.1 1337
 cmd + shift - k : echo 'x' | nc 127.0.0.1 1337
 
