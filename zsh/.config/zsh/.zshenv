@@ -16,6 +16,10 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 # npm
 export PATH="$HOME/npm-global/bin:$PATH"
 
+# pnpm
+export PNPM_HOME="$HOME/Lang/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+
 # rust
 . "$HOME/.cargo/env"
 

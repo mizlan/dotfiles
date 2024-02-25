@@ -111,12 +111,6 @@ fi
 
 export TLDR_AUTO_UPDATE_DISABLED=1
 
-export PNPM_HOME="/Users/ml/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
 eval "$(zoxide init zsh)"
 
 export DIRENV_LOG_FORMAT=
@@ -125,8 +119,3 @@ eval "$(direnv hook zsh)"
 eval "$(atuin init zsh)"
 
 eval "$(starship init zsh)"
-
-# this is slow; don't put it in .zshenv
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
