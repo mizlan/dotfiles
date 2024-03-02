@@ -4,9 +4,6 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # python
 # eval "$(pyenv init -)"
 
-# perl
-# eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
-
 # java
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
@@ -27,7 +24,7 @@ export PATH="$PNPM_HOME:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # go
-export PATH="$HOME/go/bin:$PATH"
+export PATH="$HOME/Lang/go/bin:$PATH"
 
 # kitty
 export KITTY_DEVELOP_FROM="$HOME/Repositories/kitty"

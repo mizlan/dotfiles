@@ -11,7 +11,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-vim.g.python3_host_prog = "~/GlobalVenv/bin/python3.9"
+vim.g.python3_host_prog = "~/Lang/GlobalVenv/bin/python3.9"
 vim.opt.termguicolors = true
 
 vim.g.mapleader = " "
@@ -49,10 +49,10 @@ vim.diagnostic.config({
 	-- },
 	signs = {
 		text = {
-			[vim.diagnostic.severity.ERROR] = "󰝤",
-			[vim.diagnostic.severity.WARN] = "󰔶",
-			[vim.diagnostic.severity.HINT] = "",
-			[vim.diagnostic.severity.INFO] = "󰣏",
+			[vim.diagnostic.severity.ERROR] = "",
+			[vim.diagnostic.severity.WARN] = "",
+			[vim.diagnostic.severity.HINT] = "",
+			[vim.diagnostic.severity.INFO] = "",
 		},
 	},
 	float = {
