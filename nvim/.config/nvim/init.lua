@@ -242,22 +242,15 @@ require("lazy").setup({
 	{
 		"luukvbaal/statuscol.nvim",
 		config = function()
-			-- local builtin = require("statuscol.builtin")
+			local builtin = require("statuscol.builtin")
 			require("statuscol").setup({
-				-- configuration goes here, for example:
-				-- relculright = true,
-				-- segments = {
-				--   { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
-				--   {
-				--     sign = { name = { "Diagnostic" }, maxwidth = 2, auto = true },
-				--     click = "v:lua.ScSa"
-				--   },
-				--   { text = { builtin.lnumfunc }, click = "v:lua.ScLa", },
-				--   {
-				--     sign = { name = { ".*" }, maxwidth = 2, colwidth = 1, auto = true, wrap = true },
-				--     click = "v:lua.ScSa"
-				--   },
-				-- }
+				segments = {
+					{ text = { " " } },
+					{ sign = { namespace = { ".*diagnostic/signs" }, colwidth = 3, auto = false } },
+					{ text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
+					{ text = { " " } },
+					{ sign = { namespace = { "gitsigns" }, maxwidth = 2, colwidth = 1, auto = false } },
+				},
 			})
 		end,
 	},
@@ -266,8 +259,12 @@ require("lazy").setup({
 		config = function()
 			require("gitsigns").setup({
 				on_attach = function()
-					vim.keymap.set({ "n", "v" }, "<leader>sh", "<cmd>Gitsigns stage_hunk<cr>", { desc = "stage hunk" })
-					vim.keymap.set("n", "<leader>sb", "<Cmd>Gitsigns stage_buffer<CR>", { desc = "stage buffer" })
+					local gs = package.loaded.gitsigns
+					vim.keymap.set("n", "<leader>sh", gs.stage_hunk, { desc = "stage hunk" })
+					vim.keymap.set("v", "<leader>sh", function()
+						gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+					end, { desc = "stage selected" })
+					vim.keymap.set("n", "<leader>sb", gs.stage_buffer, { desc = "stage buffer" })
 					vim.keymap.set("n", "<leader>rh", "<Cmd>Gitsigns reset_hunk<CR>", { desc = "reset hunk" })
 					vim.keymap.set("n", "]h", "<cmd>Gitsigns next_hunk<cr>", { desc = "next hunk" })
 					vim.keymap.set("n", "[h", "<cmd>Gitsigns prev_hunk<cr>", { desc = "previous hunk" })
@@ -355,6 +352,7 @@ require("lazy").setup({
 			vim.keymap.set("n", [[<Leader>']], "<Cmd>Telescope resume<CR>", { desc = "resume previous search" })
 			vim.keymap.set("n", [[<Leader>sp]], "<Cmd>Telescope live_grep_args<CR>", { desc = "ripgrep" })
 			vim.keymap.set("n", "<Leader>gg", "<Cmd>0Git<CR>", { desc = "fugitive" })
+			vim.keymap.set("n", "<Leader>hh", "<Cmd>Telescope help_tags<CR>", { desc = "help" })
 		end,
 		config = function()
 			local actions = require("telescope.actions")
@@ -397,6 +395,7 @@ require("lazy").setup({
 					},
 					find_files = {
 						hidden = true,
+						find_command = { "rg", "--files", "--iglob", "!.git", "--hidden" },
 						previewer = false,
 						theme = "ivy",
 						layout_config = {
@@ -651,7 +650,7 @@ require("lazy").setup({
 		"https://github.com/neovim/nvim-lspconfig",
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      require('neodev').setup{}
+			require("neodev").setup({})
 			require("lspconfig")["lua_ls"].setup({
 				settings = {
 					Lua = {
@@ -674,6 +673,7 @@ require("lazy").setup({
 					},
 				},
 			})
+			require("lspconfig")["racket_langserver"].setup({})
 			require("lspconfig")["ocamllsp"].setup({})
 			require("lspconfig")["clangd"].setup({})
 			require("lspconfig")["tsserver"].setup({})
@@ -696,32 +696,32 @@ require("lazy").setup({
 		lazy = false,
 		config = function()
 			-- vscoq
-			-- vim.g.loaded_coqtail = 1
-			-- vim.g['coqtail#supported'] = 0
+			vim.g.loaded_coqtail = 1
+			vim.g["coqtail#supported"] = 0
 
-			vim.g.coqtail_nomap = 1
-			vim.keymap.set({ "n", "i" }, "<C-c><C-l>", "<Plug>CoqToLine")
-			vim.keymap.set({ "n", "i" }, "<C-c><C-j>", "<Plug>CoqNext")
-			vim.keymap.set({ "n", "i" }, "<C-c><C-k>", "<Plug>CoqUndo")
-			vim.keymap.set({ "n", "i" }, "<C-c><C-g>", "<Plug>CoqJumpToEnd")
+			-- vim.g.coqtail_nomap = 1
+			-- vim.keymap.set({ "n", "i" }, "<C-c><C-l>", "<Plug>CoqToLine")
+			-- vim.keymap.set({ "n", "i" }, "<C-c><C-j>", "<Plug>CoqNext")
+			-- vim.keymap.set({ "n", "i" }, "<C-c><C-k>", "<Plug>CoqUndo")
+			-- vim.keymap.set({ "n", "i" }, "<C-c><C-g>", "<Plug>CoqJumpToEnd")
 		end,
 	},
 	{
 		"tomtomjhj/vscoq.nvim",
 		lazy = false,
 		config = function()
-			--   require 'vscoq'.setup {
-			--     vscoq = {
-			--       proof = {
-			--         mode = 0, -- manual
-			--       }
-			--     }
-			--   }
-			--   vim.keymap.set({ 'n', 'i' }, '<C-c><C-l>', '<Cmd>VsCoq interpretToPoint<CR>')
-			--   vim.keymap.set({ 'n', 'i' }, '<C-c><C-j>', '<Cmd>VsCoq stepForward<CR>')
-			--   vim.keymap.set({ 'n', 'i' }, '<C-c><C-k>', '<Cmd>VsCoq stepBackward<CR>')
-			--   vim.keymap.set({ 'n', 'i' }, '<C-c><C-e>', '<Cmd>VsCoq interpretToEnd<CR>')
-			--   vim.keymap.set({ 'n', 'i' }, '<C-c><C-g>', '<Cmd>VsCoq jumpToEnd<CR>')
+			require("vscoq").setup({
+				vscoq = {
+					proof = {
+						mode = 0, -- manual
+					},
+				},
+			})
+			vim.keymap.set({ "n", "i" }, "<C-c><C-l>", "<Cmd>VsCoq interpretToPoint<CR>")
+			vim.keymap.set({ "n", "i" }, "<C-c><C-j>", "<Cmd>VsCoq stepForward<CR>")
+			vim.keymap.set({ "n", "i" }, "<C-c><C-k>", "<Cmd>VsCoq stepBackward<CR>")
+			vim.keymap.set({ "n", "i" }, "<C-c><C-e>", "<Cmd>VsCoq interpretToEnd<CR>")
+			vim.keymap.set({ "n", "i" }, "<C-c><C-g>", "<Cmd>VsCoq jumpToEnd<CR>")
 		end,
 	},
 	{ "https://github.com/pbrisbin/vim-colors-off" },
@@ -761,6 +761,10 @@ require("lazy").setup({
 				indent = {
 					char = "▏",
 					smart_indent_cap = true,
+				},
+				scope = {
+					show_start = false,
+					show_end = false,
 				},
 			})
 			-- HACK
