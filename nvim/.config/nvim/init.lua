@@ -77,88 +77,18 @@ vim.filetype.add({
 	},
 })
 
-local function diagnostic_hl(d)
-	vim.g.edh_tracker = vim.g.edh_tracker or 0
-
-	local hlgroup
-	if d.severity == vim.diagnostic.severity.ERROR then
-		hlgroup = "EphemeralError"
-	elseif d.severity == vim.diagnostic.severity.WARN then
-		hlgroup = "EphemeralWarn"
-	elseif d.severity == vim.diagnostic.severity.HINT then
-		hlgroup = "EphemeralHint"
-	elseif d.severity == vim.diagnostic.severity.INFO then
-		hlgroup = "EphemeralInfo"
-	end
-
-	local bufnr = vim.api.nvim_get_current_buf()
-	local ns = vim.api.nvim_create_namespace("ephemeraldiagnostichighlight")
-
-	local old_edh_tracker = vim.g.edh_tracker
-
-	vim.g.edh_tracker = (vim.g.edh_tracker + 1) % 500
-
-	vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
-	vim.highlight.range(bufnr, ns, hlgroup, { d.lnum, d.col }, { d.end_lnum, d.end_col })
-
-	return old_edh_tracker
-end
-
-local function diagnostic_hl_set_trigger(bufnr, old_tracker, old_cursor)
-	local ns = vim.api.nvim_create_namespace("ephemeraldiagnostichighlight")
-	vim.api.nvim_create_autocmd({ "CursorMoved" }, {
-		callback = function()
-			local cursor = vim.api.nvim_win_get_cursor(0)
-			if old_cursor[1] == cursor[1] and old_cursor[2] == cursor[2] then
-				return
-			end
-			-- TODO and not in the hl
-			if vim.g.edh_tracker == (old_tracker + 1) % 500 then
-				vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
-			end
-			return true
-		end,
-	})
-end
-
-local function goto_next_hl(opts)
-	local bufnr = vim.api.nvim_get_current_buf()
-	local d = vim.diagnostic.get_next(opts)
-	if not d then
-		vim.diagnostic.goto_next(opts)
-		return
-	end
-	local old_tracker = diagnostic_hl(d)
-	vim.diagnostic.goto_next(opts)
-	local old_cursor = vim.api.nvim_win_get_cursor(0)
-	diagnostic_hl_set_trigger(bufnr, old_tracker, old_cursor)
-end
-
-local function goto_prev_hl(opts)
-	local bufnr = vim.api.nvim_get_current_buf()
-	local d = vim.diagnostic.get_prev(opts)
-	if not d then
-		vim.diagnostic.goto_prev(opts)
-		return
-	end
-	local old_tracker = diagnostic_hl(d)
-	vim.diagnostic.goto_prev(opts)
-	local old_cursor = vim.api.nvim_win_get_cursor(0)
-	diagnostic_hl_set_trigger(bufnr, old_tracker, old_cursor)
-end
-
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 	callback = function(ev)
 		local bufopts = { noremap = true, silent = true, buffer = ev.buf }
 
-		vim.keymap.set("n", "[d", goto_prev_hl, bufopts)
-		vim.keymap.set("n", "]d", goto_next_hl, bufopts)
+		vim.keymap.set("n", "[d", require("delimited").goto_prev, bufopts)
+		vim.keymap.set("n", "]d", require("delimited").goto_next, bufopts)
 		vim.keymap.set("n", "[D", function()
-			goto_prev_hl({ severity = vim.diagnostic.severity.ERROR })
+			require("delimited").goto_prev({ severity = vim.diagnostic.severity.ERROR })
 		end, bufopts)
 		vim.keymap.set("n", "]D", function()
-			goto_next_hl({ severity = vim.diagnostic.severity.ERROR })
+			require("delimited").goto_next({ severity = vim.diagnostic.severity.ERROR })
 		end, bufopts)
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
@@ -358,6 +288,17 @@ require("lazy").setup({
 	},
 
 	{ dir = "~/Code/longbow.nvim" },
+	{
+		"mizlan/delimited.nvim",
+		opts = {
+			pre = function()
+				vim.cmd([[IBLDisable]])
+			end,
+			post = function()
+				vim.cmd([[IBLEnable]])
+			end,
+		},
+	},
 	"https://github.com/nvim-treesitter/playground",
 	"https://github.com/stevearc/dressing.nvim",
 	{
