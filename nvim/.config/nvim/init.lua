@@ -124,7 +124,6 @@ require("lazy").setup({
 				},
 				highlight_groups = {
 					LineNr = { fg = "highlight_high" },
-					CursorLineNr = { bg = "overlay" },
 					StatusLine = { fg = "love", bg = "#f5e9e3" },
 					DiagnosticVirtualTextError = { bg = "#f5e9e3" },
 					DiagnosticVirtualTextWarn = { bg = "#f6ebdd" },
@@ -143,8 +142,10 @@ require("lazy").setup({
 					TelescopePromptBorder = { fg = "surface", bg = "surface" },
 					LuaLineDiffAdd = { fg = "#56949f", bg = "#faf4ed" },
 					LuaLineDiffChange = { fg = "#d7827e", bg = "#faf4ed" },
-					CoqtailChecked = { bg = "#d9e1dd" },
+					CoqtailChecked = { bg = "#eaeae5" },
 					CoqtailSent = { bg = "#f2e9e1" },
+					DiffAdd = { bg = "#bacfc4", inherit = false },
+					DiffDelete = { bg = "#dbb6b4", inherit = false },
 					GitSignsAdd = { fg = "#bacfc4" },
 					GitSignsChange = { fg = "#e6d2c1" },
 					GitSignsDelete = { fg = "#dbb6b4" },
@@ -793,6 +794,12 @@ require("lazy").setup({
 	{
 		"folke/flash.nvim",
 		event = "VeryLazy",
+		config = true,
+	},
+	{
+		"lukas-reineke/headlines.nvim",
+		dependencies = "nvim-treesitter/nvim-treesitter",
+		config = true, -- or `opts = {}`
 	},
 }, {
 	install = {
@@ -814,7 +821,6 @@ require("lazy").setup({
 	},
 })
 
-vim.opt.signcolumn = "yes:3"
 vim.opt.cmdheight = 1
 vim.opt.laststatus = 3
 
@@ -881,8 +887,8 @@ end
 
 vim.opt.cursorline = true
 
-vim.keymap.set("n", "<leader>f<space>", function()
-	require("conform").format()
+vim.keymap.set({ "n", "v" }, "<leader>f<space>", function()
+	require("conform").format({ async = true, lsp_fallback = true })
 end, { noremap = true, silent = true })
 
 vim.opt.statusline = "   %F %m"
