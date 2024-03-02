@@ -3,25 +3,26 @@
 bindkey -e
 
 alias e=nvim
+alias n="/Applications/Neovide.app/Contents/MacOS/neovide"
 alias t="$HOME/themechange.sh"
 alias ls="gls --hyperlink=always"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS "'--prompt="  "'' --pointer=" "'' --marker=·'
+FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS "'--prompt="  "'' --pointer=" "'' --marker=·'
 
-# # rose-pine dawn/moon colors
-# fzf() {
-#   if grep -q dark "$HOME/theme"; then
-#     FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:#e0def4,bg:#2a273f,hl:#6e6a86 --color=fg+:#908caa,bg+:#232136,hl+:#908caa --color=info:#9ccfd8,prompt:#f6c177,pointer:#c4a7e7 --color=marker:#ea9a97,spinner:#eb6f92,header:#ea9a97" /opt/homebrew/bin/fzf "$@"
-#     # FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:#d8caac,bg:#323d43,hl:#83b6af --color=fg+:#d8caac,bg+:#2b3338,hl+:#83b6af --color=info:#d9bb80,prompt:#e68183,pointer:#d39bb6 --color=marker:#a7c080,spinner:#d39bb6,header:#87c095" /opt/homebrew/bin/fzf
-#   else
-#     FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:#575279,bg:#fffaf3,hl:#9893a5 --color=fg+:#797593,bg+:#faf4ed,hl+:#797593 --color=info:#56949f,prompt:#56949f,pointer:#907aa9 --color=marker:#d7827e,spinner:#b4637a,header:#d7827e" /opt/homebrew/bin/fzf "$@"
-#   fi
-# }
+# rose-pine dawn/moon colors
+fzf() {
+  if grep -q dark "$HOME/theme"; then
+    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:#e0def4,bg:#2a273f,hl:#6e6a86 --color=fg+:#908caa,bg+:#232136,hl+:#908caa --color=info:#9ccfd8,prompt:#f6c177,pointer:#c4a7e7 --color=marker:#ea9a97,spinner:#eb6f92,header:#ea9a97" /opt/homebrew/bin/fzf "$@"
+    # FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:#d8caac,bg:#323d43,hl:#83b6af --color=fg+:#d8caac,bg+:#2b3338,hl+:#83b6af --color=info:#d9bb80,prompt:#e68183,pointer:#d39bb6 --color=marker:#a7c080,spinner:#d39bb6,header:#87c095" /opt/homebrew/bin/fzf
+  else
+    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:#575279,bg:#fffaf3,hl:#9893a5 --color=fg+:#797593,bg+:#faf4ed,hl+:#797593 --color=info:#56949f,prompt:#56949f,pointer:#907aa9 --color=marker:#d7827e,spinner:#b4637a,header:#d7827e" /opt/homebrew/bin/fzf "$@"
+  fi
+}
 
 # layout options
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --height 40% --layout=reverse"
+# export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --height 40% --layout=reverse"
 
 autoload -z edit-command-line
 zle -N edit-command-line
@@ -117,5 +118,7 @@ export DIRENV_LOG_FORMAT=
 eval "$(direnv hook zsh)"
 
 eval "$(atuin init zsh)"
-
-eval "$(starship init zsh)"
+#
+# eval "$(starship init zsh)"
+# setopt PROMPT_SUBST
+export PROMPT='%n at %m '
