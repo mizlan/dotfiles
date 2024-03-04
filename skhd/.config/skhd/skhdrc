@@ -67,6 +67,7 @@ shift + alt - 6 : yabai -m window --space 6 && echo 'r' | nc 127.0.0.1 1337
 shift + alt - 7 : yabai -m window --space 7 && echo 'r' | nc 127.0.0.1 1337
 shift + alt - 8 : yabai -m window --space 8 && echo 'r' | nc 127.0.0.1 1337
 shift + alt - 9 : yabai -m window --space 9 && echo 'r' | nc 127.0.0.1 1337
+shift + alt - 0 : yabai -m window --space 10 && echo 'r' | nc 127.0.0.1 1337
 
 ctrl + alt - p : yabai -m window --toggle sticky --toggle topmost --toggle pip
 
