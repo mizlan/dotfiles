@@ -43,10 +43,6 @@ vim.diagnostic.handlers.signs = vim.tbl_extend("force", signs_handler, {
 vim.diagnostic.config({
 	underline = false,
 	virtual_text = false,
-	-- virtual_text = {
-	--   prefix = "",
-	--   suffix = " "
-	-- },
 	signs = {
 		text = {
 			[vim.diagnostic.severity.ERROR] = "",
@@ -246,7 +242,8 @@ require("lazy").setup({
 			require("statuscol").setup({
 				segments = {
 					{ text = { " " } },
-					{ sign = { namespace = { ".*diagnostic/signs" }, colwidth = 3, auto = false } },
+					{ sign = { namespace = { ".*diagnostic/signs" }, colwidth = 2, auto = false } },
+					{ text = { " " } },
 					{ text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
 					{ text = { " " } },
 					{ sign = { namespace = { "gitsigns" }, maxwidth = 2, colwidth = 1, auto = false } },
@@ -518,7 +515,18 @@ require("lazy").setup({
 		end,
 	},
 	"https://github.com/vim-scripts/alex.vim",
-	"nvim-tree/nvim-web-devicons",
+	{
+		"nvim-tree/nvim-web-devicons",
+		opts = {
+			override_by_extension = {
+				["v"] = {
+					icon = "",
+					color = "#dba25c",
+					name = "Coq",
+				},
+			},
+		},
+	},
 	"kevinhwang91/promise-async",
 	"https://github.com/hrsh7th/cmp-buffer",
 	{
@@ -805,6 +813,33 @@ require("lazy").setup({
 		dependencies = "nvim-treesitter/nvim-treesitter",
 		config = true, -- or `opts = {}`
 	},
+	{
+		"b0o/incline.nvim",
+		config = function()
+			local helpers = require("incline.helpers")
+			local devicons = require("nvim-web-devicons")
+			require("incline").setup({
+				window = {
+					padding = 0,
+					margin = { horizontal = 0 },
+				},
+				render = function(props)
+					local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+					if filename == "" then
+						filename = "[No Name]"
+					end
+					local ft_icon, ft_color = devicons.get_icon_color(filename)
+					local modified = vim.bo[props.buf].modified
+					return {
+						ft_icon and { " ", ft_icon, " ", guifg = ft_color } or "",
+						" ",
+						{ filename, gui = modified and "italic" or "" },
+						" ",
+					}
+				end,
+			})
+		end,
+	},
 }, {
 	install = {
 		colorscheme = { "rose-pine" },
@@ -871,7 +906,7 @@ command FollowSymlink call FollowSymlink()
 
 if vim.g.neovide then
 	vim.opt.linespace = 5
-	vim.opt.guifont = { "JetBrains Mono", "Symbols Nerd Font Mono", ":h18" }
+	vim.opt.guifont = { "JetBrains Mono", "JetBrainsMono Nerd Font", ":h18" }
 
 	vim.g.neovide_floating_shadow = true
 	vim.g.neovide_floating_z_height = 5
@@ -895,7 +930,7 @@ vim.keymap.set({ "n", "v" }, "<leader>f<space>", function()
 	require("conform").format({ async = true, lsp_fallback = true })
 end, { noremap = true, silent = true })
 
-vim.opt.statusline = "   %F %m"
+vim.opt.statusline = "   %F"
 vim.opt.conceallevel = 2
 vim.opt.concealcursor = "nc"
 vim.opt.number = true
