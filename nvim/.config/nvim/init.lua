@@ -109,7 +109,6 @@ require("lazy").setup({
 		lazy = false,
 		priority = 1000,
 		config = function()
-			require("adaptive")
 			require("rose-pine").setup({
 				dark_variant = "moon",
 				disable_italics = true,
@@ -145,13 +144,14 @@ require("lazy").setup({
 					GitSignsAdd = { fg = "#bacfc4" },
 					GitSignsChange = { fg = "#e6d2c1" },
 					GitSignsDelete = { fg = "#dbb6b4" },
-					EphemeralError = { fg = "love", bg = "#EDDAD8", inherit = false },
-					EphemeralWarn = { fg = "gold", bg = "#F7E4CB", inherit = false },
-					EphemeralInfo = { fg = "foam", bg = "#DCE3DF", inherit = false },
-					EphemeralHint = { fg = "iris", bg = "#E7DEE1", inherit = false },
+					DelimitedError = { fg = "love", bg = "#EDDAD8", inherit = false },
+					DelimitedWarn = { fg = "gold", bg = "#F7E4CB", inherit = false },
+					DelimitedInfo = { fg = "foam", bg = "#DCE3DF", inherit = false },
+					DelimitedHint = { fg = "iris", bg = "#E7DEE1", inherit = false },
 					EndOfBuffer = { fg = "highlight_med" },
 				},
 			})
+			require("adaptive")
 			vim.cmd([[colorscheme rose-pine-dawn]])
 		end,
 	},
@@ -284,7 +284,7 @@ require("lazy").setup({
 
 	{ dir = "~/Code/longbow.nvim" },
 	{
-		"mizlan/delimited.nvim",
+		dir = "~/Code/delimited.nvim",
 		opts = {
 			pre = function()
 				vim.cmd([[IBLDisable]])
@@ -497,6 +497,9 @@ require("lazy").setup({
 	},
 	"https://github.com/itchyny/vim-haskell-indent",
 	"https://github.com/Nymphium/vim-koka",
+	"https://github.com/vim-scripts/alex.vim",
+	"https://github.com/wlangstroth/vim-racket",
+	"https://github.com/jaawerth/fennel.vim",
 	{
 		"https://github.com/L3MON4D3/LuaSnip",
 		config = function()
@@ -514,9 +517,9 @@ require("lazy").setup({
 			require("luasnip.loaders.from_snipmate").lazy_load()
 		end,
 	},
-	"https://github.com/vim-scripts/alex.vim",
 	{
 		"nvim-tree/nvim-web-devicons",
+		event = "VeryLazy",
 		opts = {
 			override_by_extension = {
 				["v"] = {
@@ -565,7 +568,6 @@ require("lazy").setup({
 		end,
 	},
 	"https://github.com/ii14/neorepl.nvim",
-	"https://github.com/jaawerth/fennel.vim",
 	{
 		"https://github.com/bfredl/nvim-miniyank",
 		config = function()
@@ -640,7 +642,6 @@ require("lazy").setup({
 		config = true,
 		event = "VeryLazy",
 	},
-	"rktjmp/lush.nvim",
 	"rstacruz/vim-closer",
 	{
 		"stevearc/conform.nvim",
@@ -651,6 +652,7 @@ require("lazy").setup({
 				javascriptreact = { { "prettierd", "prettier" } },
 				typescript = { { "prettierd", "prettier" } },
 				typescriptreact = { { "prettierd", "prettier" } },
+        python = { "black" },
 			},
 		},
 	},
@@ -767,7 +769,7 @@ require("lazy").setup({
 		config = function()
 			require("ibl").setup({
 				indent = {
-					char = "▏",
+					char = "│",
 					smart_indent_cap = true,
 				},
 				scope = {
@@ -792,7 +794,6 @@ require("lazy").setup({
 			})
 		end,
 	},
-	"https://github.com/wlangstroth/vim-racket",
 	{
 		"iamcco/markdown-preview.nvim",
 		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -802,6 +803,7 @@ require("lazy").setup({
 		end,
 		ft = { "markdown" },
 	},
+	{ "https://github.com/folke/tokyonight.nvim" },
 	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 	{
 		"folke/flash.nvim",
@@ -809,14 +811,8 @@ require("lazy").setup({
 		config = true,
 	},
 	{
-		"lukas-reineke/headlines.nvim",
-		dependencies = "nvim-treesitter/nvim-treesitter",
-		config = true, -- or `opts = {}`
-	},
-	{
 		"b0o/incline.nvim",
 		config = function()
-			local helpers = require("incline.helpers")
 			local devicons = require("nvim-web-devicons")
 			require("incline").setup({
 				window = {
@@ -840,6 +836,7 @@ require("lazy").setup({
 			})
 		end,
 	},
+  { "nvim-tree/nvim-tree.lua", opts = {} },
 }, {
 	install = {
 		colorscheme = { "rose-pine" },
@@ -870,7 +867,7 @@ vim.opt.undofile = true
 
 vim.cmd([[set ts=2 sw=2 sts=2 et]])
 
-vim.opt.ignorecase = true
+vim.opt.smartcase = true
 vim.opt.wrap = false
 
 vim.o.completeopt = "menuone,noinsert,noselect"
@@ -906,7 +903,7 @@ command FollowSymlink call FollowSymlink()
 
 if vim.g.neovide then
 	vim.opt.linespace = 5
-	vim.opt.guifont = { "JetBrains Mono", "JetBrainsMono Nerd Font", ":h18" }
+	-- vim.opt.guifont = { "JetBrains Mono", "JetBrainsMono Nerd Font", ":h18" }
 
 	vim.g.neovide_floating_shadow = true
 	vim.g.neovide_floating_z_height = 5
@@ -934,3 +931,9 @@ vim.opt.statusline = "   %F"
 vim.opt.conceallevel = 2
 vim.opt.concealcursor = "nc"
 vim.opt.number = true
+
+vim.api.nvim_create_autocmd({ "VimEnter" }, {
+	callback = function()
+		require("nvim-web-devicons").refresh()
+	end,
+})
