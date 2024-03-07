@@ -64,7 +64,6 @@ vim.filetype.add({
 		v = "coq",
 		kk = "koka",
 		rkt = "racket",
-		ss = "racket",
 		pl = "prolog",
 		mly = "menhir",
 	},
@@ -592,14 +591,6 @@ require("lazy").setup({
 		"Olical/conjure",
 		config = function()
 			vim.g["conjure#mapping#prefix"] = "<Leader>"
-		end,
-	},
-	{
-		"glacambre/firenvim",
-		cond = not not vim.g.started_by_firenvim,
-		build = function()
-			require("lazy").load({ plugins = "firenvim", wait = true })
-			vim.fn["firenvim#install"](0)
 		end,
 	},
 	{ "moll/vim-bbye" },
