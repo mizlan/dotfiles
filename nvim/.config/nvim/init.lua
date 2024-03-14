@@ -76,7 +76,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 	callback = function(ev)
 		local bufopts = { noremap = true, silent = true, buffer = ev.buf }
-
 		vim.keymap.set("n", "[d", require("delimited").goto_prev, bufopts)
 		vim.keymap.set("n", "]d", require("delimited").goto_next, bufopts)
 		vim.keymap.set("n", "[D", function()
@@ -124,9 +123,11 @@ require("lazy").setup({
 					DiagnosticVirtualTextInfo = { bg = "#eaeae5" },
 					DiagnosticVirtualTextHint = { bg = "#efe8e6" },
 					Visual = { bg = "#e3e7e2" },
+					EndOfBuffer = { fg = "highlight_med" },
 					WinSeparator = { fg = "highlight_med" },
 					IblScope = { fg = "highlight_med" },
 					IblIndent = { fg = "highlight_low" },
+					CursorLine = { bg = "highlight_low" },
 					TelescopeSelectionCaret = { fg = "love", bg = "highlight_med" },
 					TelescopeMultiSelection = { fg = "text", bg = "highlight_high" },
 					TelescopeTitle = { fg = "base", bg = "love" },
@@ -147,7 +148,7 @@ require("lazy").setup({
 					DelimitedWarn = { fg = "gold", bg = "#F7E4CB", inherit = false },
 					DelimitedInfo = { fg = "foam", bg = "#DCE3DF", inherit = false },
 					DelimitedHint = { fg = "iris", bg = "#E7DEE1", inherit = false },
-					EndOfBuffer = { fg = "highlight_med" },
+					CopilotSuggestion = { fg = "highlight_high" },
 				},
 			})
 			require("adaptive")
@@ -283,7 +284,7 @@ require("lazy").setup({
 
 	{ dir = "~/Code/longbow.nvim" },
 	{
-		dir = "~/Code/delimited.nvim",
+		"mizlan/delimited.nvim",
 		opts = {
 			pre = function()
 				vim.cmd([[IBLDisable]])
@@ -643,7 +644,12 @@ require("lazy").setup({
 				javascriptreact = { { "prettierd", "prettier" } },
 				typescript = { { "prettierd", "prettier" } },
 				typescriptreact = { { "prettierd", "prettier" } },
-        python = { "black" },
+				python = { "black" },
+			},
+			formatters = {
+				black = {
+					command = "/Users/ml/Lang/Venv3.11/bin/black",
+				},
 			},
 		},
 	},
@@ -685,13 +691,14 @@ require("lazy").setup({
 				capabilities = capabilities,
 			})
 			require("lspconfig").jdtls.setup({})
-			require("lspconfig")["typst_lsp"].setup({
-				settings = {
-					exportPdf = "onSave",
-				},
-			})
+			-- require("lspconfig")["typst_lsp"].setup({
+			-- 	settings = {
+			-- 		exportPdf = "onSave",
+			-- 	},
+			-- })
 		end,
 	},
+	{ "https://github.com/github/copilot.vim" },
 	{
 		"https://github.com/whonore/Coqtail",
 		lazy = false,
@@ -827,7 +834,7 @@ require("lazy").setup({
 			})
 		end,
 	},
-  { "nvim-tree/nvim-tree.lua", opts = {} },
+	{ "nvim-tree/nvim-tree.lua", opts = {} },
 }, {
 	install = {
 		colorscheme = { "rose-pine" },
@@ -858,6 +865,7 @@ vim.opt.undofile = true
 
 vim.cmd([[set ts=2 sw=2 sts=2 et]])
 
+vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.wrap = false
 
