@@ -117,7 +117,9 @@ require("lazy").setup({
 				},
 				highlight_groups = {
 					LineNr = { fg = "highlight_high" },
+					CursorLineNr = { fg = "muted", inherit = false },
 					StatusLine = { fg = "love", bg = "#f5e9e3" },
+					MatchParen = { bg = "#f6ebdd", inherit = false },
 					DiagnosticVirtualTextError = { bg = "#f5e9e3" },
 					DiagnosticVirtualTextWarn = { bg = "#f6ebdd" },
 					DiagnosticVirtualTextInfo = { bg = "#eaeae5" },
