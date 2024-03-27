@@ -73,12 +73,18 @@ ctrl + alt - p : yabai -m window --toggle sticky --toggle topmost --toggle pip
 
 fn - x : yabai -m window --toggle float --toggle topmost
 
-cmd + shift - space : yabai -m query --windows | jq -r '.[] | [.id, .app] | join (" ")' | choose | awk '{ print $1 }' | xargs -I{} yabai -m window --focus {}
+cmd + shift - space : yabai -m query --windows | jq -r '.[] | "[\(.app)] \(.title) - \(.id)"' | choose | awk '{ print $NF }' | xargs -I{} yabai -m window --focus {}
 
 alt + shift - n : yabai -m window --focus stack.next
 alt + shift - p : yabai -m window --focus stack.prev
 
 fn - t : kitty -1 --title "ephemeral-$(uuidgen)" --directory "$HOME"
+
+alt - a : yabai -m window --insert west
+alt - s : yabai -m window --insert south
+alt - w : yabai -m window --insert north
+alt - d : yabai -m window --insert east
+alt - q : yabai -m window --insert stack
 
 # logic 2010
 ctrl + shift - r : cliclick kd:shift kp:tab ku:shift kd:ctrl t:a ku:ctrl kp:delete kp:tab
