@@ -4,33 +4,40 @@ margin=20
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa && sleep 1 && yabai -m config window_shadow off"
 sudo yabai --load-sa
 
-yabai -m config                           \
-  window_shadow              off          \
-                                          \
-  mouse_action1              move         \
-  mouse_action2              resize       \
-  mouse_drop_action          stack        \
-                                          \
-  mouse_modifier             alt          \
-  focus_follows_mouse        off          \
-  mouse_follows_focus        off          \
-                                          \
-  layout                     bsp          \
-  top_padding                $margin      \
-  bottom_padding             $margin      \
-  left_padding               $margin      \
-  right_padding              $margin      \
-  window_gap                 $gapsize     \
-                                          \
-  window_opacity             off           \
-  window_opacity_duration    0.15         \
-  active_window_opacity      1.0         \
-  normal_window_opacity      1.0         \
-                                          \
-  window_animation_duration  0.05
+yabai -m config                       \
+  window_shadow              off      \
+                                      \
+  mouse_action1              move     \
+  mouse_action2              resize   \
+  mouse_drop_action          stack    \
+                                      \
+  mouse_modifier             alt      \
+  focus_follows_mouse        off      \
+  mouse_follows_focus        off      \
+                                      \
+  layout                     bsp      \
+  top_padding                $margin  \
+  bottom_padding             $margin  \
+  left_padding               $margin  \
+  right_padding              $margin  \
+  window_gap                 $gapsize \
+                                      \
+  window_opacity             off      \
+  window_opacity_duration    0.15     \
+  active_window_opacity      1.0      \
+  normal_window_opacity      1.0      \
+                                      \
+  window_animation_duration  0.2      \
+  window_animation_easing    ease_out_quint 
+
+  insert_feedback_color      0xaaedc5ca
 
 yabai -m signal --add event=window_created action='echo r | nc 127.0.0.1 1337'
 yabai -m signal --add event=window_destroyed action='echo r | nc 127.0.0.1 1337'
+
+# Demaximize upon loss of focus
+yabai -m signal --add event=window_focused \
+  action="yabai -m query --windows --window recent | jq -e '.\"has-fullscreen-zoom\"' && yabai -m window recent --toggle zoom-fullscreen"
 
 # Logic 2010
 yabai -m rule --add app="^LogicProgram$" manage=off
