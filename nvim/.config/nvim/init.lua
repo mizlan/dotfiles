@@ -806,37 +806,82 @@ require("lazy").setup({
 	{ "https://github.com/folke/tokyonight.nvim" },
 	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 	{
-		"folke/flash.nvim",
-		event = "VeryLazy",
-		config = true,
-	},
-	{
-		"b0o/incline.nvim",
-		config = function()
-			local devicons = require("nvim-web-devicons")
-			require("incline").setup({
-				window = {
-					padding = 0,
-					margin = { horizontal = 0 },
+		"nvim-tree/nvim-tree.lua",
+		opts = {
+      diagnostics = {
+        enable = true,
+      },
+			disable_netrw = true,
+			hijack_netrw = true,
+			hijack_cursor = true,
+			hijack_unnamed_buffer_when_opening = false,
+			sync_root_with_cwd = true,
+			update_focused_file = {
+				enable = true,
+				update_root = false,
+			},
+			view = {
+				adaptive_size = false,
+				side = "left",
+				width = 30,
+				preserve_window_proportions = true,
+			},
+			git = {
+				enable = false,
+				ignore = true,
+			},
+			filesystem_watchers = {
+				enable = true,
+			},
+			actions = {
+				open_file = {
+					resize_window = true,
 				},
-				render = function(props)
-					local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-					if filename == "" then
-						filename = "[No Name]"
-					end
-					local ft_icon, ft_color = devicons.get_icon_color(filename)
-					local modified = vim.bo[props.buf].modified
-					return {
-						ft_icon and { " ", ft_icon, " ", guifg = ft_color } or "",
-						" ",
-						{ filename, gui = modified and "italic" or "" },
-						" ",
-					}
-				end,
-			})
-		end,
+			},
+			renderer = {
+				root_folder_label = false,
+				highlight_git = false,
+				highlight_opened_files = "none",
+
+				indent_markers = {
+					enable = false,
+				},
+
+				icons = {
+					show = {
+						file = true,
+						folder = true,
+						folder_arrow = true,
+						git = false,
+					},
+
+					glyphs = {
+						default = "󰈚",
+						symlink = "",
+						folder = {
+							default = "",
+							empty = "",
+							empty_open = "",
+							open = "",
+							symlink = "",
+							symlink_open = "",
+							arrow_open = "",
+							arrow_closed = "",
+						},
+						git = {
+							unstaged = "✗",
+							staged = "✓",
+							unmerged = "",
+							renamed = "➜",
+							untracked = "★",
+							deleted = "",
+							ignored = "◌",
+						},
+					},
+				},
+			},
+		},
 	},
-	{ "nvim-tree/nvim-tree.lua", opts = {} },
 }, {
 	install = {
 		colorscheme = { "rose-pine" },
@@ -903,6 +948,7 @@ command FollowSymlink call FollowSymlink()
 ]])
 
 if vim.g.neovide then
+	vim.g.neovide_input_macos_alt_is_meta = true
 	vim.opt.linespace = 5
 	-- vim.opt.guifont = { "JetBrains Mono", "JetBrainsMono Nerd Font", ":h18" }
 

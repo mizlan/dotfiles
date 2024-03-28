@@ -14,6 +14,8 @@ cmd + shift - return [
  *         : echo 'gFirefox' | nc 127.0.0.1 1337
 ]
 
+cmd + shift - g : echo 'c' | nc -U /Users/ml/chubby
+
 cmd + shift - e [
   "kitty" : echo 'c'      | nc 127.0.0.1 1337
   *       : echo 'gkitty' | nc 127.0.0.1 1337
