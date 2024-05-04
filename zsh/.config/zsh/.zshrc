@@ -71,11 +71,11 @@ sync-cs() {
     -servercmd bin/unison-wrapper \
     -auto \
     -fastcheck true \
-    -path notes/131 \
+    -path notes/132 \
     -ignore 'Name .git' \
     -ignore 'Name venv' \
     -ignore 'Name __pycache__' \
-   default $HOME ssh://michaell@lnxsrv11.seas.ucla.edu/D
+   default $HOME ssh://michaell@lnxsrv07.seas.ucla.edu/D
 }
 
 e-ssh() {
@@ -122,7 +122,5 @@ export DIRENV_LOG_FORMAT=
 eval "$(direnv hook zsh)"
 
 eval "$(atuin init zsh)"
-#
-# eval "$(starship init zsh)"
-# setopt PROMPT_SUBST
-export PROMPT='%n at %m '
+
+export PROMPT='$ '

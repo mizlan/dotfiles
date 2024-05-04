@@ -113,7 +113,6 @@ require("lazy").setup({
 				styles = {
 					bold = true,
 					italic = true,
-					transparency = false,
 				},
 				highlight_groups = {
 					LineNr = { fg = "highlight_high" },
@@ -124,7 +123,6 @@ require("lazy").setup({
 					DiagnosticVirtualTextWarn = { bg = "#f6ebdd" },
 					DiagnosticVirtualTextInfo = { bg = "#eaeae5" },
 					DiagnosticVirtualTextHint = { bg = "#efe8e6" },
-					Visual = { bg = "#e3e7e2" },
 					EndOfBuffer = { fg = "highlight_med" },
 					WinSeparator = { fg = "highlight_med" },
 					IblScope = { fg = "highlight_med" },

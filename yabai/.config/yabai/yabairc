@@ -27,7 +27,7 @@ yabai -m config                             \
   active_window_opacity      1.0            \
   normal_window_opacity      1.0            \
                                             \
-  window_animation_duration  0.2            \
+  window_animation_duration  0.03            \
   window_animation_easing    ease_out_quint \
                                             \
   insert_feedback_color      0xaa676767

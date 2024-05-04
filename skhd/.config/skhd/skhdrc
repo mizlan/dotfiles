@@ -73,7 +73,7 @@ shift + alt - 0 : yabai -m window --space 10 && echo 'r' | nc 127.0.0.1 1337
 
 ctrl + alt - p : yabai -m window --toggle sticky --toggle topmost --toggle pip
 
-fn - x : yabai -m window --toggle float --toggle topmost
+shift + alt - x : yabai -m window --toggle float --toggle topmost
 
 cmd + shift - space : yabai -m query --windows | jq -r '.[] | "[\(.app)] \(.title) - \(.id)"' | choose | awk '{ print $NF }' | xargs -I{} yabai -m window --focus {}
 
@@ -87,6 +87,11 @@ alt - s : yabai -m window --insert south
 alt - w : yabai -m window --insert north
 alt - d : yabai -m window --insert east
 alt - q : yabai -m window --insert stack
+shift + alt - a : yabai -m window --stack west
+shift + alt - s : yabai -m window --stack south
+shift + alt - w : yabai -m window --stack north
+shift + alt - d : yabai -m window --stack east
+alt - tab : yabai -m window --focus recent
 
 # logic 2010
 ctrl + shift - r : cliclick kd:shift kp:tab ku:shift kd:ctrl t:a ku:ctrl kp:delete kp:tab
