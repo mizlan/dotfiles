@@ -193,8 +193,8 @@ require("lazy").setup({
 							["af"] = "@function.outer",
 							["if"] = "@function.inner",
 							["ac"] = "@class.outer",
-              ["aa"] = "@parameter.outer",
-              ["ia"] = "@parameter.inner",
+							["aa"] = "@parameter.outer",
+							["ia"] = "@parameter.inner",
 						},
 					},
 				},
@@ -297,12 +297,19 @@ require("lazy").setup({
 			})
 		end,
 	},
-	{ "https://github.com/nvim-treesitter/nvim-treesitter-context" },
+	{
+		"https://github.com/nvim-treesitter/nvim-treesitter-context",
+		config = function()
+			require("treesitter-context").setup({
+				enable = false,
+				line_numbers = false,
+			})
+		end,
+	},
 	{
 		"https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
 		config = function()
-			require("nvim-treesitter.configs").setup({
-			})
+			require("nvim-treesitter.configs").setup({})
 		end,
 	},
 
