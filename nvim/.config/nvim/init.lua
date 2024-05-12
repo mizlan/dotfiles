@@ -109,7 +109,7 @@ require("lazy").setup({
 		config = function()
 			require("rose-pine").setup({
 				dark_variant = "moon",
-				disable_italics = true,
+				disable_italics = false,
 				styles = {
 					bold = true,
 					italic = true,
@@ -133,6 +133,7 @@ require("lazy").setup({
 					TelescopeTitle = { fg = "base", bg = "love" },
 					TelescopePromptTitle = { fg = "base", bg = "pine" },
 					TelescopePreviewTitle = { fg = "base", bg = "iris" },
+					Todo = { fg = "love", bg = "love", blend = 1 },
 					TelescopePromptNormal = { fg = "text", bg = "surface" },
 					TelescopePromptBorder = { fg = "surface", bg = "surface" },
 					LuaLineDiffAdd = { fg = "#56949f", bg = "#faf4ed" },
@@ -183,6 +184,20 @@ require("lazy").setup({
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				highlight = { enable = true },
+				textobjects = {
+					select = {
+						enable = true,
+						lookahead = true,
+						keymaps = {
+							-- You can use the capture groups defined in textobjects.scm
+							["af"] = "@function.outer",
+							["if"] = "@function.inner",
+							["ac"] = "@class.outer",
+              ["aa"] = "@parameter.outer",
+              ["ia"] = "@parameter.inner",
+						},
+					},
+				},
 			})
 			local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
 			parser_config.koka = {
@@ -228,6 +243,7 @@ require("lazy").setup({
 	"https://github.com/tpope/vim-fugitive",
 	{
 		"NeogitOrg/neogit",
+		branch = "nightly",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"sindrets/diffview.nvim",
@@ -278,6 +294,14 @@ require("lazy").setup({
 						{ desc = "preview hunk overlay" }
 					)
 				end,
+			})
+		end,
+	},
+	{ "https://github.com/nvim-treesitter/nvim-treesitter-context" },
+	{
+		"https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
+		config = function()
+			require("nvim-treesitter.configs").setup({
 			})
 		end,
 	},
@@ -340,12 +364,7 @@ require("lazy").setup({
 			vim.keymap.set("n", "<Leader>ff", "<Cmd>Telescope find_files<CR>", { desc = "find file" })
 			vim.keymap.set("n", "<Leader>fr", "<Cmd>Recent<CR>", { desc = "find frecent file" })
 			vim.keymap.set("n", "<Leader>fo", "<Cmd>Telescope oldfiles<CR>", { desc = "find recent file" })
-			vim.keymap.set(
-				"n",
-				"<Leader>,",
-				"<Cmd>Telescope buffers ignore_current_buffer=true<CR>",
-				{ desc = "switch to buffer" }
-			)
+			vim.keymap.set("n", "<Leader>,", "<Cmd>Telescope buffers<CR>", { desc = "switch to buffer" })
 			vim.keymap.set("n", [[<Leader>']], "<Cmd>Telescope resume<CR>", { desc = "resume previous search" })
 			vim.keymap.set("n", [[<Leader>sp]], "<Cmd>Telescope live_grep_args<CR>", { desc = "ripgrep" })
 			vim.keymap.set("n", "<Leader>gg", "<Cmd>0Git<CR>", { desc = "fugitive" })
@@ -551,7 +570,7 @@ require("lazy").setup({
 	{
 		"chomosuke/typst-preview.nvim",
 		ft = "typst",
-		version = "0.1.*",
+		version = "0.3.*",
 		build = function()
 			require("typst-preview").update()
 		end,
@@ -691,11 +710,11 @@ require("lazy").setup({
 				capabilities = capabilities,
 			})
 			require("lspconfig").jdtls.setup({})
-			-- require("lspconfig")["typst_lsp"].setup({
-			-- 	settings = {
-			-- 		exportPdf = "onSave",
-			-- 	},
-			-- })
+			require("lspconfig")["typst_lsp"].setup({
+				settings = {
+					exportPdf = "onSave",
+				},
+			})
 		end,
 	},
 	{ "https://github.com/github/copilot.vim" },
@@ -707,6 +726,8 @@ require("lazy").setup({
 			vim.g.loaded_coqtail = 1
 			vim.g["coqtail#supported"] = 0
 
+			-- NOTE: comment out to use VsCoq
+			--
 			-- vim.g.coqtail_nomap = 1
 			-- vim.keymap.set({ "n", "i" }, "<C-c><C-l>", "<Plug>CoqToLine")
 			-- vim.keymap.set({ "n", "i" }, "<C-c><C-j>", "<Plug>CoqNext")
@@ -764,6 +785,9 @@ require("lazy").setup({
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		main = "ibl",
+		-- NOTE: VeryLazy seems to load ibl after colorscheme,
+		-- so IBLIndent and IBLScope highlights are applied
+		event = "VeryLazy",
 		config = function()
 			require("ibl").setup({
 				indent = {
@@ -775,7 +799,7 @@ require("lazy").setup({
 					show_end = false,
 				},
 			})
-			-- HACK
+			-- HACK: hide indent lines in visual mode
 			-- ref: https://github.com/lukas-reineke/indent-blankline.nvim/issues/132#issuecomment-1781195298
 			local ibl_visual_hide = vim.api.nvim_create_augroup("ibl_visual_hide", { clear = true })
 			vim.api.nvim_create_autocmd("ModeChanged", {
@@ -804,11 +828,12 @@ require("lazy").setup({
 	{ "https://github.com/folke/tokyonight.nvim" },
 	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 	{
+		-- NOTE: taken from nvchad
 		"nvim-tree/nvim-tree.lua",
 		opts = {
-      diagnostics = {
-        enable = true,
-      },
+			diagnostics = {
+				enable = true,
+			},
 			disable_netrw = true,
 			hijack_netrw = true,
 			hijack_cursor = true,
@@ -918,6 +943,7 @@ vim.o.completeopt = "menuone,noinsert,noselect"
 vim.o.shortmess = vim.o.shortmess .. "c"
 vim.opt.showmode = false
 
+-- NOTE: ref: https://gist.github.com/romainl/1cad2606f7b00088dda3bb511af50d53
 vim.cmd([[
 command! -range=% SP <line1>,<line2>w !curl -F 'sprunge=<-' http://sprunge.us | tr -d '\n' | pbcopy
 command! -range=% CL <line1>,<line2>w !curl -F 'clbin=<-' https://clbin.com | tr -d '\n' | pbcopy
@@ -977,8 +1003,11 @@ vim.opt.conceallevel = 2
 vim.opt.concealcursor = "nc"
 vim.opt.number = true
 
+-- NOTE: refresh devicons to render correctly whether light or dark
 vim.api.nvim_create_autocmd({ "VimEnter" }, {
 	callback = function()
 		require("nvim-web-devicons").refresh()
 	end,
 })
+
+vim.g.loaded_perl_provider = 0
