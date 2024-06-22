@@ -1,3 +1,9 @@
+vim.g.firenvim_config = {
+  localSettings = {
+    ['.*'] = { takeover = 'never' }
+  }
+}
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
@@ -16,30 +22,30 @@ vim.opt.termguicolors = true
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
-
-local severe_ns = vim.api.nvim_create_namespace("severe-diagnostics")
-
-local function max_diagnostic(callback)
-	return function(_, bufnr, diagnostics, opts)
-		local line_to_diagnostic = {}
-		for _, d in ipairs(diagnostics) do
-			local m = line_to_diagnostic[d.lnum]
-			if not m or d.severity < m.severity then
-				line_to_diagnostic[d.lnum] = d
-			end
-		end
-		callback(severe_ns, bufnr, vim.tbl_values(line_to_diagnostic), opts)
-	end
-end
-
-local signs_handler = vim.diagnostic.handlers.signs
-vim.diagnostic.handlers.signs = vim.tbl_extend("force", signs_handler, {
-	show = max_diagnostic(signs_handler.show),
-	hide = function(_, bufnr)
-		signs_handler.hide(severe_ns, bufnr)
-	end,
-})
-
+--
+-- local severe_ns = vim.api.nvim_create_namespace("severe-diagnostics")
+--
+-- local function max_diagnostic(callback)
+-- 	return function(_, bufnr, diagnostics, opts)
+-- 		local line_to_diagnostic = {}
+-- 		for _, d in ipairs(diagnostics) do
+-- 			local m = line_to_diagnostic[d.lnum]
+-- 			if not m or d.severity < m.severity then
+-- 				line_to_diagnostic[d.lnum] = d
+-- 			end
+-- 		end
+-- 		callback(severe_ns, bufnr, vim.tbl_values(line_to_diagnostic), opts)
+-- 	end
+-- end
+--
+-- local signs_handler = vim.diagnostic.handlers.signs
+-- vim.diagnostic.handlers.signs = vim.tbl_extend("force", signs_handler, {
+-- 	show = max_diagnostic(signs_handler.show),
+-- 	hide = function(_, bufnr)
+-- 		signs_handler.hide(severe_ns, bufnr)
+-- 	end,
+-- })
+--
 vim.diagnostic.config({
 	underline = false,
 	virtual_text = false,
@@ -315,7 +321,7 @@ require("lazy").setup({
 
 	{ dir = "~/Code/longbow.nvim" },
 	{
-		"mizlan/delimited.nvim",
+		dir = "~/Code/delimited.nvim",
 		opts = {
 			pre = function()
 				vim.cmd([[IBLDisable]])
@@ -911,6 +917,40 @@ require("lazy").setup({
 				},
 			},
 		},
+	},
+	{
+		"Julian/lean.nvim",
+		event = { "BufReadPre *.lean", "BufNewFile *.lean" },
+
+		dependencies = {
+			"neovim/nvim-lspconfig",
+			"nvim-lua/plenary.nvim",
+			"hrsh7th/nvim-cmp",
+		},
+
+		opts = {
+			mappings = true,
+		},
+	},
+	{
+		"phha/zenburn.nvim",
+		config = function()
+			require("zenburn").setup()
+		end,
+	},
+	{ "https://github.com/pocco81/true-zen.nvim", opts = true },
+	{
+		"glacambre/firenvim",
+
+		-- Lazy load firenvim
+		-- Explanation: https://github.com/folke/lazy.nvim/discussions/463#discussioncomment-4819297
+		lazy = not vim.g.started_by_firenvim,
+		build = function()
+			vim.fn["firenvim#install"](0)
+		end,
+    config = function ()
+      vim.g.firenvim_config.localSettings['.*'] = { takeover = 'never' }
+    end,
 	},
 }, {
 	install = {
