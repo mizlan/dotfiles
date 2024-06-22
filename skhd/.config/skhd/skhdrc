@@ -26,7 +26,7 @@ cmd + shift - p [
   *      : echo 'gSkim' | nc 127.0.0.1 1337
 ]
 
-cmd + shift - x [
+cmd + shift - d [
   "Neovide" : echo 'c'     | nc 127.0.0.1 1337
   *         : echo 'gNeovide' | nc 127.0.0.1 1337
 ]
