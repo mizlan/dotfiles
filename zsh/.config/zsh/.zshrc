@@ -5,7 +5,7 @@ bindkey -e
 alias e=nvim
 alias n="/Applications/Neovide.app/Contents/MacOS/neovide"
 alias t="$HOME/themechange.sh"
-alias ls="gls --hyperlink=always"
+alias ls="gls --hyperlink=always --color=auto"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
