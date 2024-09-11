@@ -5,6 +5,7 @@ yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa && sle
 sudo yabai --load-sa
 
 yabai -m config                             \
+  external_bar               all:32:0       \
   window_shadow              off            \
                                             \
   mouse_action1              move           \
@@ -27,7 +28,7 @@ yabai -m config                             \
   active_window_opacity      1.0            \
   normal_window_opacity      1.0            \
                                             \
-  window_animation_duration  0.03            \
+  window_animation_duration  0.03           \
   window_animation_easing    ease_out_quint \
                                             \
   insert_feedback_color      0xaa676767
@@ -57,7 +58,4 @@ yabai -m rule --add title="^ephemeral-" manage=off grid=6:4:1:1:2:4
 
 $HOME/.config/yabai/centerstubborn.sh
 
-borders \
-  "active_color=gradient(top_left=0xffffc640,bottom_right=0xffba3aa5)" \
-  "inactive_color=gradient(top_left=0xaa45c4c0,bottom_right=0xaaba3aa5)" \
-  width=10
+yabai -m signal --add event=display_changed action="$HOME/.config/yabai/displayspecificconfig.sh"
