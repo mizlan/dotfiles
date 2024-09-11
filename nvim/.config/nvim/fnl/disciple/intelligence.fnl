@@ -11,16 +11,23 @@
 ;; Shortcut to set clipboard
 (map :n :<Leader>sc+ #(set vim.opt.clipboard :unnamedplus))
 
+(map :n :<Leader>st
+     #(let [count vim.v.count]
+        (set vim.opt.tabstop count)
+        (set vim.opt.softtabstop count)
+        (set vim.opt.shiftwidth count)
+        (set vim.opt.expandtab (not= count 8))))
+
 (au :LspAttach
     {:group (vim.api.nvim_create_augroup :UserLspConfig {})
      :callback (fn [ev]
                  (let [opts {:noremap true :silent true :buffer ev.buf}
                        err vim.diagnostic.severity.ERROR
-                       d (require :delimited)]
-                   (map :n "[d" (. d :goto_prev) opts)
-                   (map :n "]d" (. d :goto_next) opts)
-                   (map :n "[D" #((. d :goto_prev) {:severity err}) opts)
-                   (map :n "]D" #((. d :goto_next) {:severity err}) opts)
+                       jump (. (require :delimited) :jump)]
+                   (map :n "[d" #(jump {:count -1 :float true}) opts)
+                   (map :n "]d" #(jump {:count 1 :float true}) opts)
+                   (map :n "[D" #(jump {:count -1 :float true :severity err}) opts)
+                   (map :n "]D" #(jump {:count 1 :float true :severity err}) opts)
                    (map :n :gd vim.lsp.buf.definition opts)
                    (map :n :K vim.lsp.buf.hover opts)
                    (map :n :<Leader>rn vim.lsp.buf.rename opts)
@@ -38,7 +45,9 @@
 [;; Syntax support and highlighting for Fennel
  {1 :jaawerth/fennel.vim}
  ;; Git client
- {1 :tpope/vim-fugitive}
+ {1 :tpope/vim-fugitive
+  :init (fn []
+          (map :n :<Leader>gg :<Cmd>0Git<CR>))}
  {1 :NMAC427/guess-indent.nvim :opts {}}
  {1 :lewis6991/gitsigns.nvim
   :opts {:culhl true
