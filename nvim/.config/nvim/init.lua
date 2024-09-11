@@ -20,7 +20,7 @@ vim.g.maplocalleader = " m"
 vim.opt.ignorecase = true
 
 require("lazy").setup({
-	spec = { { import = "disciple" } },
+	spec = { { import = "disciple" }, "Olical/nfnl" },
 	install = { colorscheme = { "rose-pine-dawn" } },
 	change_detection = { notify = false },
 })

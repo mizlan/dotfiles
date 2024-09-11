@@ -41,5 +41,6 @@
           (vim.keymap.set :n "-" (. (require :oil) :open)
                           {:desc "Open directory"}))
   :opts true}
- {1 :folke/which-key.nvim :event :VeryLazy :opts {}}]
+ {1 :folke/which-key.nvim :event :VeryLazy :opts {}}
+ {1 :ggandor/leap.nvim :config #(req :leap :create_default_mappings)}]
 
