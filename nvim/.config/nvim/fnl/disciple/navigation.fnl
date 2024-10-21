@@ -10,6 +10,8 @@
           (vim.keymap.set :n :<Leader>ff "<Cmd>Telescope find_files<CR>"
                           {:desc "Find file"})
           (vim.keymap.set :n :<Leader>fo "<Cmd>Telescope oldfiles<CR>"
+                          {:desc "Find old file"})
+          (vim.keymap.set :n :<Leader>sp "<Cmd>Telescope live_grep<CR>"
                           {:desc "Find old file"}))
   :opts {:defaults {:history {:cycle_wrap true}
                     :prompt_prefix "   "
@@ -42,5 +44,6 @@
                           {:desc "Open directory"}))
   :opts true}
  {1 :folke/which-key.nvim :event :VeryLazy :opts {}}
- {1 :ggandor/leap.nvim :config #(req :leap :create_default_mappings)}]
+ {1 :ggandor/leap.nvim :config #(req :leap :create_default_mappings)}
+ {1 :stevearc/qf_helper.nvim :opts {}}]
 

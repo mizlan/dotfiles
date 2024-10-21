@@ -10,6 +10,7 @@ local function switch_test_app_file()
   end
 end
 _G.vim.keymap.set("n", "<Leader>tn", switch_test_app_file)
+vim.g.firenvim_config = {localSettings = {[".*"] = {takeover = "never"}}}
 local function _2_()
   _G.vim.keymap.set("n", "<Leader>t<Space>", "<Cmd>TestFile<CR>")
   _G.vim.keymap.set("n", "<Leader>gt", "<Cmd>TestVisit<CR>")
@@ -26,4 +27,4 @@ local function _4_()
   vim.wo.statusline = " "
   return nil
 end
-return {{"vim-test/vim-test", init = _2_, config = _3_}, {"akinsho/toggleterm.nvim", version = "*", opts = {open_mapping = {"<C-\\>"}, on_create = _4_, highlights = {StatusLine = {guibg = "#f4ede8"}}, insert_mappings = false, shade_terminals = false, terminal_mappings = false}}}
+return {{"vim-test/vim-test", init = _2_, config = _3_}, {"akinsho/toggleterm.nvim", version = "*", opts = {open_mapping = {"<C-\\>"}, on_create = _4_, highlights = {StatusLine = {guibg = "#f4ede8"}}, insert_mappings = false, shade_terminals = false, terminal_mappings = false}}, {"glacambre/firenvim", build = ":call firenvim#install(0)"}}

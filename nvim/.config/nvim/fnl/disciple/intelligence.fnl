@@ -26,8 +26,10 @@
                        jump (. (require :delimited) :jump)]
                    (map :n "[d" #(jump {:count -1 :float true}) opts)
                    (map :n "]d" #(jump {:count 1 :float true}) opts)
-                   (map :n "[D" #(jump {:count -1 :float true :severity err}) opts)
-                   (map :n "]D" #(jump {:count 1 :float true :severity err}) opts)
+                   (map :n "[D" #(jump {:count -1 :float true :severity err})
+                        opts)
+                   (map :n "]D" #(jump {:count 1 :float true :severity err})
+                        opts)
                    (map :n :gd vim.lsp.buf.definition opts)
                    (map :n :K vim.lsp.buf.hover opts)
                    (map :n :<Leader>rn vim.lsp.buf.rename opts)
@@ -49,6 +51,8 @@
   :init (fn []
           (map :n :<Leader>gg :<Cmd>0Git<CR>))}
  {1 :NMAC427/guess-indent.nvim :opts {}}
+ ; {1 :https://github.com/zbirenbaum/copilot.lua
+ ; :opts {}}
  {1 :lewis6991/gitsigns.nvim
   :opts {:culhl true
          :on_attach (fn []
@@ -56,7 +60,9 @@
                         (map :n :<Leader>sh gs.stage_hunk {:desc "Stage hunk"})
                         (map :n :<Leader>rh gs.reset_hunk {:desc "Reset hunk"})
                         (map :n "]h" gs.next_hunk {:desc "Next hunk"})
-                        (map :n "[h" gs.prev_hunk {:desc "Prev hunk"})))}}
+                        (map :n "[h" gs.prev_hunk {:desc "Prev hunk"})
+                        (map :n :<Leader>phi gs.preview_hunk_inline
+                             {:desc "Preview hunk inline"})))}}
  {1 :chrisgrieser/nvim-various-textobjs
   :event :UIEnter
   :opts {:useDefaultKeymaps true}}
@@ -67,6 +73,7 @@
   :main :nvim-treesitter.configs
   :opts {:ensure_installed [:c
                             :cpp
+                            :css
                             :python
                             :lua
                             :fennel
@@ -74,10 +81,13 @@
                             :haskell
                             :perl
                             :gitcommit
+                            :go
                             :java
                             :javascript
                             :prolog
-                            :typescript]
+                            :svelte
+                            :typescript
+                            :tsx]
          :highlight {:enable true}
          :sync_install true
          :textobjects {:select {:enable true
@@ -95,7 +105,8 @@
  {1 :folke/lazydev.nvim
   :ft :lua
   :opts {:library {:path :luvit-meta/library :words ["vim%.uv"]}}}
- {1 :williamboman/mason.nvim :opts true}
+ {1 "https://github.com/github/copilot.vim"}
+ {1 :williamboman/mason.nvim :opts {}}
  {1 :williamboman/mason-lspconfig.nvim
   ;; The use of :dependencies ensures that the plugin setup order is
   ;; 1. mason.nvim 2. mason-lspconfig.nvim 3. nvim-lspconfig
@@ -104,9 +115,16 @@
                             :fennel_language_server
                             :clangd
                             :pyright
-                            :ruff]
+                            :gopls
+                            :ruff
+                            :svelte
+                            :ts_ls
+                            :hls
+                            :tinymist
+                            :tailwindcss]
          :handlers {1 (fn [server-name]
                         ((. (require :lspconfig) server-name :setup) {}))
+                    :hls (fn [])
                     :fennel_language_server (fn []
                                               (let [lspconfig (require :lspconfig)]
                                                 (lspconfig.fennel_language_server.setup {:filetypes [:fennel]
@@ -118,8 +136,19 @@
                                                                                                                                      :comment]}
                                                                                                              :workspace {:library (vim.api.nvim_list_runtime_paths)}}}})))}}}
  {1 :neovim/nvim-lspconfig
-  :dependencies [:williamboman/mason.nvim :williamboman/mason-lspconfig.nvim]}
+  :lazy false
+  :dependencies [:williamboman/mason.nvim
+                 :williamboman/mason-lspconfig.nvim
+                 {1 :ms-jpq/coq_nvim :branch :coq}]}
+ {1 :mrcjkb/haskell-tools.nvim
+  :version :^4
+  ;; Already lazy
+  :lazy false}
+ {1 :Julian/lean.nvim
+  :event ["BufReadPre *.lean" "BufNewFile *.lean"]
+  :opts {}}
  {1 :hrsh7th/nvim-cmp
+  ; :commit :b356f2c80cb6c5bae2a65d7f9c82dd5c3fdd6038
   :config (fn []
             (let [cmp (require :cmp)]
               (cmp.setup {:mapping (cmp.mapping.preset.insert {:<C-b> (cmp.mapping.scroll_docs -1)
@@ -160,10 +189,10 @@
                #(req :conform :format {:async true :lsp_fallback true})
                {:noremap true :silent true}))}
  {1 :kylechui/nvim-surround :event :VeryLazy :opts {:indent_lines false}}
- {1 :JoosepAlviste/nvim-ts-context-commentstring}
+ {1 :JoosepAlviste/nvim-ts-context-commentstring :opts {:enable_autocmd true}}
  {1 :numToStr/Comment.nvim
   :config #(let [i (require :ts_context_commentstring.integrations.comment_nvim)]
-             {:pre_hook (i.create_pre_hook)})}
+             (req :Comment :setup {:pre_hook (i.create_pre_hook)}))}
  {1 :stevearc/aerial.nvim :opts {}}
  {1 :bfredl/nvim-miniyank
   :init (fn []
@@ -173,5 +202,9 @@
           (map :n :<Leader>N "<Plug>(miniyank-cycleback)")
           (map :n :<Leader><Space>c "<Plug>(miniyank-tochar)")
           (map :n :<Leader><Space>l "<Plug>(miniyank-toline)")
-          (map :n :<Leader><Space>b "<Plug>(miniyank-toblock)"))}]
+          (map :n :<Leader><Space>b "<Plug>(miniyank-toblock)"))}
+ {1 :chomosuke/typst-preview.nvim
+  :ft :typst
+  :version :0.3.*
+  :build #(req :typst-preview :update)}]
 
