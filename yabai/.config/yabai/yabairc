@@ -57,5 +57,6 @@ yabai -m rule --add app="^System Settings$" manage=off
 yabai -m rule --add title="^ephemeral-" manage=off grid=6:4:1:1:2:4
 
 $HOME/.config/yabai/centerstubborn.sh
+$HOME/.config/yabai/displayspecificconfig.sh
 
 yabai -m signal --add event=display_changed action="$HOME/.config/yabai/displayspecificconfig.sh"

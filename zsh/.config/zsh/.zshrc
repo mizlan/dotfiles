@@ -1,4 +1,5 @@
 # interactive configuration
+export PATH="$PATH_SAVE"
 
 bindkey -e
 

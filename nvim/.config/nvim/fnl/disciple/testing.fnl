@@ -2,7 +2,6 @@
 
 (map :t :<Esc> "<C-\\><C-n>")
 
-;; For my interview
 (fn switch-test-app-file []
   "Switch between an application file and its corresponding test in Python"
   (let [fname (vim.fn.expand "%:t")
@@ -12,6 +11,8 @@
         (vim.cmd (.. "e " dir :/test_ fname)))))
 
 (map :n :<Leader>tn switch-test-app-file)
+
+(set vim.g.firenvim_config {:localSettings {:.* {:takeover :never}}})
 
 [{1 :vim-test/vim-test
   :init (fn []
@@ -28,8 +29,8 @@
                       (set vim.opt.cursorline false)
                       (set vim.wo.foldcolumn :2)
                       (set vim.wo.statusline " "))
-         :highlights {:StatusLine {:guibg :#f4ede8}}
+         :highlights {:StatusLine {:guibg "#f4ede8"}}
          :insert_mappings false
          :terminal_mappings false
-         :shade_terminals false}}]
-
+         :shade_terminals false}}
+ {1 :glacambre/firenvim :build ":call firenvim#install(0)"}]

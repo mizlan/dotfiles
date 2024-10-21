@@ -57,30 +57,33 @@ local function _10_()
   _G.vim.keymap.set("n", "<Leader>sh", gs.stage_hunk, {desc = "Stage hunk"})
   _G.vim.keymap.set("n", "<Leader>rh", gs.reset_hunk, {desc = "Reset hunk"})
   _G.vim.keymap.set("n", "]h", gs.next_hunk, {desc = "Next hunk"})
-  return _G.vim.keymap.set("n", "[h", gs.prev_hunk, {desc = "Prev hunk"})
+  _G.vim.keymap.set("n", "[h", gs.prev_hunk, {desc = "Prev hunk"})
+  return _G.vim.keymap.set("n", "<Leader>phi", gs.preview_hunk_inline, {desc = "Preview hunk inline"})
 end
 local function _11_(server_name)
   return require("lspconfig")[server_name].setup({})
 end
 local function _12_()
+end
+local function _13_()
   local lspconfig = require("lspconfig")
   return lspconfig.fennel_language_server.setup({filetypes = {"fennel"}, root_dir = lspconfig.util.root_pattern("fnl", "lua"), single_file_support = true, settings = {fennel = {diagnostics = {globals = {"vim", "jit", "comment"}}, workspace = {library = vim.api.nvim_list_runtime_paths()}}}})
 end
-local function _13_()
+local function _14_()
   local cmp = require("cmp")
   return cmp.setup({mapping = cmp.mapping.preset.insert({["<C-b>"] = cmp.mapping.scroll_docs(-1), ["<C-f>"] = cmp.mapping.scroll_docs(1), ["<C-Space>"] = cmp.mapping.complete(), ["<C-e>"] = cmp.mapping.abort(), ["<C-y>"] = cmp.mapping.confirm({select = true})}), sources = cmp.config.sources({{name = "nvim_lsp"}, {name = "nvim_lsp_signature_help"}, {name = "buffer", option = {get_bufnrs = vim.api.nvim_list_bufs}}}), sorting = {comparators = {cmp.config.compare.offset, cmp.config.compare.exact, cmp.config.compare.score, cmp.config.compare.score, require("cmp-under-comparator").under, cmp.config.compare.kind, cmp.config.compare.sort_text, cmp.config.compare.length, cmp.config.compare.order}}})
 end
-local function _14_()
-  local function _15_()
+local function _15_()
+  local function _16_()
     return require("conform").format({async = true, lsp_fallback = true})
   end
-  return _G.vim.keymap.set({"n", "v"}, "<Leader>f<Space>", _15_, {noremap = true, silent = true})
-end
-local function _16_()
-  local i = require("ts_context_commentstring.integrations.comment_nvim")
-  return {pre_hook = i.create_pre_hook()}
+  return _G.vim.keymap.set({"n", "v"}, "<Leader>f<Space>", _16_, {noremap = true, silent = true})
 end
 local function _17_()
+  local i = require("ts_context_commentstring.integrations.comment_nvim")
+  return require("Comment").setup({pre_hook = i.create_pre_hook()})
+end
+local function _18_()
   _G.vim.keymap.set("n", "p", "<Plug>(miniyank-autoput)")
   _G.vim.keymap.set("n", "P", "<Plug>(miniyank-autoPut)")
   _G.vim.keymap.set("n", "<Leader>n", "<Plug>(miniyank-cycle)")
@@ -89,4 +92,7 @@ local function _17_()
   _G.vim.keymap.set("n", "<Leader><Space>l", "<Plug>(miniyank-toline)")
   return _G.vim.keymap.set("n", "<Leader><Space>b", "<Plug>(miniyank-toblock)")
 end
-return {{"jaawerth/fennel.vim"}, {"tpope/vim-fugitive", init = _9_}, {"NMAC427/guess-indent.nvim", opts = {}}, {"lewis6991/gitsigns.nvim", opts = {culhl = true, on_attach = _10_}}, {"chrisgrieser/nvim-various-textobjs", event = "UIEnter", opts = {useDefaultKeymaps = true}}, {"nvim-treesitter/nvim-treesitter-textobjects"}, {"nvim-treesitter/nvim-treesitter", dependencies = {"nvim-treesitter/nvim-treesitter-textobjects"}, main = "nvim-treesitter.configs", opts = {ensure_installed = {"c", "cpp", "python", "lua", "fennel", "ocaml", "haskell", "perl", "gitcommit", "java", "javascript", "prolog", "typescript"}, highlight = {enable = true}, sync_install = true, textobjects = {select = {enable = true, lookahead = true, keymaps = {af = "@function.outer", ["if"] = "@function.inner", ac = "@class.outer", ic = "@class.inner", aa = "@parameter.outer", ia = "@parameter.inner"}}}}, lazy = false}, {dir = "~/Code/delimited.nvim"}, {"Bilal2453/luvit-meta", lazy = true}, {"folke/lazydev.nvim", ft = "lua", opts = {library = {path = "luvit-meta/library", words = {"vim%.uv"}}}}, {"williamboman/mason.nvim", opts = true}, {"williamboman/mason-lspconfig.nvim", dependencies = {"williamboman/mason.nvim"}, opts = {ensure_installed = {"lua_ls", "fennel_language_server", "clangd", "pyright", "ruff"}, handlers = {_11_, fennel_language_server = _12_}}}, {"neovim/nvim-lspconfig", dependencies = {"williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim"}}, {"hrsh7th/nvim-cmp", config = _13_}, {"hrsh7th/cmp-nvim-lsp"}, {"hrsh7th/cmp-nvim-lsp-signature-help"}, {"hrsh7th/cmp-buffer"}, {"lukas-reineke/cmp-under-comparator"}, {"stevearc/conform.nvim", opts = {formatters_by_ft = {lua = {"stylua"}, fennel = {"fnlfmt"}, cpp = {"clang-format"}, json = {"jq"}, javascript = {"prettierd"}, javascriptreact = {"prettierd"}, typescript = {"prettierd"}, typescriptreact = {"prettierd"}, python = {"ruff_format"}}}, init = _14_}, {"kylechui/nvim-surround", event = "VeryLazy", opts = {indent_lines = false}}, {"JoosepAlviste/nvim-ts-context-commentstring"}, {"numToStr/Comment.nvim", config = _16_}, {"stevearc/aerial.nvim", opts = {}}, {"bfredl/nvim-miniyank", init = _17_}}
+local function _19_()
+  return require("typst-preview").update()
+end
+return {{"jaawerth/fennel.vim"}, {"tpope/vim-fugitive", init = _9_}, {"NMAC427/guess-indent.nvim", opts = {}}, {"lewis6991/gitsigns.nvim", opts = {culhl = true, on_attach = _10_}}, {"chrisgrieser/nvim-various-textobjs", event = "UIEnter", opts = {useDefaultKeymaps = true}}, {"nvim-treesitter/nvim-treesitter-textobjects"}, {"nvim-treesitter/nvim-treesitter", dependencies = {"nvim-treesitter/nvim-treesitter-textobjects"}, main = "nvim-treesitter.configs", opts = {ensure_installed = {"c", "cpp", "css", "python", "lua", "fennel", "ocaml", "haskell", "perl", "gitcommit", "go", "java", "javascript", "prolog", "svelte", "typescript", "tsx"}, highlight = {enable = true}, sync_install = true, textobjects = {select = {enable = true, lookahead = true, keymaps = {af = "@function.outer", ["if"] = "@function.inner", ac = "@class.outer", ic = "@class.inner", aa = "@parameter.outer", ia = "@parameter.inner"}}}}, lazy = false}, {dir = "~/Code/delimited.nvim"}, {"Bilal2453/luvit-meta", lazy = true}, {"folke/lazydev.nvim", ft = "lua", opts = {library = {path = "luvit-meta/library", words = {"vim%.uv"}}}}, {"https://github.com/github/copilot.vim"}, {"williamboman/mason.nvim", opts = {}}, {"williamboman/mason-lspconfig.nvim", dependencies = {"williamboman/mason.nvim"}, opts = {ensure_installed = {"lua_ls", "fennel_language_server", "clangd", "pyright", "gopls", "ruff", "svelte", "ts_ls", "hls", "tinymist", "tailwindcss"}, handlers = {_11_, hls = _12_, fennel_language_server = _13_}}}, {"neovim/nvim-lspconfig", dependencies = {"williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim", {"ms-jpq/coq_nvim", branch = "coq"}}, lazy = false}, {"mrcjkb/haskell-tools.nvim", version = "^4", lazy = false}, {"Julian/lean.nvim", event = {"BufReadPre *.lean", "BufNewFile *.lean"}, opts = {}}, {"hrsh7th/nvim-cmp", config = _14_}, {"hrsh7th/cmp-nvim-lsp"}, {"hrsh7th/cmp-nvim-lsp-signature-help"}, {"hrsh7th/cmp-buffer"}, {"lukas-reineke/cmp-under-comparator"}, {"stevearc/conform.nvim", opts = {formatters_by_ft = {lua = {"stylua"}, fennel = {"fnlfmt"}, cpp = {"clang-format"}, json = {"jq"}, javascript = {"prettierd"}, javascriptreact = {"prettierd"}, typescript = {"prettierd"}, typescriptreact = {"prettierd"}, python = {"ruff_format"}}}, init = _15_}, {"kylechui/nvim-surround", event = "VeryLazy", opts = {indent_lines = false}}, {"JoosepAlviste/nvim-ts-context-commentstring", opts = {enable_autocmd = true}}, {"numToStr/Comment.nvim", config = _17_}, {"stevearc/aerial.nvim", opts = {}}, {"bfredl/nvim-miniyank", init = _18_}, {"chomosuke/typst-preview.nvim", ft = "typst", version = "0.3.*", build = _19_}}

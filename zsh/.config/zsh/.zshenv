@@ -1,3 +1,6 @@
+# add /usr/local/bin ourselves
+export PATH="/usr/local/bin:$PATH"
+
 # homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -37,3 +40,6 @@ export PATH="$PATH:$HOME/Repositories/kattis-cli"
 
 # typst
 export PATH="$PATH:$HOME/Repositories/typst-lsp/target/release"
+
+# /etc/paths messes with our PATH
+export PATH_SAVE=$PATH
