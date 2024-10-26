@@ -28,6 +28,8 @@
                                                :!.git
                                                :--glob
                                                :!venv
+                                               :--glob
+                                               :!_build
                                                :--hidden]}}
          :extensions {:fzf {:fuzzy true
                             :override_generic_sorter true

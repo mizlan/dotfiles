@@ -1,5 +1,5 @@
 -- [nfnl] Compiled from fnl/disciple/visuals.fnl by https://github.com/Olical/nfnl, do not edit.
-vim.opt.guicursor = "n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor"
+vim.opt.guicursor = "a:hor20-StatusLineTerm"
 vim.opt.showmode = false
 vim.opt.cursorline = true
 vim.opt.statusline = " %t"

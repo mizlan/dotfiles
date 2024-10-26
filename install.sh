@@ -25,3 +25,4 @@ stow --no-folding --target="$HOME" sketchybar
 stow              --target="$HOME" theming
 stow              --target="$HOME" yabai
 stow              --target="$HOME" skhd
+stow              --target="$HOME" borders

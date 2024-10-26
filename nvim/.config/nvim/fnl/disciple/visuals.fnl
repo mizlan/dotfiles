@@ -2,8 +2,9 @@
 
 ;; Use the Cursor highlight group for the cursor,
 ;; which has been disabled by default
-(set vim.opt.guicursor
-     "n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor")
+; (set vim.opt.guicursor
+;      "n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor")
+(set vim.opt.guicursor "a:hor20-StatusLineTerm")
 
 ;; Don't display mode indicators, our cursor communicates that to us
 (set vim.opt.showmode false)
