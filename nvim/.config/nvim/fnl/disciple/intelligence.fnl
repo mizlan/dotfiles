@@ -120,6 +120,7 @@
                             :svelte
                             :ts_ls
                             :hls
+                            :ocamllsp
                             :tinymist
                             :tailwindcss]
          :handlers {1 (fn [server-name]
@@ -196,8 +197,8 @@
  {1 :stevearc/aerial.nvim :opts {}}
  {1 :bfredl/nvim-miniyank
   :init (fn []
-          (map :n :p "<Plug>(miniyank-autoput)")
-          (map :n :P "<Plug>(miniyank-autoPut)")
+          (map [:n :v] :p "<Plug>(miniyank-autoput)")
+          (map [:n :v] :P "<Plug>(miniyank-autoPut)")
           (map :n :<Leader>n "<Plug>(miniyank-cycle)")
           (map :n :<Leader>N "<Plug>(miniyank-cycleback)")
           (map :n :<Leader><Space>c "<Plug>(miniyank-tochar)")
