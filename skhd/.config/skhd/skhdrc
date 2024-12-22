@@ -10,8 +10,8 @@ ctrl + alt + cmd - r : yabai --restart-service
 ctrl + alt + cmd - c : /Users/ml/themechange.sh
 
 cmd + shift - return [
- "Google Chrome" : echo 'c'        | nc 127.0.0.1 1337
- *         : echo 'gGoogle Chrome' | nc 127.0.0.1 1337
+ "Firefox" : echo 'c'        | nc 127.0.0.1 1337
+ *         : echo 'gFirefox' | nc 127.0.0.1 1337
 ]
 
 cmd + shift - g : echo 'c' | nc -U /Users/ml/chubby

@@ -1,4 +1,5 @@
 (import-macros {: map} :disciple.macros)
+
 [{1 :whonore/Coqtail
   :init (fn []
           (set vim.g.loaded_coqtail 1)
