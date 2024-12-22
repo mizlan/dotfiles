@@ -28,6 +28,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # go
 export PATH="$HOME/Lang/go/bin:$PATH"
+export PATH="$HOME/go/bin:$PATH"
 
 # kitty
 export KITTY_DEVELOP_FROM="$HOME/Repositories/kitty"
@@ -40,6 +41,9 @@ export PATH="$PATH:$HOME/Repositories/kattis-cli"
 
 # typst
 export PATH="$PATH:$HOME/Repositories/typst-lsp/target/release"
+
+# latex
+export PATH="/Library/TeX/texbin:$PATH"
 
 # /etc/paths messes with our PATH
 export PATH_SAVE=$PATH

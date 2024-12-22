@@ -4,7 +4,9 @@
 ;; which has been disabled by default
 ; (set vim.opt.guicursor
 ;      "n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor")
-(set vim.opt.guicursor "a:hor20-StatusLineTerm")
+; (set vim.opt.guicursor "a:hor20-StatusLineTerm")
+(set vim.opt.guicursor
+     "n-v-c-sm:hor20-FloatShadow,i-ci-ve:hor20-StatusLineTerm,r-cr-o:hor20-RedrawDebugClear")
 
 ;; Don't display mode indicators, our cursor communicates that to us
 (set vim.opt.showmode false)
@@ -47,7 +49,7 @@
                    (set vim.g.neovide_light_angle_degrees 45)
                    (set vim.g.neovide_light_radius 60)
                    (set vim.g.neovide_cursor_animate_command_line false)
-                   ;; (set vim.g.neovide_cursor_vfx_mode :railgun)
+                   (set vim.g.neovide_cursor_vfx_mode :railgun)
                    (set vim.g.neovide_cursor_vfx_opacity 300.0)
                    (set vim.g.neovide_cursor_vfx_particle_lifetime 1.5)
                    (set vim.g.neovide_cursor_vfx_particle_speed 20.0)
@@ -76,7 +78,8 @@
   :config (fn []
             (req :rose-pine :setup
                  {:disable_italics true
-                  :highlight_groups {:LineNr {:fg :highlight_high}
+                  :highlight_groups {:Visual {:bg "#cbdfe5"}
+                                     :LineNr {:fg :highlight_high}
                                      :CursorLineNr {:fg :muted
                                                     :bg :highlight_low
                                                     :inherit false}
@@ -134,6 +137,21 @@
                                      :GitSignsDelete {:fg "#dbb6b4"}
                                      :GitSignsDeleteCul {:fg "#dbb6b4"
                                                          :bg :highlight_low}
+                                     :GitSignsStagedAdd {:fg "#75b0bb"}
+                                     :GitSignsStagedAddCul {:fg "#75b0bb"
+                                                            :bg :highlight_low}
+                                     :GitSignsStagedChange {:fg "#e8a655"}
+                                     :GitSignsStagedChangeCul {:fg "#e8a655"
+                                                               :bg :highlight_low}
+                                     :GitSignsStagedChangedelete {:fg "#e8a655"}
+                                     :GitSignsStagedChangedeleteCul {:fg "#e8a655"
+                                                                     :bg :highlight_low}
+                                     :GitSignsStagedDelete {:fg "#c4a7e7"}
+                                     :GitSignsStagedDeleteCul {:fg "#c4a7e7"
+                                                               :bg :highlight_low}
+                                     :GitSignsStagedTopdelete {:fg "#c4a7e7"}
+                                     :GitSignsStagedTopdeleteCul {:fg "#c4a7e7"
+                                                                  :bg :highlight_low}
                                      :DelimitedError {:fg :love
                                                       :bg "#EDDAD8"
                                                       :inherit false}
@@ -243,5 +261,6 @@
   :dependencies [:rose-pine/neovim]
   :opts {:override_by_extension {:v {:icon "" :color "#dba25c" :name :Coq}}}}
  {1 :romainl/vim-cool}
- {1 :stevearc/dressing.nvim}]
-
+ {1 :MunifTanjim/nui.nvim}
+ {1 :stevearc/dressing.nvim}
+ {1 "https://github.com/ellisonleao/gruvbox.nvim"}]

@@ -12,7 +12,10 @@
           (vim.keymap.set :n :<Leader>fo "<Cmd>Telescope oldfiles<CR>"
                           {:desc "Find old file"})
           (vim.keymap.set :n :<Leader>sp "<Cmd>Telescope live_grep<CR>"
-                          {:desc "Find old file"}))
+                          {:desc "Find old file"})
+          (vim.keymap.set :n :<Leader>ss
+                          "<Cmd>Telescope lsp_document_symbols<CR>"
+                          {:desc "Find LSP symbol"}))
   :opts {:defaults {:history {:cycle_wrap true}
                     :prompt_prefix "   "
                     :selection_caret "  "
@@ -30,6 +33,10 @@
                                                :!venv
                                                :--glob
                                                :!_build
+                                               :--glob
+                                               :!_opam
+                                               :--glob
+                                               :!dist-newstyle
                                                :--hidden]}}
          :extensions {:fzf {:fuzzy true
                             :override_generic_sorter true
@@ -40,12 +47,7 @@
   :dependencies [:nvim-telescope/telescope.nvim]
   :config (fn []
             (req :telescope :load_extension :fzf))}
- {1 "https://github.com/stevearc/oil.nvim"
-  :init (fn []
-          (vim.keymap.set :n "-" (. (require :oil) :open)
-                          {:desc "Open directory"}))
-  :opts true}
  {1 :folke/which-key.nvim :event :VeryLazy :opts {}}
  {1 :ggandor/leap.nvim :config #(req :leap :create_default_mappings)}
- {1 :stevearc/qf_helper.nvim :opts {}}]
-
+ {1 :stevearc/quicker.nvim :opts true}
+ {1 :kevinhwang91/nvim-bqf :opts {:preview {:winblend 0}}}]
