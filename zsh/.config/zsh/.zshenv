@@ -30,8 +30,8 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/Lang/go/bin:$PATH"
 export PATH="$HOME/go/bin:$PATH"
 
-# kitty
-export KITTY_DEVELOP_FROM="$HOME/Repositories/kitty"
+# # kitty
+# export KITTY_DEVELOP_FROM="$HOME/Repositories/kitty"
 
 # zig
 export PATH="$PATH:$HOME/.zvm/bin"
