@@ -111,7 +111,13 @@
                                           :ac "@class.outer"
                                           :ic "@class.inner"
                                           :aa "@parameter.outer"
-                                          :ia "@parameter.inner"}}}}}
+                                          :ia "@parameter.inner"}}}}
+  :config (fn [opts]
+            (req :nvim-treesitter.configs :setup opts.opts)
+            (let [cfgs (req :nvim-treesitter.parsers :get_parser_configs)]
+              (set cfgs.rapper
+                   {:install_info {:url "~/Repositories/tree-sitter-rapper"
+                                   :files [:src/parser.c]}})))}
  ;; Tidy goto_{prev,next}
  {:dir "~/Code/delimited.nvim"}
  ;; Add-on to lspconfig's lua_ls configuration
@@ -119,7 +125,7 @@
  {1 :folke/lazydev.nvim
   :ft :lua
   :opts {:library {:path :luvit-meta/library :words ["vim%.uv"]}}}
- ; {1 "https://github.com/github/copilot.vim"}
+ {1 "https://github.com/github/copilot.vim"}
  {1 :williamboman/mason.nvim :opts {}}
  {1 :williamboman/mason-lspconfig.nvim
   ;; The use of :dependencies ensures that the plugin setup order is
@@ -173,33 +179,6 @@
                                                     :buffer]}}}
   :opts_extend [:sources.completion.enabled_providers]
   :version :v0.*}
- ; {1 :hrsh7th/nvim-cmp
- ;  ; :commit :b356f2c80cb6c5bae2a65d7f9c82dd5c3fdd6038
- ;  :config (fn []
- ;            (let [cmp (require :cmp)]
- ;              (cmp.setup {:mapping (cmp.mapping.preset.insert {:<C-b> (cmp.mapping.scroll_docs -1)
- ;                                                               :<C-f> (cmp.mapping.scroll_docs 1)
- ;                                                               :<C-Space> (cmp.mapping.complete)
- ;                                                               :<C-e> (cmp.mapping.abort)
- ;                                                               :<C-y> (cmp.mapping.confirm {:select true})})
- ;                          :sources (cmp.config.sources [{:name :nvim_lsp}
- ;                                                        {:name :nvim_lsp_signature_help}
- ;                                                        {:name :buffer
- ;                                                         :option {:get_bufnrs vim.api.nvim_list_bufs}}])
- ;                          :sorting {:comparators [cmp.config.compare.offset
- ;                                                  cmp.config.compare.exact
- ;                                                  cmp.config.compare.score
- ;                                                  cmp.config.compare.score
- ;                                                  (. (require :cmp-under-comparator)
- ;                                                     :under)
- ;                                                  cmp.config.compare.kind
- ;                                                  cmp.config.compare.sort_text
- ;                                                  cmp.config.compare.length
- ;                                                  cmp.config.compare.order]}})))}
- ; {1 :hrsh7th/cmp-nvim-lsp}
- ; {1 :hrsh7th/cmp-nvim-lsp-signature-help}
- ; {1 :hrsh7th/cmp-buffer}
- ; {1 :lukas-reineke/cmp-under-comparator}
  {1 :stevearc/conform.nvim
   :opts {:formatters_by_ft {:lua [:stylua]
                             :fennel [:fnlfmt]
@@ -214,6 +193,7 @@
           (map [:n :v] :<Leader>f<Space>
                #(req :conform :format {:async true :lsp_fallback true})
                {:noremap true :silent true}))}
+ {1 :folke/trouble.nvim :opts {}}
  {1 :kylechui/nvim-surround :event :VeryLazy :opts {:indent_lines false}}
  {1 :JoosepAlviste/nvim-ts-context-commentstring :opts {:enable_autocmd true}}
  {1 :numToStr/Comment.nvim

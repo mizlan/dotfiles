@@ -2,7 +2,8 @@
 local function _1_()
   require("mini.files").setup({mappings = {close = "<Esc>", go_in_plus = "<CR>"}})
   require("mini.ai").setup()
-  return require("mini.bufremove").setup()
+  require("mini.bufremove").setup()
+  return require("mini.align").setup()
 end
 local function _2_()
   local function _3_()
@@ -17,7 +18,7 @@ local function _2_()
   end
   _G.vim.keymap.set("n", "-", _3_, {desc = "Switch buffer"})
   local function _5_()
-    return require("mini.bufremove").unshow()
+    return require("mini.bufremove").delete()
   end
   return _G.vim.keymap.set("n", "<Leader>bd", _5_, {desc = "Remove buffer"})
 end

@@ -62,29 +62,35 @@ local function _10_()
   _G.vim.keymap.set("n", "[h", gs.prev_hunk, {desc = "Prev hunk"})
   return _G.vim.keymap.set("n", "<Leader>phi", gs.preview_hunk_inline, {desc = "Preview hunk inline"})
 end
-local function _11_(server_name)
+local function _11_(opts)
+  require("nvim-treesitter.configs").setup(opts.opts)
+  local cfgs = require("nvim-treesitter.parsers").get_parser_configs()
+  cfgs.rapper = {install_info = {url = "~/Repositories/tree-sitter-rapper", files = {"src/parser.c"}}}
+  return nil
+end
+local function _12_(server_name)
   return require("lspconfig")[server_name].setup({})
 end
-local function _12_()
-end
 local function _13_()
+end
+local function _14_()
   local lspconfig = require("lspconfig")
   return lspconfig.fennel_language_server.setup({filetypes = {"fennel"}, root_dir = lspconfig.util.root_pattern("fnl", "lua"), single_file_support = true, settings = {fennel = {diagnostics = {globals = {"vim", "jit", "comment"}}, workspace = {library = vim.api.nvim_list_runtime_paths()}}}})
 end
-local function _14_()
+local function _15_()
   return require("lspconfig").ocamllsp.setup({})
 end
-local function _15_()
-  local function _16_()
+local function _16_()
+  local function _17_()
     return require("conform").format({async = true, lsp_fallback = true})
   end
-  return _G.vim.keymap.set({"n", "v"}, "<Leader>f<Space>", _16_, {noremap = true, silent = true})
+  return _G.vim.keymap.set({"n", "v"}, "<Leader>f<Space>", _17_, {noremap = true, silent = true})
 end
-local function _17_()
+local function _18_()
   local i = require("ts_context_commentstring.integrations.comment_nvim")
   return require("Comment").setup({pre_hook = i.create_pre_hook()})
 end
-local function _18_()
+local function _19_()
   _G.vim.keymap.set({"n", "v"}, "p", "<Plug>(miniyank-autoput)")
   _G.vim.keymap.set({"n", "v"}, "P", "<Plug>(miniyank-autoPut)")
   _G.vim.keymap.set("n", "<Leader>n", "<Plug>(miniyank-cycle)")
@@ -93,7 +99,7 @@ local function _18_()
   _G.vim.keymap.set("n", "<Leader><Space>l", "<Plug>(miniyank-toline)")
   return _G.vim.keymap.set("n", "<Leader><Space>b", "<Plug>(miniyank-toblock)")
 end
-local function _19_()
+local function _20_()
   return require("typst-preview").update()
 end
-return {{"jaawerth/fennel.vim"}, {"tpope/vim-fugitive", init = _9_}, {"NMAC427/guess-indent.nvim", opts = {}}, {"lewis6991/gitsigns.nvim", opts = {culhl = true, signs = {changedelete = {text = "\226\148\135"}}, signs_staged = {changedelete = {text = "\226\148\135"}}, on_attach = _10_}}, {"chrisgrieser/nvim-various-textobjs", event = "UIEnter", opts = {useDefaultKeymaps = true}}, {"nvim-treesitter/nvim-treesitter-textobjects"}, {"nvim-treesitter/nvim-treesitter", dependencies = {"nvim-treesitter/nvim-treesitter-textobjects"}, main = "nvim-treesitter.configs", opts = {ensure_installed = {"c", "cpp", "css", "python", "lua", "fennel", "ocaml", "haskell", "perl", "gitcommit", "go", "java", "javascript", "prolog", "svelte", "typescript", "tsx"}, highlight = {enable = true}, sync_install = true, textobjects = {select = {enable = true, lookahead = true, keymaps = {af = "@function.outer", ["if"] = "@function.inner", ac = "@class.outer", ic = "@class.inner", aa = "@parameter.outer", ia = "@parameter.inner"}}}}, lazy = false}, {dir = "~/Code/delimited.nvim"}, {"Bilal2453/luvit-meta", lazy = true}, {"folke/lazydev.nvim", ft = "lua", opts = {library = {path = "luvit-meta/library", words = {"vim%.uv"}}}}, {"williamboman/mason.nvim", opts = {}}, {"williamboman/mason-lspconfig.nvim", dependencies = {"williamboman/mason.nvim"}, opts = {ensure_installed = {"lua_ls", "fennel_language_server", "clangd", "pyright", "gopls", "ruff", "svelte", "ts_ls", "hls", "tinymist", "tailwindcss"}, automatic_installation = {exclude = {"ocamllsp"}}, handlers = {_11_, hls = _12_, fennel_language_server = _13_}}}, {"neovim/nvim-lspconfig", dependencies = {"williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim"}, config = _14_, lazy = false}, {"mrcjkb/haskell-tools.nvim", version = "^4", lazy = false}, {"Julian/lean.nvim", event = {"BufReadPre *.lean", "BufNewFile *.lean"}, opts = {}}, {"saghen/blink.cmp", dependencies = "rafamadriz/friendly-snippets", opts = {appearance = {nerd_font_variant = "mono", use_nvim_cmp_as_default = true}, keymap = {preset = "default"}, sources = {completion = {enabled_providers = {"lsp", "path", "snippets", "buffer"}}}}, opts_extend = {"sources.completion.enabled_providers"}, version = "v0.*", lazy = false}, {"stevearc/conform.nvim", opts = {formatters_by_ft = {lua = {"stylua"}, fennel = {"fnlfmt"}, cpp = {"clang-format"}, json = {"jq"}, javascript = {"prettierd"}, javascriptreact = {"prettierd"}, typescript = {"prettierd"}, typescriptreact = {"prettierd"}, python = {"ruff_format"}}}, init = _15_}, {"kylechui/nvim-surround", event = "VeryLazy", opts = {indent_lines = false}}, {"JoosepAlviste/nvim-ts-context-commentstring", opts = {enable_autocmd = true}}, {"numToStr/Comment.nvim", config = _17_}, {"stevearc/aerial.nvim", opts = {}}, {"bfredl/nvim-miniyank", init = _18_}, {"NMAC427/guess-indent.nvim", opts = {}}, {"axkirillov/hbac.nvim", opts = {threshold = 4}}, {"chomosuke/typst-preview.nvim", ft = "typst", version = "0.3.*", build = _19_}}
+return {{"jaawerth/fennel.vim"}, {"tpope/vim-fugitive", init = _9_}, {"NMAC427/guess-indent.nvim", opts = {}}, {"lewis6991/gitsigns.nvim", opts = {culhl = true, signs = {changedelete = {text = "\226\148\135"}}, signs_staged = {changedelete = {text = "\226\148\135"}}, on_attach = _10_}}, {"chrisgrieser/nvim-various-textobjs", event = "UIEnter", opts = {useDefaultKeymaps = true}}, {"nvim-treesitter/nvim-treesitter-textobjects"}, {"nvim-treesitter/nvim-treesitter", dependencies = {"nvim-treesitter/nvim-treesitter-textobjects"}, main = "nvim-treesitter.configs", opts = {ensure_installed = {"c", "cpp", "css", "python", "lua", "fennel", "ocaml", "haskell", "perl", "gitcommit", "go", "java", "javascript", "prolog", "svelte", "typescript", "tsx"}, highlight = {enable = true}, sync_install = true, textobjects = {select = {enable = true, lookahead = true, keymaps = {af = "@function.outer", ["if"] = "@function.inner", ac = "@class.outer", ic = "@class.inner", aa = "@parameter.outer", ia = "@parameter.inner"}}}}, config = _11_, lazy = false}, {dir = "~/Code/delimited.nvim"}, {"Bilal2453/luvit-meta", lazy = true}, {"folke/lazydev.nvim", ft = "lua", opts = {library = {path = "luvit-meta/library", words = {"vim%.uv"}}}}, {"https://github.com/github/copilot.vim"}, {"williamboman/mason.nvim", opts = {}}, {"williamboman/mason-lspconfig.nvim", dependencies = {"williamboman/mason.nvim"}, opts = {ensure_installed = {"lua_ls", "fennel_language_server", "clangd", "pyright", "gopls", "ruff", "svelte", "ts_ls", "hls", "tinymist", "tailwindcss"}, automatic_installation = {exclude = {"ocamllsp"}}, handlers = {_12_, hls = _13_, fennel_language_server = _14_}}}, {"neovim/nvim-lspconfig", dependencies = {"williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim"}, config = _15_, lazy = false}, {"mrcjkb/haskell-tools.nvim", version = "^4", lazy = false}, {"Julian/lean.nvim", event = {"BufReadPre *.lean", "BufNewFile *.lean"}, opts = {}}, {"saghen/blink.cmp", dependencies = "rafamadriz/friendly-snippets", opts = {appearance = {nerd_font_variant = "mono", use_nvim_cmp_as_default = true}, keymap = {preset = "default"}, sources = {completion = {enabled_providers = {"lsp", "path", "snippets", "buffer"}}}}, opts_extend = {"sources.completion.enabled_providers"}, version = "v0.*", lazy = false}, {"stevearc/conform.nvim", opts = {formatters_by_ft = {lua = {"stylua"}, fennel = {"fnlfmt"}, cpp = {"clang-format"}, json = {"jq"}, javascript = {"prettierd"}, javascriptreact = {"prettierd"}, typescript = {"prettierd"}, typescriptreact = {"prettierd"}, python = {"ruff_format"}}}, init = _16_}, {"folke/trouble.nvim", opts = {}}, {"kylechui/nvim-surround", event = "VeryLazy", opts = {indent_lines = false}}, {"JoosepAlviste/nvim-ts-context-commentstring", opts = {enable_autocmd = true}}, {"numToStr/Comment.nvim", config = _18_}, {"stevearc/aerial.nvim", opts = {}}, {"bfredl/nvim-miniyank", init = _19_}, {"NMAC427/guess-indent.nvim", opts = {}}, {"axkirillov/hbac.nvim", opts = {threshold = 4}}, {"chomosuke/typst-preview.nvim", ft = "typst", version = "0.3.*", build = _20_}}
