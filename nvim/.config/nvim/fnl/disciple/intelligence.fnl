@@ -115,9 +115,14 @@
   :config (fn [opts]
             (req :nvim-treesitter.configs :setup opts.opts)
             (let [cfgs (req :nvim-treesitter.parsers :get_parser_configs)]
-              (set cfgs.rapper
-                   {:install_info {:url "~/Repositories/tree-sitter-rapper"
-                                   :files [:src/parser.c]}})))}
+              (set cfgs.sql
+                   {:install_info {:url "~/Repositories/tree-sitter-sql"
+                                   :files [:src/parser.c :src/scanner.c]
+                                   :branch :main
+                                   :generate_requires_npm false
+                                   :requires_generate_from_grammar :true}
+                    :filetype :sql}))
+            (vim.treesitter.language.register "sql" "sql"))}
  ;; Tidy goto_{prev,next}
  {:dir "~/Code/delimited.nvim"}
  ;; Add-on to lspconfig's lua_ls configuration

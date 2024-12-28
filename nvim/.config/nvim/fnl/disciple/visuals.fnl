@@ -15,7 +15,7 @@
 (set vim.opt.cursorline true)
 
 ;; Simple statusline
-(set vim.opt.statusline " %t")
+; (set vim.opt.statusline " %t")
 
 ;; Only display a global statusline, not one per window
 (set vim.opt.laststatus 3)
@@ -256,7 +256,9 @@
   :opts {1 "*"
          ;; Highlight rgb() and hsl() functions as well in CSS
          :css {:css true}}}
- ; {1 :nvim-lualine/lualine.nvim :opts {}}
+ {1 :nvim-lualine/lualine.nvim
+  :opts {:options {:component_separators {:left "╲" :right "╱"}
+                   :section_separators {:left "" :right ""}}}}
  {1 :nvim-tree/nvim-web-devicons
   :dependencies [:rose-pine/neovim]
   :opts {:override_by_extension {:v {:icon "" :color "#dba25c" :name :Coq}}}}

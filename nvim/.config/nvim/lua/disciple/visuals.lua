@@ -2,7 +2,6 @@
 vim.opt.guicursor = "n-v-c-sm:hor20-FloatShadow,i-ci-ve:hor20-StatusLineTerm,r-cr-o:hor20-RedrawDebugClear"
 vim.opt.showmode = false
 vim.opt.cursorline = true
-vim.opt.statusline = " %t"
 vim.opt.laststatus = 3
 vim.opt.number = true
 vim.opt.wrap = false
@@ -86,4 +85,4 @@ local function _13_()
   _G.vim.api.nvim_create_autocmd("ModeChanged", {group = ibl_visual_hide, pattern = "[vV\22]*:*", command = "IBLEnable", desc = "Enable IBL in non-Visual mode"})
   return _G.vim.api.nvim_create_autocmd("ModeChanged", {group = ibl_visual_hide, pattern = "*:[vV\22]*", command = "IBLDisable", desc = "Disable IBL in non-Visual mode"})
 end
-return {{"rose-pine/neovim", priority = 1000, main = "rose-pine", config = _7_, lazy = false}, {"luukvbaal/statuscol.nvim", config = _8_}, {"lukas-reineke/indent-blankline.nvim", main = "ibl", dependencies = {"rose-pine/neovim"}, config = _13_}, {"norcalli/nvim-colorizer.lua", opts = {"*", css = {css = true}}}, {"nvim-tree/nvim-web-devicons", dependencies = {"rose-pine/neovim"}, opts = {override_by_extension = {v = {icon = "\239\134\157", color = "#dba25c", name = "Coq"}}}}, {"romainl/vim-cool"}, {"MunifTanjim/nui.nvim"}, {"stevearc/dressing.nvim"}, {"https://github.com/ellisonleao/gruvbox.nvim"}}
+return {{"rose-pine/neovim", priority = 1000, main = "rose-pine", config = _7_, lazy = false}, {"luukvbaal/statuscol.nvim", config = _8_}, {"lukas-reineke/indent-blankline.nvim", main = "ibl", dependencies = {"rose-pine/neovim"}, config = _13_}, {"norcalli/nvim-colorizer.lua", opts = {"*", css = {css = true}}}, {"nvim-lualine/lualine.nvim", opts = {options = {component_separators = {left = "\226\149\178", right = "\226\149\177"}, section_separators = {left = "\238\130\184", right = "\238\130\186"}}}}, {"nvim-tree/nvim-web-devicons", dependencies = {"rose-pine/neovim"}, opts = {override_by_extension = {v = {icon = "\239\134\157", color = "#dba25c", name = "Coq"}}}}, {"romainl/vim-cool"}, {"MunifTanjim/nui.nvim"}, {"stevearc/dressing.nvim"}, {"https://github.com/ellisonleao/gruvbox.nvim"}}
