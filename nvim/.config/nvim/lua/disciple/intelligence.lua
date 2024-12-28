@@ -64,9 +64,11 @@ local function _10_()
 end
 local function _11_(opts)
   require("nvim-treesitter.configs").setup(opts.opts)
-  local cfgs = require("nvim-treesitter.parsers").get_parser_configs()
-  cfgs.rapper = {install_info = {url = "~/Repositories/tree-sitter-rapper", files = {"src/parser.c"}}}
-  return nil
+  do
+    local cfgs = require("nvim-treesitter.parsers").get_parser_configs()
+    cfgs.sql = {install_info = {url = "~/Repositories/tree-sitter-sql", files = {"src/parser.c", "src/scanner.c"}, branch = "main", requires_generate_from_grammar = "true", generate_requires_npm = false}, filetype = "sql"}
+  end
+  return vim.treesitter.language.register("sql", "sql")
 end
 local function _12_(server_name)
   return require("lspconfig")[server_name].setup({})
