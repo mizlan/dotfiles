@@ -3,7 +3,7 @@ vim.opt.guicursor = "n-v-c-sm:hor20-FloatShadow,i-ci-ve:hor20-StatusLineTerm,r-c
 vim.opt.showmode = false
 vim.opt.cursorline = true
 vim.opt.laststatus = 3
-vim.opt.number = true
+vim.opt.number = false
 vim.opt.wrap = false
 vim.opt.background = "light"
 local function _1_()
@@ -47,42 +47,15 @@ local function _2_()
   end
 end
 _G.vim.api.nvim_create_autocmd({"UIEnter"}, {callback = _2_})
+vim.diagnostic.config({float = {header = "", max_width = math.min(math.floor((vim.o.columns * 0.7)), 100), max_height = math.min(math.floor((vim.o.lines * 0.3)), 30)}, signs = false, underline = false, virtual_text = false})
 local function _7_()
   require("rose-pine").setup({disable_italics = true, highlight_groups = {Visual = {bg = "#cbdfe5"}, LineNr = {fg = "highlight_high"}, CursorLineNr = {fg = "muted", bg = "highlight_low", inherit = false}, CursorLineSign = {bg = "highlight_low"}, StatusLine = {fg = "muted", bg = "highlight_low"}, DiagnosticVirtualTextError = {bg = "#f5e9e3"}, DiagnosticVirtualTextWarn = {bg = "#f6ebdd"}, DiagnosticVirtualTextInfo = {bg = "#eaeae5"}, DiagnosticVirtualTextHint = {bg = "#efe8e6"}, DiagnosticSignErrorCul = {fg = "love", bg = "highlight_low"}, DiagnosticSignWarnCul = {fg = "gold", bg = "highlight_low"}, DiagnosticSignInfoCul = {fg = "foam", bg = "highlight_low"}, DiagnosticSignHintCul = {fg = "iris", bg = "highlight_low"}, EndOfBuffer = {fg = "highlight_med"}, WinSeparator = {fg = "highlight_med"}, IblScope = {fg = "highlight_med"}, IblIndent = {fg = "highlight_low"}, CursorLine = {bg = "highlight_low"}, TelescopeSelectionCaret = {fg = "love", bg = "highlight_med"}, TelescopeMultiSelection = {fg = "text", bg = "highlight_high"}, TelescopeTitle = {fg = "base", bg = "love"}, TelescopePromptTitle = {fg = "base", bg = "pine"}, TelescopePreviewTitle = {fg = "base", bg = "iris"}, TelescopePromptNormal = {fg = "text", bg = "surface"}, TelescopePromptBorder = {fg = "surface", bg = "surface"}, CoqtailChecked = {bg = "#eaeae5"}, CoqtailSent = {bg = "#f2e9e1"}, QuickFixLine = {fg = "foam", bg = "#DCE3DF", inherit = false}, LuaLineDiffAdd = {fg = "#56949f", bg = "#faf4ed"}, LuaLineDiffChange = {fg = "#d7827e", bg = "#faf4ed"}, DiffAdd = {bg = "#bacfc4", inherit = false}, DiffDelete = {bg = "#dbb6b4", inherit = false}, GitSignsAdd = {fg = "#bacfc4"}, GitSignsAddCul = {fg = "#bacfc4", bg = "highlight_low"}, GitSignsChange = {fg = "#e6d2c1"}, GitSignsChangeCul = {fg = "#e6d2c1", bg = "highlight_low"}, GitSignsDelete = {fg = "#dbb6b4"}, GitSignsDeleteCul = {fg = "#dbb6b4", bg = "highlight_low"}, GitSignsStagedAdd = {fg = "#75b0bb"}, GitSignsStagedAddCul = {fg = "#75b0bb", bg = "highlight_low"}, GitSignsStagedChange = {fg = "#e8a655"}, GitSignsStagedChangeCul = {fg = "#e8a655", bg = "highlight_low"}, GitSignsStagedChangedelete = {fg = "#e8a655"}, GitSignsStagedChangedeleteCul = {fg = "#e8a655", bg = "highlight_low"}, GitSignsStagedDelete = {fg = "#c4a7e7"}, GitSignsStagedDeleteCul = {fg = "#c4a7e7", bg = "highlight_low"}, GitSignsStagedTopdelete = {fg = "#c4a7e7"}, GitSignsStagedTopdeleteCul = {fg = "#c4a7e7", bg = "highlight_low"}, DelimitedError = {fg = "love", bg = "#EDDAD8", inherit = false}, DelimitedWarn = {fg = "gold", bg = "#F7E4CB", inherit = false}, DelimitedInfo = {fg = "foam", bg = "#DCE3DF", inherit = false}, DelimitedHint = {fg = "iris", bg = "#E7DEE1", inherit = false}, CopilotSuggestion = {fg = "highlight_high"}, TreesitterContext = {bg = "#f3ede8"}}})
   return vim.cmd("colorscheme rose-pine-dawn")
 end
 local function _8_()
-  require("statuscol").setup({ft_ignore = {"aerial"}, bt_ignore = {"terminal"}, segments = {{text = {" "}}, {sign = {namespace = {".*diagnostic/signs"}, colwidth = 2, auto = false}}, {text = {" "}}, {text = {require("statuscol.builtin").lnumfunc}, click = "v:lua.ScLa"}, {text = {" "}}, {sign = {namespace = {"gitsigns"}, maxwidth = 2, colwidth = 1, auto = false}}}})
-  do
-    local severe_ns = vim.api.nvim_create_namespace("severe-diagnostics")
-    local max_diag
-    local function _9_(callback)
-      local function _10_(_, bufnr, diagnostics, opts)
-        local line__3ediag = {}
-        for _0, d in ipairs(diagnostics) do
-          local m = line__3ediag[d.lnum]
-          if (not m or (d.severity < m.severity)) then
-            line__3ediag[d.lnum] = d
-          else
-          end
-        end
-        return callback(severe_ns, bufnr, vim.tbl_values(line__3ediag), opts)
-      end
-      return _10_
-    end
-    max_diag = _9_
-    local signs_handler = vim.diagnostic.handlers.signs
-    local function _12_(_, bufnr)
-      return signs_handler.hide(severe_ns, bufnr)
-    end
-    vim.diagnostic.handlers.signs = vim.tbl_extend("force", signs_handler, {show = max_diag(signs_handler.show), hide = _12_})
-  end
-  return vim.diagnostic.config({signs = {text = {[vim.diagnostic.severity.ERROR] = "\239\129\177", [vim.diagnostic.severity.WARN] = "\239\129\177", [vim.diagnostic.severity.HINT] = "\239\129\177", [vim.diagnostic.severity.INFO] = "\239\129\177"}, cursorlinehl = {[vim.diagnostic.severity.ERROR] = "DiagnosticSignErrorCul", [vim.diagnostic.severity.WARN] = "DiagnosticSignWarnCul", [vim.diagnostic.severity.HINT] = "DiagnosticSignHintCul", [vim.diagnostic.severity.INFO] = "DiagnosticSignInfoCul"}}, float = {header = "", max_width = math.min(math.floor((vim.o.columns * 0.7)), 100), max_height = math.min(math.floor((vim.o.lines * 0.3)), 30)}, underline = false, virtual_text = false})
-end
-local function _13_()
   require("ibl").setup({indent = {char = "\226\148\130"}, scope = {show_end = false, show_start = false}})
   local ibl_visual_hide = vim.api.nvim_create_augroup("ibl_visual_hide", {clear = true})
   _G.vim.api.nvim_create_autocmd("ModeChanged", {group = ibl_visual_hide, pattern = "[vV\22]*:*", command = "IBLEnable", desc = "Enable IBL in non-Visual mode"})
   return _G.vim.api.nvim_create_autocmd("ModeChanged", {group = ibl_visual_hide, pattern = "*:[vV\22]*", command = "IBLDisable", desc = "Disable IBL in non-Visual mode"})
 end
-return {{"rose-pine/neovim", priority = 1000, main = "rose-pine", config = _7_, lazy = false}, {"luukvbaal/statuscol.nvim", config = _8_}, {"lukas-reineke/indent-blankline.nvim", main = "ibl", dependencies = {"rose-pine/neovim"}, config = _13_}, {"norcalli/nvim-colorizer.lua", opts = {"*", css = {css = true}}}, {"nvim-lualine/lualine.nvim", opts = {options = {component_separators = {left = "\226\149\178", right = "\226\149\177"}, section_separators = {left = "\238\130\184", right = "\238\130\186"}}}}, {"nvim-tree/nvim-web-devicons", dependencies = {"rose-pine/neovim"}, opts = {override_by_extension = {v = {icon = "\239\134\157", color = "#dba25c", name = "Coq"}}}}, {"romainl/vim-cool"}, {"MunifTanjim/nui.nvim"}, {"stevearc/dressing.nvim"}, {"https://github.com/ellisonleao/gruvbox.nvim"}}
+return {{"rose-pine/neovim", priority = 1000, main = "rose-pine", config = _7_, lazy = false}, {"lukas-reineke/indent-blankline.nvim", main = "ibl", dependencies = {"rose-pine/neovim"}, config = _8_}, {"norcalli/nvim-colorizer.lua", opts = {"*", css = {css = true}}}, {"nvim-lualine/lualine.nvim", opts = {options = {component_separators = {left = "\226\149\178", right = "\226\149\177"}, section_separators = {left = "\238\130\184", right = "\238\130\186"}}}}, {"nvim-tree/nvim-web-devicons", dependencies = {"rose-pine/neovim"}, opts = {override_by_extension = {v = {icon = "\239\134\157", color = "#dba25c", name = "Coq"}}}}, {"romainl/vim-cool"}, {"MunifTanjim/nui.nvim"}, {"stevearc/dressing.nvim"}, {"https://github.com/ellisonleao/gruvbox.nvim"}}

@@ -49,16 +49,6 @@
  {1 :tpope/vim-fugitive
   :init (fn []
           (map :n :<Leader>gg :<Cmd>0Git<CR>))}
- {1 :NMAC427/guess-indent.nvim :opts {}}
- ; {1 "https://github.com/zbirenbaum/copilot.lua"
- ;  :opts {:suggestion {:auto_trigger true
- ;                      :debounce 50
- ;                      :enabled true
- ;                      :hide_during_completion true
- ;                      :keymap {:accept :<C-x>
- ;                               :dismiss "<C-]>"
- ;                               :next "<M-]>"
- ;                               :prev "<M-[>"}}}}
  {1 :lewis6991/gitsigns.nvim
   :opts {:culhl true
          :signs {:changedelete {:text "┇"}}
@@ -79,50 +69,7 @@
                              {:desc "Preview hunk inline"})))}}
  {1 :chrisgrieser/nvim-various-textobjs
   :event :UIEnter
-  :opts {:useDefaultKeymaps true}}
- {1 :nvim-treesitter/nvim-treesitter-textobjects}
- {1 :nvim-treesitter/nvim-treesitter
-  :lazy false
-  :dependencies [:nvim-treesitter/nvim-treesitter-textobjects]
-  :main :nvim-treesitter.configs
-  :opts {:ensure_installed [:c
-                            :cpp
-                            :css
-                            :python
-                            :lua
-                            :fennel
-                            :ocaml
-                            :haskell
-                            :perl
-                            :gitcommit
-                            :go
-                            :java
-                            :javascript
-                            :prolog
-                            :svelte
-                            :typescript
-                            :tsx]
-         :highlight {:enable true}
-         :sync_install true
-         :textobjects {:select {:enable true
-                                :lookahead true
-                                :keymaps {:af "@function.outer"
-                                          :if "@function.inner"
-                                          :ac "@class.outer"
-                                          :ic "@class.inner"
-                                          :aa "@parameter.outer"
-                                          :ia "@parameter.inner"}}}}
-  :config (fn [opts]
-            (req :nvim-treesitter.configs :setup opts.opts)
-            (let [cfgs (req :nvim-treesitter.parsers :get_parser_configs)]
-              (set cfgs.sql
-                   {:install_info {:url "~/Repositories/tree-sitter-sql"
-                                   :files [:src/parser.c :src/scanner.c]
-                                   :branch :main
-                                   :generate_requires_npm false
-                                   :requires_generate_from_grammar :true}
-                    :filetype :sql}))
-            (vim.treesitter.language.register "sql" "sql"))}
+  :opts {:keymaps {:useDefaults true}}}
  ;; Tidy goto_{prev,next}
  {:dir "~/Code/delimited.nvim"}
  ;; Add-on to lspconfig's lua_ls configuration
@@ -178,10 +125,7 @@
   :lazy false
   :opts {:appearance {:nerd_font_variant :mono :use_nvim_cmp_as_default true}
          :keymap {:preset :default}
-         :sources {:completion {:enabled_providers [:lsp
-                                                    :path
-                                                    :snippets
-                                                    :buffer]}}}
+         :sources {:default [:lsp :path :snippets :buffer]}}
   :opts_extend [:sources.completion.enabled_providers]
   :version :v0.*}
  {1 :stevearc/conform.nvim

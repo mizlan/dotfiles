@@ -20,8 +20,8 @@
 ;; Only display a global statusline, not one per window
 (set vim.opt.laststatus 3)
 
-;; Display line numbers
-(set vim.opt.number true)
+;; Don't display line numbers
+(set vim.opt.number false)
 
 ;; Don't wrap lines
 (set vim.opt.wrap false)
@@ -70,6 +70,17 @@
                                    (fn []
                                      (set vim.g.neovide_scale_factor 1)
                                      (os.execute :/Users/ml/.config/yabai/microshift.sh)))))})
+
+(vim.diagnostic.config {:underline false
+                        :virtual_text false
+                        :signs false
+                        :float {:header ""
+                                :max_width (math.min (math.floor (* vim.o.columns
+                                                                    0.7))
+                                                     100)
+                                :max_height (math.min (math.floor (* vim.o.lines
+                                                                     0.3))
+                                                      30)}})
 
 [{1 :rose-pine/neovim
   :lazy false
@@ -167,66 +178,6 @@
                                      :CopilotSuggestion {:fg :highlight_high}
                                      :TreesitterContext {:bg "#f3ede8"}}})
             (vim.cmd "colorscheme rose-pine-dawn"))}
- {1 :luukvbaal/statuscol.nvim
-  :config (fn []
-            (req :statuscol :setup
-                 {:ft_ignore [:aerial]
-                  :bt_ignore [:terminal]
-                  :segments [{:text [" "]}
-                             ;; This pattern should capture the different types
-                             ;; of signs resulting from diagnostics
-                             {:sign {:namespace [:.*diagnostic/signs]
-                                     :colwidth 2
-                                     :auto false}}
-                             {:text [" "]}
-                             {:text [(. (require :statuscol.builtin) :lnumfunc)]
-                              :click "v:lua.ScLa"}
-                             {:text [" "]}
-                             {:sign {:namespace [:gitsigns]
-                                     :maxwidth 2
-                                     :colwidth 1
-                                     :auto false}}]})
-            ;; For each line with a diagnostic, only display the diagnostic
-            ;; with the highest severity (e.g., if a line had both a warning
-            ;; and an error, only the symbol for an error would be shown
-            (let [severe-ns (vim.api.nvim_create_namespace :severe-diagnostics)
-                  max-diag (fn [callback]
-                             (fn [_ bufnr diagnostics opts]
-                               (let [line->diag {}]
-                                 (each [_ d (ipairs diagnostics)]
-                                   (let [m (. line->diag d.lnum)]
-                                     (when (or (not m)
-                                               (< d.severity m.severity))
-                                       (tset line->diag d.lnum d))))
-                                 (callback severe-ns bufnr
-                                           (vim.tbl_values line->diag) opts))))
-                  signs-handler vim.diagnostic.handlers.signs]
-              (set vim.diagnostic.handlers.signs
-                   (vim.tbl_extend :force signs-handler
-                                   {:show (max-diag signs-handler.show)
-                                    :hide (fn [_ bufnr]
-                                            (signs-handler.hide severe-ns bufnr))})))
-            ;; Display diagnostics subtly: no virtual text, no underlines
-            ;; or squigglies; only signs
-            (vim.diagnostic.config {:underline false
-                                    :virtual_text false
-                                    :signs {:text {vim.diagnostic.severity.ERROR ""
-                                                   vim.diagnostic.severity.WARN ""
-                                                   vim.diagnostic.severity.HINT ""
-                                                   vim.diagnostic.severity.INFO ""}
-                                            ;; Display signs on the cursor line with their background
-                                            ;; matching CursorLineSign
-                                            :cursorlinehl {vim.diagnostic.severity.ERROR :DiagnosticSignErrorCul
-                                                           vim.diagnostic.severity.WARN :DiagnosticSignWarnCul
-                                                           vim.diagnostic.severity.HINT :DiagnosticSignHintCul
-                                                           vim.diagnostic.severity.INFO :DiagnosticSignInfoCul}}
-                                    :float {:header ""
-                                            :max_width (math.min (math.floor (* vim.o.columns
-                                                                                0.7))
-                                                                 100)
-                                            :max_height (math.min (math.floor (* vim.o.lines
-                                                                                 0.3))
-                                                                  30)}}))}
  {1 :lukas-reineke/indent-blankline.nvim
   :main :ibl
   ;; Load indent-blankline after colorscheme,

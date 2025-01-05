@@ -13,6 +13,12 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 # haskell
 [ -f "/Users/ml/.ghcup/env" ] && source "/Users/ml/.ghcup/env"
 
+# ocaml
+source '/Users/ml/.opam/opam-init/init.zsh' >/dev/null 2>/dev/null
+
+# lean
+export PATH="$HOME/.elan/bin:$PATH"
+
 # npm
 export PATH="$HOME/npm-global/bin:$PATH"
 
