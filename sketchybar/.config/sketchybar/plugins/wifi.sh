@@ -4,7 +4,8 @@
 # is passed to the script.
 
 # ref: https://github.com/FelixKratz/SketchyBar/issues/407#issuecomment-1755765318
-INFO="$(/System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -I  | awk -F' SSID: '  '/ SSID: / {print $2}')"
+INFO="$(ipconfig getsummary "$(networksetup -listallhardwareports | awk '/Wi-Fi|AirPort/{getline; print $NF}')" | grep '  SSID : ' | awk -F ': ' '{print $2}')"
+
 
 WIFI=${INFO:-"Not Connected"}
 

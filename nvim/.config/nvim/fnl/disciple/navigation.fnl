@@ -27,6 +27,7 @@
                                 :hidden true
                                 :find_command [:rg
                                                :--files
+                                               :--follow
                                                :--glob
                                                :!.git
                                                :--glob
