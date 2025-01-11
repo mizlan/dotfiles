@@ -15,7 +15,9 @@
                           {:desc "Find old file"})
           (vim.keymap.set :n :<Leader>ss
                           "<Cmd>Telescope lsp_document_symbols<CR>"
-                          {:desc "Find LSP symbol"}))
+                          {:desc "Find LSP symbol"})
+          (vim.keymap.set :n "<Leader>'" "<Cmd>Telescope resume<CR>"
+                          {:desc "Resume Telescope"}))
   :opts {:defaults {:history {:cycle_wrap true}
                     :prompt_prefix "   "
                     :selection_caret "  "

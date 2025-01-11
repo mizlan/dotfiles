@@ -71,13 +71,13 @@
   :event :UIEnter
   :opts {:keymaps {:useDefaults true}}}
  ;; Tidy goto_{prev,next}
- {:dir "~/Code/delimited.nvim"}
+ {1 :mizlan/delimited.nvim}
  ;; Add-on to lspconfig's lua_ls configuration
  {1 :Bilal2453/luvit-meta :lazy true}
  {1 :folke/lazydev.nvim
   :ft :lua
   :opts {:library {:path :luvit-meta/library :words ["vim%.uv"]}}}
- {1 "https://github.com/github/copilot.vim"}
+ ; {1 "https://github.com/github/copilot.vim"}
  {1 :williamboman/mason.nvim :opts {}}
  {1 :williamboman/mason-lspconfig.nvim
   ;; The use of :dependencies ensures that the plugin setup order is
