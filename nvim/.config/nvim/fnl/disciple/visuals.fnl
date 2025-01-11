@@ -2,11 +2,11 @@
 
 ;; Use the Cursor highlight group for the cursor,
 ;; which has been disabled by default
-; (set vim.opt.guicursor
-;      "n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor")
-; (set vim.opt.guicursor "a:hor20-StatusLineTerm")
 (set vim.opt.guicursor
-     "n-v-c-sm:hor20-FloatShadow,i-ci-ve:hor20-StatusLineTerm,r-cr-o:hor20-RedrawDebugClear")
+     "n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor")
+; (set vim.opt.guicursor "a:hor20-StatusLineTerm")
+; (set vim.opt.guicursor
+;      "n-v-c-sm:hor20-FloatShadow,i-ci-ve:hor20-StatusLineTerm,r-cr-o:hor20-RedrawDebugClear")
 
 ;; Don't display mode indicators, our cursor communicates that to us
 (set vim.opt.showmode false)
@@ -89,8 +89,7 @@
   :config (fn []
             (req :rose-pine :setup
                  {:disable_italics true
-                  :highlight_groups {:Visual {:bg "#cbdfe5"}
-                                     :LineNr {:fg :highlight_high}
+                  :highlight_groups {:LineNr {:fg :highlight_high}
                                      :CursorLineNr {:fg :muted
                                                     :bg :highlight_low
                                                     :inherit false}
