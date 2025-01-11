@@ -1,0 +1,23 @@
+[user]
+name = "Michael Lan"
+email = "..."
+
+[ui]
+default-command = ["log", "--no-pager"]
+graph.style = "square"
+
+[templates]
+log_node = '''
+coalesce(
+  if(!self, "🮀"),
+  if(current_working_copy, "@"),
+  if(root, "┴"),
+  if(immutable, "◆", "◇"),
+)
+'''
+op_log_node = 'if(current_operation, "@", "◇")'
+
+[template-aliases]
+'format_timestamp(timestamp)' = 'timestamp.ago()'
+'format_short_signature(signature)' = 'signature.email().local()'
+'format_short_id(id)' = 'id.shortest()'
