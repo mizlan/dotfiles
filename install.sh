@@ -22,7 +22,8 @@ stow --no-folding --target="$HOME" nvim
 stow --no-folding --target="$HOME" scripts
 stow --no-folding --target="$HOME" wallpapers
 stow --no-folding --target="$HOME" sketchybar
-stow              --target="$HOME" theming
 stow              --target="$HOME" yabai
 stow              --target="$HOME" skhd
 stow              --target="$HOME" borders
+# atuin autogenerates its config, so we need to remove the old one first
+rm -rf ~/.config/atuin && stow --target="$HOME" atuin

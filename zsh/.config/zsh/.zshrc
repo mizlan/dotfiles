@@ -60,8 +60,6 @@ else
   compinit -C
 fi
 
-source "$HOME/Repositories/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-
 ucla-wifi() {
   # wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 $1
   aria2c -x 16 -s 16 $1
@@ -125,3 +123,5 @@ eval "$(direnv hook zsh)"
 eval "$(atuin init zsh)"
 
 export PROMPT='$ '
+
+source /opt/homebrew/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
