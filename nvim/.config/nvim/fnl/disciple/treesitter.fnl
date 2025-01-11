@@ -2,6 +2,7 @@
 
 [{1 :nvim-treesitter/nvim-treesitter-textobjects}
  {1 :nvim-treesitter/nvim-treesitter
+  ; treesitter slow :(
   :lazy false
   :dependencies [:nvim-treesitter/nvim-treesitter-textobjects]
   :main :nvim-treesitter.configs
