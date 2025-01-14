@@ -11,10 +11,10 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 # haskell
-[ -f "/Users/ml/.ghcup/env" ] && source "/Users/ml/.ghcup/env"
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env"
 
 # ocaml
-source '/Users/ml/.opam/opam-init/init.zsh' >/dev/null 2>/dev/null
+source "$HOME/.opam/opam-init/init.zsh" >/dev/null 2>/dev/null
 
 # lean
 export PATH="$HOME/.elan/bin:$PATH"

@@ -48,4 +48,5 @@
                     :install_info {:url "https://github.com/tree-sitter/tree-sitter-ocaml"
                                    :files [:src/parser.c :src/scanner.c]
                                    :location :grammars/type}
-                    :maintainers ["@undu"]})))}]
+                    :maintainers ["@undu"]})))}
+ {1 :nvim-treesitter/nvim-treesitter-context :opts {}}]
