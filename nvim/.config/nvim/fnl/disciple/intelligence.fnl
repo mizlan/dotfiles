@@ -65,13 +65,14 @@
                             :fennel_language_server
                             :clangd
                             :pyright
-                            :gopls
-                            :ruff
-                            :svelte
-                            :ts_ls
-                            :hls
-                            :tinymist
-                            :tailwindcss]
+                            ; :gopls
+                            ; :ruff
+                            ; :svelte
+                            ; :ts_ls
+                            ; :hls
+                            ; :tinymist
+                            ; :tailwindcss
+                            ]
          :automatic_installation {:exclude [:ocamllsp]}
          :handlers {1 (fn [server-name]
                         ((. (require :lspconfig) server-name :setup) {}))
