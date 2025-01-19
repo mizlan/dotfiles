@@ -12,7 +12,13 @@
           (vim.keymap.set :n :<Leader>fo "<Cmd>Telescope oldfiles<CR>"
                           {:desc "Find old file"})
           (vim.keymap.set :n :<Leader>sp "<Cmd>Telescope live_grep<CR>"
-                          {:desc "Find old file"})
+                          {:desc "Search for string"})
+          (vim.keymap.set :n :<Leader>fp
+                          "<Cmd>Telescope find_files cwd=~/.config/nvim<CR>"
+                          {:desc "Find Neovim configuration file"})
+          (vim.keymap.set :n :<Leader>fP
+                          "<Cmd>Telescope find_files cwd=~/.config<CR>"
+                          {:desc "Find configuration file"})
           (vim.keymap.set :n :<Leader>ss
                           "<Cmd>Telescope lsp_document_symbols<CR>"
                           {:desc "Find LSP symbol"})

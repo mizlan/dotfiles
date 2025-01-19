@@ -93,10 +93,6 @@
   :dependencies [:williamboman/mason.nvim :williamboman/mason-lspconfig.nvim]
   :config (fn []
             ((. (require :lspconfig) :ocamllsp :setup) {}))}
- {1 :mrcjkb/haskell-tools.nvim
-  :version :^4
-  ;; Already lazy
-  :lazy false}
  {1 :Julian/lean.nvim
   :event ["BufReadPre *.lean" "BufNewFile *.lean"]
   :opts {}}

@@ -5,7 +5,6 @@ bindkey -e
 
 alias e=nvim
 alias n="/Applications/Neovide.app/Contents/MacOS/neovide"
-alias t="$HOME/themechange.sh"
 alias ls="eza"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
