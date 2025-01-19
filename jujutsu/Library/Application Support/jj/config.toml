@@ -1,3 +1,5 @@
+"$schema" = "https://jj-vcs.github.io/jj/prerelease/config-schema.json"
+
 [user]
 name = "Michael Lan"
 email = "..."

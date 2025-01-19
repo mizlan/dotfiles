@@ -65,6 +65,7 @@
                             :fennel_language_server
                             :clangd
                             :pyright
+                            :taplo
                             ; :gopls
                             ; :ruff
                             ; :svelte
