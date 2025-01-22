@@ -82,6 +82,9 @@
                                                                      0.3))
                                                       30)}})
 
+(set vim.opt.splitright true)
+(set vim.opt.splitbelow true)
+
 [{1 :rose-pine/neovim
   :lazy false
   :priority 1000

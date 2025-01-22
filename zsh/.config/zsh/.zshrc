@@ -97,7 +97,6 @@ export SAVEHIST=$HISTSIZE
 HISTORY_IGNORE="(ls|cd|fg)"
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
-setopt SHARE_HISTORY
 
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 export HOMEBREW_NO_AUTO_UPDATE=1
