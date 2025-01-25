@@ -35,7 +35,7 @@
     {:group (vim.api.nvim_create_augroup :highlight_yank {})
      :desc "Highlight on yank"
      :callback (fn []
-                 (vim.highlight.on_yank {:higroup :Todo :timeout 200}))})
+                 (vim.highlight.on_yank {:higroup :Search :timeout 200}))})
 
 ;; Neovide configuration
 (au [:UIEnter]

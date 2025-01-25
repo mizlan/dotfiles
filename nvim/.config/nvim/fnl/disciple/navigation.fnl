@@ -14,7 +14,7 @@
           (vim.keymap.set :n :<Leader>sp "<Cmd>Telescope live_grep<CR>"
                           {:desc "Search for string"})
           (vim.keymap.set :n :<Leader>fp
-                          "<Cmd>Telescope find_files cwd=~/.config/nvim<CR>"
+                          "<Cmd>Telescope find_files cwd=~/.config/nvim/fnl<CR>"
                           {:desc "Find Neovim configuration file"})
           (vim.keymap.set :n :<Leader>fP
                           "<Cmd>Telescope find_files cwd=~/.config<CR>"

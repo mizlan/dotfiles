@@ -1,5 +1,5 @@
-gapsize=5
-margin=10
+gapsize=15
+margin=25
 
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa && sleep 1 && yabai -m config window_shadow off"
 sudo yabai --load-sa

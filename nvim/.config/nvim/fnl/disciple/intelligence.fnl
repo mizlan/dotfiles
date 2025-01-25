@@ -139,4 +139,5 @@
  {1 :chomosuke/typst-preview.nvim
   :ft :typst
   :version :0.3.*
-  :build #(req :typst-preview :update)}]
+  :build #(req :typst-preview :update)}
+ {1 :mizlan/iswap.nvim}]
